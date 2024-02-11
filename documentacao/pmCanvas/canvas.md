@@ -106,3 +106,6 @@ Custos:
     6 progamadores 
     1000 X 6
     6000 Reais no total
+
+Fiz essa alterção para testar se meu email ta certo 
+antes erra outro
