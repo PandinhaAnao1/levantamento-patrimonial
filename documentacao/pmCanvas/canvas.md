@@ -140,15 +140,10 @@
       Nota do cliente
 
 # Custos:
-
-    • 80h (Carga horária da matéria)
-    • 2.000/(40h * 4)
-    • 2.000/160
-    • 12.5 A hora trabalhada
-    • 80 x 12.5
-    • 1000 por programador
-    • 6 programadores
-    • 1000 X 6
-    • 6000 Reais no total
-
+    • 5 meses de desenvolvimento
+    • Media salário de um desenvolvedor junior back-end 2.387,00 trabalhando 4 horas diárias segundo a glassdoor.com
+    • 5 desenvolvedores
+    • 2.387,00 X 5 programadores = 11.935,00
+    • 11.935,00 X 5 meses = 59.675,00
+    • 11.935,00 por programador
 Origem: [Salários de Desenvolvedor Back-end Júnior](https://www.glassdoor.com.br/Sal%C3%A1rios/desenvolvedor-back-end-jr-sal%C3%A1rio-SRCH_KO0,25.htm)
