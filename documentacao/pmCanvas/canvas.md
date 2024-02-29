@@ -73,6 +73,11 @@
     • IFRO
 
 ## Premissas:
+    • Utilização de um banco de dados SQL
+    • A API será consumida por uma aplicação mobile
+    • 
+
+
 
 # Bloco 4:
 
@@ -96,12 +101,6 @@
 
 # Bloco 5
 
-## Premissas:
-
-    Pandemia
-    Fim Do
-    Premissas: São suposições do projeto as quais o gerente não possui controle e que serão dadas como certas no planejamento. Na descrição destas deve conter apenas o que realmente irá viabilizar o projeto;
-
 ## Restrições:
     • Disponibilidade do cliente.
     • Disponibilidade dos alunos.
@@ -109,7 +108,8 @@
 
 ## Riscos:
     • Integrantes desistirem do curso
-    • O levantamento dos requisitos foi produzido errado
+    • Os integrantes não conseguirer aprender a criar a API.
+    • O Grupo não contribuir de forma igualitária com o projeto.
 
 # Linha do tempo:
 
