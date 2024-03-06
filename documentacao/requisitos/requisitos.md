@@ -27,3 +27,8 @@
 
 | IDENTIFICADOR | NOME | REGRA DE NEGOCIO |
 | :------------ | :--- | :--------------- |
+| RF-001        | Segurança                | Garantir a segurança das informações do inventário, restringindo o acesso apenas a usuários autorizados através de autenticação segura. Armazenar e proteger as informações do inventário contra acessos não autorizados.                         |
+| RF-002        | Usabilidade              | Fornecer uma interface do usuário intuitiva e de fácil utilização, mesmo para usuários sem experiência técnica. Oferecer feedback claro sobre a conclusão bem-sucedida de uma entrada de inventário.                                 |
+| RF-003        | Disponibilidade          | Manter o sistema disponível 24/7, com tempo de inatividade mínimo planejado para a realização de manutenção.|
+| RF-004        | Confiabilidade           | Implementar mecanismos que permitam ao sistema lidar com falhas de forma adequada, preservando a integridade dos dados do inventário. |
+| RF-005        | Legislação e Conformidade| Assegurar que o sistema esteja em conformidade com as regulamentações e normas locais relacionadas à gestão de inventário e dados. |
