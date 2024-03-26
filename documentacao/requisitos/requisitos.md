@@ -18,10 +18,9 @@
 
 | IDENTIFICADOR | NOME                     | REGRA DE NEGOCIO                                                                                                 |
 | :------------ | :----------------------- | :--------------------------------------------------------------------------------------------------------------- |
-| RF-001        | Vizualização por grafico | O sistemas deve ser capaz de demonstrar quantos itens ja foram tombados e quantos faltam                         |
-| RF-002        | Permisões                | O sistemas de gerenciar as permisões dos usuario sendo eles comisario e gerente                                  |
-| RF-003        | Historico                | O sistemas deve possuir um historico de todos os itens que foram auditado e as pessoas responsaveis pela audição |
-| RF-004        | Esqueceu a senha         | O comisario deve ser capaz de ultilizar o recurso de esqueceu senha se necessário                                |
+| RF-001        | Cadastro Simplificado | Facilitar conferência dos bens, tornando o acesso mais rápido.                         |
+| RF-002        | Acesso Móvel                | Melhorar o acesso em dispositivos móveis.                                  |
+| RF-003        | Histórico de Atividades              | Ter uma opção de visualizar um histórico detalhado de atividades e alterações. |                               |
 
 ## Requisitos Não Funcionais Obrigatórios:
 
