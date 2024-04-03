@@ -1,7 +1,7 @@
 import expres from "express";
-const route = expres.Router()
+const router = expres.Router()
 
-route.get('/',(req,res)=>{
+router.get('/teste',(req,res)=>{
     res.send("Pegou as rotas")
 })
-export default route;
+export default router;
