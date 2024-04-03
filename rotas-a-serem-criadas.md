@@ -27,22 +27,15 @@ com isso vc vai buscar no banco as salas que perternce aquele inventario
 
 # tela sala
 
-auditar bem como encontrado 
-4. patch-http://localhost:3000/sala/bem/encontrado/:id
-
-o front deve retornar na rota o id do bem e no body os seguintes dados
-- hist_estado_item = "não encontrado"
-- hist_item_ocioso = null
-
-auditar bem como não encontrado 
-5. patch-http://localhost:3000/bem/nao-encontrado/:id
+auditar bem como encontrado ou não encotrado
+4. patch-http://localhost:3000/sala/:idBem
 
 o front deve retornar na rota o id do bem e no body os seguintes dados
 - hist_estado_item
-- hist_item_ocioso
+- hist_item_ocioso 
 
 buscar bens da sala 
-6. get-http://localhost:3000/bem/:idSala
+6. get-http://localhost:3000/sala/:idSala
 deve receber por dentro da rota o id da sala e a rota deve retornar os seguintes dados
 - iten_id
 - iten_nome
@@ -51,7 +44,7 @@ deve receber por dentro da rota o id da sala e a rota deve retornar os seguintes
 # tela auditar bens
 
 busca os dados do bem 
-7. get-http://localhost:3000/bem/:id
+7. get-http://localhost:3000/bem/:idBem
 deve receber por dentro da rota o id do item e a rota deve retornar os seguintes dados
 - iten_id
 - iten_nome
@@ -59,7 +52,7 @@ deve receber por dentro da rota o id do item e a rota deve retornar os seguintes
 - iten_descrição
 
 audita bem passando o estado 
-8. putch-http://localhost:3000/bem/:id
+8. putch-http://localhost:3000/bem/:idBem
 o front deve retornar o id do item e os seguintes dados
 - hist_estado_item
 - hist_item_ocioso
@@ -67,9 +60,9 @@ o front deve retornar o id do item e os seguintes dados
 # tela cadastrar bem
 
 cria um bem passando todos os dados e o estado dele
-9. post-http://localhost:3000/bem
+9. post-http://localhost:3000/bemAdicionado
 
-o front deve retornar os dados para adicionar o bem 
+o front deve retornar os dados para adicionar o bem
 - iten_nome
 - iten_tombo
 - iten_descrição
