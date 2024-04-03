@@ -6,5 +6,5 @@ router
     .get("sala/idSala") // busca todos os bem pertencentes a uma sala
     .patch("sala/:idbem") // audita um bem
 
-export default router
+export default router;
 
