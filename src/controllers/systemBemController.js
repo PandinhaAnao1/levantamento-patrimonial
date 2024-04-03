@@ -10,3 +10,5 @@ class systemBemController {
         return null
     }
 }
+
+export default systemBemController;

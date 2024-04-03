@@ -7,3 +7,5 @@ class systemBemAdicionadoController {
         return null
     }
 }
+
+export default systemBemAdicionadoController;

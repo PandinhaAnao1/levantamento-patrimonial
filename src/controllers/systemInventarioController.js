@@ -1,7 +1,7 @@
 // import { prisma } from "../configs/prismaClient.js";
 // quando o prisma estiver funcionando é so descomentar
 
-class systemInventarioController {
+class systemBemController {
     static listarInventarios = (req, res) => {
         return null
     }
@@ -10,3 +10,5 @@ class systemInventarioController {
         return null
     }
 }
+
+export default systemBemController;

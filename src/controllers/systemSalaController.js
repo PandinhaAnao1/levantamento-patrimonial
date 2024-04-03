@@ -14,3 +14,5 @@ class systemSalaController {
         return null
     }
 }
+
+export default systemSalaController;
