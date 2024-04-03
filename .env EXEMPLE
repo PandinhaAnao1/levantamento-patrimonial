@@ -1,0 +1,8 @@
+# servidor
+PORT=3000
+
+# banco de dados
+DATABASE_URL="mysql://fslab:fslab@edurondon.tplinkdns.com:3341/db_Levantamento_Patrimonial"
+
+
+
