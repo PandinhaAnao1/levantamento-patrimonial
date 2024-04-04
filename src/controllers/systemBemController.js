@@ -1,5 +1,5 @@
-// import { prisma } from "../configs/prismaClient.js";
-// quando o prisma estiver funcionando é so descomentar
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 class systemBemController {
     static listarDados = (req, res) => {
