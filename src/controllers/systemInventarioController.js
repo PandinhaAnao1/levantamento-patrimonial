@@ -3,7 +3,20 @@
 
 class systemBemController {
     static listarInventarios = (req, res) => {
-        return null
+        try{
+            const unitExists = await prisma.system_InventarioRoutes.js.findMany({
+                select{
+                    inve_id,
+                    inve_nome,
+                    inve_data,
+                    inve_campus,
+                    inve_concluido,
+                },
+                
+            })
+                
+            
+        }return null
     }
 
     static criarInventario = (req, res) => {
