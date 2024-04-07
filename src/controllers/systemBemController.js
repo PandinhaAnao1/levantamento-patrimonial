@@ -3,21 +3,7 @@ class systemBemController {
     static listarDados = (req, res) => {
         return null
     } 
-    // hist_iten_id
-    // hist_au_in_id
-    // hist_estado_item
-    // hist_item_ocioso
-    // hist_imagem
-    // hist_encontrado
-    // hist_sala_id 
-    //SELECT * FROM auditor_inventario, itens, sala
-    //SELECT 
-	// au_in_id, iten_id,
-    // Sala_id
-	// FROM auditor_inventario, itens, sala
-    // WHERE au_in_id = 1 AND iten_id = 1 AND Sala_id = 1;
     static auditarBem = async (req, res) => {
-        console.log("Pegou")
         try{
             const{
                 item,auditor,
@@ -25,8 +11,7 @@ class systemBemController {
                 img,enctr,
                 sala
             } = req.body
-            console.log("Antes da consulta")
-            existeItem = await prisma.itens.findFirst({
+            const existeItem = await prisma.itens.findUnique({
                 where: {
                     iten_id: parseInt(item)
                 },
@@ -34,13 +19,48 @@ class systemBemController {
                     iten_id:true
                 }
             })
-            console.log("depois")
-            console.log(existeItem)
-
+            const existeAuditor = await prisma.auditor_inventario.findUnique({
+                where: {
+                    au_in_id: parseInt(auditor)
+                },
+                select:{
+                    au_in_id:true
+                }
+            })
+            const existeSala = await prisma.sala.findUnique({
+                where: {
+                    Sala_id: parseInt(sala)
+                },
+                select:{
+                    Sala_id:true
+                }
+            })
+            if(existeAuditor && existeItem && existeSala){
+                const historico = {
+                    hist_iten_id:parseInt(item),
+                    hist_au_in_id:parseInt(auditor),
+                    hist_estado_item:estado,
+                    hist_item_ocioso:parseInt(ocioso),
+                    hist_imagem:img,
+                    hist_encontrado:parseInt(enctr),
+                    hist_sala_id:parseInt(sala)
+                }
+                const historicoInserido = 
+                    await prisma.historico.create({
+                        data: historico
+                    })
+                console.log(historicoInserido)
+                res.status(201).json({
+                        "itemAuditado":historicoInserido,
+                    })
+                return;
+            }
+            res.status(400).json({
+                "Mensage":"Ocorreu um erro ao tentar auditar um item"
+            })
+            return;
         }catch(error){
-            console.log("pego no catch")
             res.status(500).send(error)
-
         }
     }
 }
