@@ -49,7 +49,6 @@ class systemBemController {
                     await prisma.historico.create({
                         data: historico
                     })
-                console.log(historicoInserido)
                 res.status(201).json({
                         "itemAuditado":historicoInserido,
                     })
