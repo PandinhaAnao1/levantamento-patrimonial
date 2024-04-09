@@ -2,26 +2,27 @@
 // quando o prisma estiver funcionando é so descomentar
 
 class systemBemController {
-    static listarInventarios = (req, res) => {
-        try{
-            const unitExists = await prisma.system_InventarioRoutes.js.findMany({
-                select{
-                    inve_id,
-                    inve_nome,
-                    inve_data,
-                    inve_campus,
-                    inve_concluido,
+    static listarInventarios = async (req, res) => {
+        try {
+            const unitExists = await prisma.sytemInventarioRoutes.findMany({
+                select:{
+                inve_id: true,
+                inve_nome: true,
+                inve_data: true,
+                inve_campus: true,
+                inve_concluido: true,
                 },
-                
-            })
-                
-            
-        }return null
-    }
+            });
+            return res.status(200).json(unitExists);
+    }catch (err){
 
-    static criarInventario = (req, res) => {
-        return null
+        console.error(err);
+        return res.status(500).json([{ error: true, code: 500, message: "OCORREU UM ERRO INTERNO"}])
+    }{
+
     }
+  }
+
 }
 
 export default systemBemController;
