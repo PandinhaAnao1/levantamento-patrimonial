@@ -13,11 +13,23 @@ class systemBemController {
                 inve_concluido: true,
                 },
             });
+
+            if(unitExists.length === 0){
+                return res.status(200).json([{
+                    error: true,
+                    code:400,
+                    message:"NÃO FOI ENCONTRADO NENHUM INVENTARIO"
+                }])
+            }
+
             return res.status(200).json(unitExists);
     }catch (err){
-
         console.error(err);
-        return res.status(500).json([{ error: true, code: 500, message: "OCORREU UM ERRO INTERNO"}])
+        return res.status(500).json([{ 
+            error: true, 
+            code: 500, 
+            message: "OCORREU UM ERRO INTERNO"
+        }])
     }{
 
     }
