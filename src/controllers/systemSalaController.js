@@ -1,26 +1,25 @@
 import { PrismaClient } from '@prisma/client'
-import { count } from 'console'
 const prisma = new PrismaClient()
 
 class systemSalaController {
     static listarSalas = async (req, res) => {
         try{
-            const idInventario = req.params.idInventario
+            const idInventario = parseInt(req.params.idInventario)
     
             if(!idInventario){
                 return res.status(400).json({
                     error: true,
                     code: 400,
-                    message: "id do inventario não foi fornescido"
+                    message: "id do inventario não é valido"
                 });
             }
+
     
             const salas = await prisma.inventarios.findMany({
                 where:{
                      inve_id: parseInt(idInventario)
                 },
                 select: {
-    
                     sala_invent: {
                         select: {
                             sala: {
@@ -34,7 +33,8 @@ class systemSalaController {
                 }
             })
 
-            if(salas){
+
+            if(salas.length === 0){
                 return res.status(400).json({
                     error: true,
                     code: 400,
@@ -44,13 +44,14 @@ class systemSalaController {
                 return res.status(200).json({
                     error: false,
                     code: 200,
-                    message: "Usuários encontrados",
+                    message: "salas encontradas",
                     data: salas
                 });
             }
     
 
-        }catch{
+        }catch(err){
+            console.log(err)
             return res.status(500).json({
                 error: true,
                 code: 500,
