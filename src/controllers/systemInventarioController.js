@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 class systemBemController {
     static listarInventarios = async (req, res) => {
         try {
-            const unitExists = await prisma.sytemInventarioRoutes.findMany({
+            const unitExists = await prisma.inventarios.findMany({
                 select:{
                 inve_id: true,
                 inve_nome: true,
