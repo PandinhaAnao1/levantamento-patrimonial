@@ -27,12 +27,14 @@ com isso vc vai buscar no banco as salas que perternce aquele inventario
 
 # tela sala
 
+prixima
 auditar bem como encontrado ou não encotrado
 4. patch-http://localhost:3000/sala/:idBem
 
 o front deve retornar na rota o id do bem e no body os seguintes dados
 - hist_estado_item
-- hist_item_ocioso 
+- hist_item_ocioso
+
 
 buscar bens da sala 
 6. get-http://localhost:3000/sala/:idSala
@@ -57,10 +59,26 @@ o front deve retornar o id do item e os seguintes dados
 - hist_estado_item
 - hist_item_ocioso
 
+
+# proximas a serem feitas
+
+
+
+# tela sala
+
+prixima
+auditar bem como encontrado ou não encotrado
+4. patch-http://localhost:3000/sala/:idBem
+
+o front deve retornar na rota o id do bem e no body os seguintes dados
+- hist_estado_item
+- hist_item_ocioso
+
 # tela cadastrar bem
 
+
 cria um bem passando todos os dados e o estado dele
-9. post-http://localhost:3000/bemAdicionado
+9. post-http://localhost:3000/bemAdicionado  - Daniel
 
 o front deve retornar os dados para adicionar o bem
 - iten_nome
@@ -68,3 +86,24 @@ o front deve retornar os dados para adicionar o bem
 - iten_descrição
 - hist_estado_item
 - hist_item_ocioso
+
+10. get-http://localhost:3000/conta - Adison 
+
+Retorna todos as contas cadastradas
+nome
+cpf 
+id
+
+11. get-http://localhost:3000/conta/:id - 
+
+retorna todos os dados de apenas uma conta
+
+12. post-http://localhost:3000/conta - Levi
+
+cria uma conta, você recebe todos os dados pelo body da requisição
+
+13. patch-http://localhost:3000/conta
+
+atualiza os dados de uma conta, deve receber todos os dados atualizados pelo body, e atualizar no banco a conta.
+
+
