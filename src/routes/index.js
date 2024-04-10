@@ -4,6 +4,7 @@ import bem from "./systemBemRoutes.js"
 import bemAdicionados from "./systemBemAdicionadoRoutes.js"
 import inventario from "./systemInventarioRoutes.js"
 import sala from "./systemSalaRoutes.js"
+import conta from "./systemContaRouter.js"
 
 
 const routes = (app)=>{
@@ -13,7 +14,8 @@ const routes = (app)=>{
         bem,
         bemAdicionados,
         inventario,
-        sala
+        sala,
+        conta
     );
 };
 
