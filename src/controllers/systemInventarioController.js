@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { prisma } from "../configs/prismaClient.js"
 
 class systemBemController {
     static listarInventarios = async (req, res) => {
