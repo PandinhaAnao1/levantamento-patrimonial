@@ -1,21 +1,19 @@
 import express  from "express";
-import teste from "./listarTes.js"
-import bem from "./systemBemRoutes.js"
-import bemAdicionados from "./systemBemAdicionadoRoutes.js"
-import inventario from "./systemInventarioRoutes.js"
-import sala from "./systemSalaRoutes.js"
-import conta from "./systemContaRouter.js"
+import routerBem from "./BemRoutes.js"
+import routerBemAdicionados from "./BemAdicionadoRoutes.js"
+import routerInventario from "./InventarioRoutes.js"
+import routerSala from "./SalaRoutes.js"
+import routerConta from "./ContaRouter.js"
 
 
 const routes = (app)=>{
     app.use(
         express.json(),
-        teste,
-        bem,
-        bemAdicionados,
-        inventario,
-        sala,
-        conta
+        routerBem,
+        routerBemAdicionados,
+        routerInventario,
+        routerSala,
+        routerConta
     );
 };
 

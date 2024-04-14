@@ -7,7 +7,7 @@ class systemContaController {
     }
 
     static listarPorId = (red, res) => {
-        
+        return null
     }
 
     static criarConta = (req, res) => {
