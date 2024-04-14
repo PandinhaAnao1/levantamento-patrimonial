@@ -1,8 +1,31 @@
 import { prisma } from "../configs/prismaClient.js"
 class systemBemController {
-    static listarDados = (req, res) => {
-        return null
-    } 
+
+    static listarDados = async (req, res) => {
+        try {
+            const userExists = await prisma.itens.findFirst({
+                where: {
+                    iten_id: parseInt(req.params.idBem),
+                },
+                select: {
+                    iten_nome:true,
+                    iten_id:true,
+                    iten_tombo:true,
+                    iten_responsavel:true,
+                    iten_decri__o:true,
+                }
+            })
+        
+            
+            return res.status(200).json(userExists);
+            
+
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json([{ error: true, code: 500, message: "Error interno do Servidor"}])
+        }
+    }
+    
     static auditarBem = async (req, res) => {
         try{
             const{
