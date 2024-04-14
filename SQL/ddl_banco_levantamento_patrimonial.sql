@@ -165,7 +165,7 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- -----------------------------------------------------
 -- Table `levantamento_patrimonial`.`sala_invent`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `levantamento_patrimonial`.`sala_invent` (
+CREATE TABLE IF NOT EXISTS `levantamento_patrimonial`.`sala_inventario` (
   `sa_in_id` INT(11) NOT NULL AUTO_INCREMENT,
   `sa_in_sala_id` INT(11) NOT NULL,
   `sa_in_inve_id` INT(11) NOT NULL,
