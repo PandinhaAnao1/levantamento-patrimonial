@@ -40,9 +40,13 @@ class systemBemAdicionadoController {
                 }
             })
 
-
+            //Corrijir o parse int, deixar apenas nesses atributos:
+            //item_add_id,item_add_au_in_id,item_add_sala_id
+            //O item add id deve ser retirado pois a chave primaria é auto increment
+            //deve ser adicionado tambem ocioso com parser int pois ele é tyni int
             const unitExists = await prisma.bemAdicionado.create({
                 item_adicionado:{
+                    item_add_id:parseInt(item_add_id),
                     item_add_id:parseInt(item_add_id),
                     item_add_nome:parseInt(item_add_nome),
                     item_add_estado:(item_add_estado),
@@ -50,7 +54,6 @@ class systemBemAdicionadoController {
                     item_add_au_in_id:parseInt(item_add_au_in_id),
                     item_add_sala_id:parseInt(item_add_sala_id),
                     item_add_imagem:parseInt(item_add_imagem),
-                    item_add_id:parseInt(item_add_id)
                 }
 
             });

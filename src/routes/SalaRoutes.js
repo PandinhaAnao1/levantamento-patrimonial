@@ -1,10 +1,10 @@
 import express from "express";
-import systemSalaController from '../controllers/SalaController.js'
+import SalaController from '../controllers/SalaController.js'
 const router = express.Router();
 
 router
-    .get("/sala/:idSala", systemSalaController.listarbens) // busca todos os bem pertencentes a uma sala
-    .post("/sala/:idbem", systemSalaController.auditarBem) // audita um bem
+    .get("/sala/:idSala", SalaController.listarbens) // busca todos os bem pertencentes a uma sala
+    .post("/sala/:idbem", SalaController.auditarBem) // audita um bem
 
 export default router;
 

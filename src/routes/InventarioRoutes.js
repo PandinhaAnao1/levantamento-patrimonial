@@ -1,10 +1,10 @@
 import express from "express";
-import systemInventarioController from '../controllers/systemInventarioController.js'
+import InventarioController from '../controllers/InventarioController.js'
 const router = express.Router();
 
 router
-    .get("/inventario", systemInventarioController.listarInventarios) // Daniel criar a rota que buscar os inventarios
-    .get("/sala/:idInventario", systemInventarioController.listarSalas) //busca todas as salas pertencentes a um inventario
+    .get("/inventario", InventarioController.listarInventarios) // Daniel criar a rota que buscar os inventarios
+    .get("/sala/:idInventario", InventarioController.listarSalas) //busca todas as salas pertencentes a um inventario
     //.post("/inventario", systemInventarioController.criarInventario)
 
 
