@@ -12,7 +12,7 @@ class systemBemController {
                     iten_id:true,
                     iten_tombo:true,
                     iten_responsavel:true,
-                    iten_decri__o:true,
+                    //  iten_decri__o:true,
                 }
             })
         

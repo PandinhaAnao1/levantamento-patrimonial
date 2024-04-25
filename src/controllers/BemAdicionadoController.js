@@ -9,7 +9,7 @@ class systemBemAdicionadoController {
         const {
             item_add_id,
             item_add_nome,
-            item_add_descrição,
+            item_add_descricao,
             item_add_estado,
             item_au_in_id,
             item_add_imagem,
@@ -50,7 +50,7 @@ class systemBemAdicionadoController {
                     item_add_id:parseInt(item_add_id),
                     item_add_nome:parseInt(item_add_nome),
                     item_add_estado:(item_add_estado),
-                    item_add_descricao:parseInt(item_add_descrição),
+                    item_add_descricao:parseInt(item_add_descricao),
                     item_add_au_in_id:parseInt(item_add_au_in_id),
                     item_add_sala_id:parseInt(item_add_sala_id),
                     item_add_imagem:parseInt(item_add_imagem),

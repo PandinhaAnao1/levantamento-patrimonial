@@ -1,0 +1,13 @@
+services:
+  db:
+    build: ./mysql/
+    restart: always
+    env_file:
+      - ./db.env
+    environment:
+      MYSQL_ROOT_PASSWORD: fslab
+      MYSQL_DATABASE: db_Levantamento_Patrimonial
+      MYSQL_USER: levantamento
+      MYSQL_PASSWORD: fslab
+    ports:
+      - '3307:3306'
