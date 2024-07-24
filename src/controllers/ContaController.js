@@ -41,8 +41,6 @@ class ContaController {
             code: 500, 
             message: "OCORREU UM ERRO INTERNO"
         }])
-    }{
-
     }
     }
 
