@@ -1,5 +1,5 @@
 import express from "express";
-import BemAdicionadoController from '../controllers/BemAdicionadoController.js'
+import BemAdicionadoController from '../controllers/AdicionarBemController.js'
 const router = express.Router();
 
 router

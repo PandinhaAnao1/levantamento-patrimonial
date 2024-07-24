@@ -34,10 +34,6 @@ class systemBemController {
     }
   }
 
-  static listarPorId = (req, res) => {
-    return null
-    }
-
   static listarSalas = async (req, res) => {
     try{
         const idInventario = parseInt(req.params.id)

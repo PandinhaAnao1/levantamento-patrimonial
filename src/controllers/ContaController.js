@@ -3,7 +3,7 @@ import { prisma } from "../configs/prismaClient.js"
 class ContaController {
 
     static listarContas = (req, res) => {
-        return null
+        return null // listar todas as contas
     }
 
     static listarPorId = async (req, res) => {
@@ -45,11 +45,11 @@ class ContaController {
     }
 
     static criarConta = (req, res) => {
-        return null
+        return null // criar a conta com todos os dados
     }
 
     static atualizarConta = (req, res) => {
-        return null
+        return null // atualiza todos os campos
     }
 }
 
