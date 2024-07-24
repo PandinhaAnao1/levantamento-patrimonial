@@ -5,7 +5,7 @@ class systemBemController {
         try {
             const userExists = await prisma.itens.findFirst({
                 where: {
-                    iten_id: parseInt(req.params.idBem),
+                    iten_id: parseInt(req.params.id),
                 },
                 select: {
                     iten_nome:true,
