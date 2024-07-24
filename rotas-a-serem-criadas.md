@@ -10,31 +10,85 @@ Rota generica que retorna todos os inventarios paginados para o usuario.
 #### Rota:
 <div>http://localhost:3000/invetario<div>
 
-#### Dados:
-<ul>
-    <li>id do iventario</li>
-    <li>data do iventario</li>
-    <li>campus do iventario</li>
-    <li>nome do iventario</li>
-    <li>concluido do iventario</li>
-</ul>
+#### Saída:
+```json
+
+    "pagina": 1,
+    "status": 200,
+    "quantidade": 300,
+    "data":[
+        {
+            "id":1,
+            "data":"2000-09-11",
+            "campus":10,
+            "nome":"Inventario do campus vilhena audição"
+        },
+        {
+            "id":2,
+            "data":"2001-09-14",
+            "campus":11,
+            "nome":"Inventario do campus colorado audição"
+        }
+    ]
+
+```
+### GET ID:
+
+#### Descrição:
+Rota generica que retorna todos os inventarios paginados para o usuario.
+
+#### Rota:
+<div>http://localhost:3000/invetario<div>
+
+#### Saída:
+```json
+{
+  "data": {
+    "_id": "66674b51d84e8bbf8644b973",
+    "nome": "Inventario do campus vilhena",
+    "campus":{
+        "_id": 10,
+        "nome":"Campus vilhena"
+    },
+    "status": true,
+    "expiracao":"2024-06-23",
+    "created_at": "2024-06-10",
+    "updated_at": "2024-06-10"
+  },
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+
+
+```
+
 
 ### POST:
 
 #### Descrição:
 
-Rota que cria um inventario 
+Rota que cria um novo inventario com dados de um campos o nome e a data de duração
 
 #### Rota:
 <div>http://localhost:3000/invetario<div>
 
-#### Dados:
+#### Entrada:
 <ul>
     <li>Nome do iventario</li>
     <li>Data do iventario</li>
     <li>Campus do iventario</li>
+    <li>Importar o csv<li>
 </ul>
 
+#### Saida:
+<ul>
+    <li>Id do iventario</li>
+    <li>Nome do iventario</li>
+    <li>Data do iventario</li>
+    <li>Campus do iventario</li>
+</ul>
 
 ### GET:
 
