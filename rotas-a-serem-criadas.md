@@ -1,28 +1,58 @@
-# tela Inventarios
+# Rotas:
 
-1. get-http://localhost:3000/invetario
-dados que devem retorar:
-- inve_id
-- inve_nome
-- inve_data
-- inve_campus
-- inve_concluido
+## Inventarios:
 
-2. post-http://localhost:3000/invetario
-deve receber do front por meio do body
-- inve_nome
-- inve_data
-- inve_campus
+### GET:
 
-# tela salas
+#### Descrição:
+Rota generica que retorna todos os inventarios paginados para o usuario.
 
-busca todas as salas que pertence ao invetario
-3. get-http://localhost:3000/sala/:idInventario
-deve receber por dentro da rota o idInventario com o id do inventario
-com isso vc vai buscar no banco as salas que perternce aquele inventario
-- sala_id
-- sala_nome
-<br>de todas as salas
+#### Rota:
+<div>http://localhost:3000/invetario<div>
+
+#### Dados:
+<ul>
+    <li>id do iventario</li>
+    <li>data do iventario</li>
+    <li>campus do iventario</li>
+    <li>nome do iventario</li>
+    <li>concluido do iventario</li>
+</ul>
+
+### POST:
+
+#### Descrição:
+
+Rota que cria um inventario 
+
+#### Rota:
+<div>http://localhost:3000/invetario<div>
+
+#### Dados:
+<ul>
+    <li>Nome do iventario</li>
+    <li>Data do iventario</li>
+    <li>Campus do iventario</li>
+</ul>
+
+
+### GET:
+
+#### Descrição:
+Rota que lista todas as salas a que existem em um inventario de forma paginada.
+#### Rota:
+<div>http://localhost:3000/invetario/sala/:id<div>
+
+#### Dados:
+<ul>
+    <li>id da sala</li>
+    <li>nome da sala</li>
+</ul>
+
+
+
+## Tela salas:
+
 
 
 # tela sala
