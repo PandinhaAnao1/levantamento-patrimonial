@@ -1,10 +1,6 @@
 import {prisma} from '../configs/prismaClient.js'
 
 class systemSalaController {
-    static listarSalas = (req, res) => {
-        return null
-    }
-    
 
     static listarBensSalas = async (req, res) => {
    
