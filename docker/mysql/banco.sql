@@ -75,7 +75,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `db_Levantamento_Patrimonial`.`sala`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`sala` (
-  `Sala_id` INT NOT NULL AUTO_INCREMENT,
+  `sala_id` INT NOT NULL AUTO_INCREMENT,
   `sala_nome` VARCHAR(150) NOT NULL,
   PRIMARY KEY (`Sala_id`),
   UNIQUE INDEX `Sala_id_UNIQUE` (`Sala_id` ASC))

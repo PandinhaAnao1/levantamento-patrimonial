@@ -3,8 +3,6 @@ import SalaController from '../controllers/SalaController.js'
 const router = express.Router();
 
 router
-    .get("/sala/:idSala", SalaController.listarbens) // busca todos os bem pertencentes a uma sala
-    .post("/sala/:idbem", SalaController.auditarBem) // audita um bem
+    .get("/sala_bens/:id", SalaController.listarbens) // busca todos os bem pertencentes a uma sala
 
 export default router;
-
