@@ -6,7 +6,7 @@ class systemSalaController {
     }
     
 
-    static listarbens = async (req, res) => {
+    static listarBensSalas = async (req, res) => {
    
         try {
             const id = req.params.id;

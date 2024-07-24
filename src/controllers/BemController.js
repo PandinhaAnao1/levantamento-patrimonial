@@ -1,7 +1,7 @@
 import { prisma } from "../configs/prismaClient.js"
 class systemBemController {
 
-    static listarDados = async (req, res) => {
+    static listarPorId = async (req, res) => {
         try {
             const userExists = await prisma.itens.findFirst({
                 where: {
