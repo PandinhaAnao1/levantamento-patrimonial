@@ -34,9 +34,13 @@ class systemBemController {
     }
   }
 
+  static listarPorId = (req, res) => {
+    return null
+    }
+
   static listarSalas = async (req, res) => {
     try{
-        const idInventario = parseInt(req.params.idInventario)
+        const idInventario = parseInt(req.params.id)
 
         if(!idInventario){
             return res.status(400).json({
@@ -56,8 +60,8 @@ class systemBemController {
                     select: {
                         sala: {
                             select:{
-                                Sala_id: true,
-                                Sala_Nome: true
+                                sala_id: true,
+                                sala_nome: true
                             }
                         }
                     }

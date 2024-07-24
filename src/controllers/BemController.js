@@ -1,18 +1,18 @@
 import { prisma } from "../configs/prismaClient.js"
 class systemBemController {
 
-    static listarDados = async (req, res) => {
+    static listarPorId = async (req, res) => {
         try {
             const userExists = await prisma.itens.findFirst({
                 where: {
-                    iten_id: parseInt(req.params.idBem),
+                    iten_id: parseInt(req.params.id),
                 },
                 select: {
                     iten_nome:true,
                     iten_id:true,
                     iten_tombo:true,
                     iten_responsavel:true,
-                    iten_decri__o:true,
+                    //  iten_decri__o:true,
                 }
             })
         
