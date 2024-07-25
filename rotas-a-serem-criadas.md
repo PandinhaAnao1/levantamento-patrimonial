@@ -173,38 +173,79 @@ Rota que lista todas as salas a que existem dentro de um inventario de forma pag
 }
 ```
 
-
-## Tela salas:
-
-### GET POR ID DE INVENTARIO:
+### GET POR ID DE INVENTARIO COM A QUERY DO NOME DA SALA:
 
 
 #### Descrição:
-Rota que lista todas as salas a que existem filtrando por um inventario de forma paginada.
+Rota que lista todas as salas a que existem dentro de um inventario de forma paginada.
 #### Rota:
-<div>http://localhost:3000/sala?inventario="10"<div>
+<div>http://localhost:3000/invetario/{id}/sala<div>
+
+#### Saida:
+
+
+```json
+{
+  "data": [
+    {
+        "_id": 1,
+        "nome": "Sala ao lado do bebedouro",
+        "campus": 10,
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+    {
+        "_id": 2,
+        "nome": "Sala de refeições",
+        "campus": 10,
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+  ],
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
+
+
+
+## Tela salas:
+
+### GET ID:
+
+
+#### Descrição:
+Rota que lista todos os itens presentes naquela sala.
+#### Rota:
+<div>http://localhost:3000/sala/{id}/bem"<div>
 
 #### Dados:
 
 ```json
 {
-    "nome": "Inventario do campus vilhena",
-    "campus":10,
-    "status": true,
-    "expiracao":"2024-06-23",
-    "created_at": "2024-06-10",
-    "importacao_do_csv": "dados do csv"
+    "data": {
+        "_id": 2,
+        "nome": "Sala de refeições",
+        "campus":{
+            "_id": 10,
+            "nome":"Campus vilhena"
+        },
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
 }
 ```
-<ul>
-    <li>id da sala</li>
-    <li>nome da sala</li>
-</ul>
 
 
 
 
-# tela sala
+
 
 prixima
 auditar bem como encontrado ou não encotrado
