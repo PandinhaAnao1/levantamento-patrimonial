@@ -14,7 +14,7 @@ class systemBemController {
             });
 
             if(unitExists.length === 0){
-                return res.status(200).json([{
+                return res.status(400).json([{
                     error: true,
                     code:400,
                     message:"NÃO FOI ENCONTRADO NENHUM INVENTARIO"
@@ -56,7 +56,7 @@ class systemBemController {
                     select: {
                         sala: {
                             select:{
-                                sala_id: true,
+                                Sala_id: true,
                                 sala_nome: true
                             }
                         }
