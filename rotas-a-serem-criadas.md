@@ -1,31 +1,251 @@
-# tela Inventarios
+# Rotas:
 
-1. get-http://localhost:3000/invetario
-dados que devem retorar:
-- inve_id
-- inve_nome
-- inve_data
-- inve_campus
-- inve_concluido
+## Inventarios:
 
-2. post-http://localhost:3000/invetario
-deve receber do front por meio do body
-- inve_nome
-- inve_data
-- inve_campus
+<table>
+    <tr>
+        <th>Verbo</th>
+        <th>Funcionalidade</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>listar todos os dados</td>
+    </tr>
+    <tr>
+        <td>GET ID</td>
+        <td>lista um item especifico</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>cria um novo inventario</td>
+    </tr>
+</table>
 
-# tela salas
+### GET:
 
-busca todas as salas que pertence ao invetario
-3. get-http://localhost:3000/sala/:idInventario
-deve receber por dentro da rota o idInventario com o id do inventario
-com isso vc vai buscar no banco as salas que perternce aquele inventario
-- sala_id
-- sala_nome
-<br>de todas as salas
+#### Descrição:
+Rota generica que retorna todos os inventarios paginados para o usuario.
+
+#### Rota:
+<div>http://localhost:3000/invetario<div>
+
+#### Saída:
+```json
+{
+    "data":[
+        {
+            "_id": 1,
+            "nome": "Inventario do campus vilhena",
+            "campus":10,
+            "status": true,
+            "expiracao":"2024-06-23",
+            "created_at": "2024-06-10",
+            "updated_at": "2024-06-10"
+        },
+        {
+            "id":2,
+            "nome":"Inventario do campus colorado audição",
+            "campus":10,
+            "status": true,
+            "expiracao":"2024-06-23",
+            "created_at": "2024-06-10",
+            "updated_at": "2024-06-10"
+        }
+    ],      
+    "error": false,
+    "code": 200,
+    "total_paginas":10,
+    "pagina": 1,
+    "quantidade": 300,
+    "message": "Requisição bem sucedida.",
+    "errors": [],
+}
+```
+### GET ID:
+
+#### Descrição:
+Rota generica que retorna um objeto especifico por id.
+
+#### Rota:
+<div>http://localhost:3000/invetario/{id}<div>
+
+#### Saída:
+```json
+{
+  "data": {
+    "_id": 1,
+    "nome": "Inventario do campus vilhena",
+    "campus":{
+        "_id": 10,
+        "nome":"Campus vilhena"
+    },
+    "status": true,
+    "expiracao":"2024-06-23",
+    "created_at": "2024-06-10",
+    "updated_at": "2024-06-10"
+  },
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
 
 
-# tela sala
+### POST:
+
+#### Descrição:
+
+Rota que cria um novo inventario com dados de um campos o nome e a data de duração
+
+#### Rota:
+<div>http://localhost:3000/invetario<div>
+
+#### Entrada:
+
+```json
+{
+    "nome": "Inventario do campus vilhena",
+    "campus":10,
+    "status": true,
+    "expiracao":"2024-06-23",
+    "created_at": "2024-06-10",
+    "importacao_do_csv": "dados do csv"
+}
+```
+
+#### Saida:
+
+```json
+{
+  "data": {
+    "_id": 1,
+    "nome": "Inventario do campus vilhena",
+    "campus":{
+        "_id": 10,
+        "nome":"Campus vilhena"
+    },
+    "status": true,
+    "expiracao":"2024-06-23",
+    "created_at": "2024-06-10",
+    "updated_at": "2024-06-10"
+  },
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
+
+### GET POR ID DE INVENTARIO:
+
+
+#### Descrição:
+Rota que lista todas as salas a que existem dentro de um inventario de forma paginada.
+#### Rota:
+<div>http://localhost:3000/invetario/{id}/sala<div>
+
+#### Saida:
+
+
+```json
+{
+  "data": [
+    {
+        "_id": 1,
+        "nome": "Sala ao lado do bebedouro",
+        "campus": 10,
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+    {
+        "_id": 2,
+        "nome": "Sala de refeições",
+        "campus": 10,
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+  ],
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
+
+### GET POR ID DE INVENTARIO COM A QUERY DO NOME DA SALA:
+
+
+#### Descrição:
+Rota que lista todas as salas a que existem dentro de um inventario de forma paginada.
+#### Rota:
+<div>http://localhost:3000/invetario/{id}/sala<div>
+
+#### Saida:
+
+
+```json
+{
+  "data": [
+    {
+        "_id": 1,
+        "nome": "Sala ao lado do bebedouro",
+        "campus": 10,
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+    {
+        "_id": 2,
+        "nome": "Sala de refeições",
+        "campus": 10,
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+  ],
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
+
+
+
+## Tela salas:
+
+### GET ID:
+
+
+#### Descrição:
+Rota que lista todos os itens presentes naquela sala.
+#### Rota:
+<div>http://localhost:3000/sala/{id}/bem"<div>
+
+#### Dados:
+
+```json
+{
+    "data": {
+        "_id": 2,
+        "nome": "Sala de refeições",
+        "campus":{
+            "_id": 10,
+            "nome":"Campus vilhena"
+        },
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
+
+
+
+
+
 
 prixima
 auditar bem como encontrado ou não encotrado
