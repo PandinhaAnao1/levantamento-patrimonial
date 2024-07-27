@@ -137,7 +137,7 @@ Rota que cria um novo inventario com dados de um campos o nome e a data de dura�
 }
 ```
 
-### GET POR ID DE INVENTARIO:
+### GET SALAS POR ID DE INVENTARIO:
 
 
 #### Descrição:
@@ -172,48 +172,10 @@ Rota que lista todas as salas a que existem dentro de um inventario de forma pag
   "errors": []
 }
 ```
-
-### GET POR ID DE INVENTARIO COM A QUERY DO NOME DA SALA:
-
-
-#### Descrição:
-Rota que lista todas as salas a que existem dentro de um inventario de forma paginada.
-#### Rota:
-<div>http://localhost:3000/invetario/{id}/sala<div>
-
-#### Saida:
-
-
-```json
-{
-  "data": [
-    {
-        "_id": 1,
-        "nome": "Sala ao lado do bebedouro",
-        "campus": 10,
-        "created_at": "2024-06-10",
-        "updated_at": "2024-06-10"
-    },
-    {
-        "_id": 2,
-        "nome": "Sala de refeições",
-        "campus": 10,
-        "created_at": "2024-06-10",
-        "updated_at": "2024-06-10"
-    },
-  ],
-  "error": false,
-  "code": 200,
-  "message": "Requisição bem sucedida.",
-  "errors": []
-}
-```
-
-
 
 ## Tela salas:
 
-### GET ID:
+### GET BENS POR ID DE SALAS:
 
 
 #### Descrição:
@@ -221,7 +183,7 @@ Rota que lista todos os itens presentes naquela sala.
 #### Rota:
 <div>http://localhost:3000/sala/{id}/bem"<div>
 
-#### Dados:
+#### Saida:
 
 ```json
 {
@@ -241,6 +203,76 @@ Rota que lista todos os itens presentes naquela sala.
   "errors": []
 }
 ```
+
+
+
+
+# POST PARA AUDITAR UM BEM POR ID:
+
+
+#### Descrição:
+Auditar bem como encontrado ou não encotrado
+#### Rota:
+<div>http://localhost:3000/sala/{id}/bem/{id}"<div>
+
+#### Entrada:
+
+```json
+{
+    "_id": 2,
+    "nome": "Sala de refeições",
+    "estado_item": "para uso",
+    "item_ocioso": false
+}
+```
+
+#### Saida:
+
+```json
+{
+    "data": {
+        "_id": 2,
+        "nome": "Sala de refeições",
+        "campus":{
+            "_id": 10,
+            "nome":"Campus vilhena"
+        },
+        "created_at": "2024-06-10",
+        "updated_at": "2024-06-10"
+    },
+  "error": false,
+  "code": 200,
+  "message": "Requisição bem sucedida.",
+  "errors": []
+}
+```
+
+
+
+
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+# COLOCAR A OPÇÃO NA TELA DOS ITENS ABRIR UMA CAMERA E POR ISSO,
+ESCANIAR O TOMBOM PRA ISSO EU DEVO CRIAR UMA ROTA QUE VAI RECEBER A
+QUERY COM TOMBO 
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -13,7 +13,8 @@ class systemBemController {
                     iten_tombo:true,
                     iten_responsavel:true,
                     //  iten_decri__o:true,
-                }
+                },
+
             })
         
             
