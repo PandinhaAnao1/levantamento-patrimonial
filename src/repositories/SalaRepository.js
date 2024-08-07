@@ -1,4 +1,4 @@
-import {prisma} from '../configs/prismaClient.js'
+import { prisma } from "../configs/prismaClient.js"
 
 class salaRepository{
 
