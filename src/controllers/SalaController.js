@@ -1,4 +1,5 @@
 import {prisma} from '../configs/prismaClient.js'
+import salaService  from '../services/salaService.js';
 
 class systemSalaController {
 
@@ -6,9 +7,8 @@ class systemSalaController {
    
         try {
             const id = req.params.id;
-            
 
-            const itemExiste = await prisma.itens.findMany({
+            let filtro = {
                 where: {
                     iten_sala_id: parseInt(id)
                 },
@@ -18,7 +18,9 @@ class systemSalaController {
                     iten_nome: true,
                     iten_tombo: true,
                 }
-            })
+            }
+
+            const itemExiste = await salaService.listarPorIdSala(filtro)
 
             if (itemExiste.length === 0) {
                 return res.status(400).json([{
