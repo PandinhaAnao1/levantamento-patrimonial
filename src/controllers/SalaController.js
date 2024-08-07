@@ -1,4 +1,3 @@
-import {prisma} from '../configs/prismaClient.js'
 import salaService  from '../services/salaService.js';
 
 class systemSalaController {

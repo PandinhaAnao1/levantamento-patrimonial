@@ -29,8 +29,6 @@ class systemBemController {
             code: 500, 
             message: "OCORREU UM ERRO INTERNO"
         }])
-    }{
-
     }
   }
 

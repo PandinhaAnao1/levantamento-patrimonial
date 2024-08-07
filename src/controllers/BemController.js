@@ -1,9 +1,11 @@
-import { prisma } from "../configs/prismaClient.js"
+import bemService from "../services/bemService.js";
+
 class systemBemController {
 
     static listarPorId = async (req, res) => {
         try {
-            const userExists = await prisma.itens.findFirst({
+
+            let filtro = {
                 where: {
                     iten_id: parseInt(req.params.id),
                 },
@@ -14,9 +16,10 @@ class systemBemController {
                     iten_responsavel:true,
                     //  iten_decri__o:true,
                 }
-            })
+            }
+
+            const userExists = await bemService.listarById(filtro)
         
-            
             return res.status(200).json(userExists);
             
 
@@ -69,7 +72,7 @@ class systemBemController {
             //item_add_id,item_add_au_in_id,item_add_sala_id
             //O item add id deve ser retirado pois a chave primaria é auto increment
             //deve ser adicionado tambem ocioso com parser int pois ele é tyni int
-            const unitExists = await prisma.bemAdicionado.create({
+            let data = {
                 item_adicionado:{
                     item_add_nome:parseInt(item_add_nome),
                     item_add_estado:(item_add_estado),
@@ -79,8 +82,10 @@ class systemBemController {
                     item_add_imagem:parseInt(item_add_imagem),
                     item_add_ocioso:parseInt(item_add_ocioso),
                 }
+            }
 
-            });
+            const unitExists = await bemService.adicionarBem(data)
+
         return res.status(200).json(unitExists);
      }catch(err){
         console.error(err);
@@ -135,7 +140,7 @@ class systemBemController {
                     hist_sala_id:parseInt(sala)
                 }
                 const historicoInserido = 
-                    await prisma.historico.create({
+                    await bemService.auditarBem({
                         data: historico
                     })
                 res.status(201).json({
