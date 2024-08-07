@@ -1,3 +1,4 @@
+import { prisma } from "../configs/prismaClient.js"
 class salaRepository{
 
     async findById(filtro){

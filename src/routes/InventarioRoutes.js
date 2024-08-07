@@ -4,7 +4,7 @@ const router = express.Router();
 
 router
     .get("/inventarios", InventarioController.listarInventarios) // Daniel criar a rota que buscar os inventarios
-    .get("/inventarios/:id/salas/", InventarioController.listarSalas) //busca todas as salas pertencentes a um inventario
+    .get("/inventarios/:id/salas", InventarioController.listarSalas) //busca todas as salas pertencentes a um inventario
     //.post("/inventario", systemInventarioController.criarInventario)
 
 
