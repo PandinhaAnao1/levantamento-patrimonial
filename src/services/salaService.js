@@ -1,4 +1,3 @@
-import { deflate } from "zlib";
 import SalaRepository from "../repositories/SalaRepository.js";
 
 class salaService{
