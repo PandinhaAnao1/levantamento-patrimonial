@@ -49,7 +49,7 @@ class systemBemController {
 
         const salas = await prisma.inventarios.findMany({
             where:{
-                 inve_id: parseInt(idInventario)
+                inve_id: parseInt(idInventario)
             },
             select: {
                 sala_invent: {
