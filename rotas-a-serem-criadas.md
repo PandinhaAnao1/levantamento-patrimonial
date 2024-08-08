@@ -150,26 +150,26 @@ Rota que lista todas as salas a que existem dentro de um inventario de forma pag
 
 ```json
 {
-  "data": [
-    {
-        "_id": 1,
-        "nome": "Sala ao lado do bebedouro",
-        "campus": 10,
-        "created_at": "2024-06-10",
-        "updated_at": "2024-06-10"
-    },
-    {
-        "_id": 2,
-        "nome": "Sala de refeições",
-        "campus": 10,
-        "created_at": "2024-06-10",
-        "updated_at": "2024-06-10"
-    },
-  ],
-  "error": false,
-  "code": 200,
-  "message": "Requisição bem sucedida.",
-  "errors": []
+    "data": [
+        {
+            "_id": 1,
+            "nome": "Sala ao lado do bebedouro",
+            "campus": 10,
+            "created_at": "2024-06-10",
+            "updated_at": "2024-06-10"
+        },
+        {
+            "_id": 2,
+            "nome": "Sala de refeições",
+            "campus": 10,
+            "created_at": "2024-06-10",
+            "updated_at": "2024-06-10"
+        },
+    ],
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
 }
 ```
 
@@ -187,20 +187,33 @@ Rota que lista todos os itens presentes naquela sala.
 
 ```json
 {
-    "data": {
-        "_id": 2,
-        "nome": "Sala de refeições",
-        "campus":{
-            "_id": 10,
-            "nome":"Campus vilhena"
+    "data": [
+        {
+            "_id": 2,
+            "nome": "cadeira",
+            "tombo": 0001,
+            "responsavel": "Marcelo Augusto de Aguiar",
+            "descricao": "Descrição do Estado: Cadeira com leve desgaste e arranhões."
         },
-        "created_at": "2024-06-10",
-        "updated_at": "2024-06-10"
-    },
-  "error": false,
-  "code": 200,
-  "message": "Requisição bem sucedida.",
-  "errors": []
+        {
+            "_id": 3,
+            "nome": "mesa",
+            "tombo": 0002,
+            "responsavel": "Ana Souza",
+            "descricao": "Descrição do Estado: Mesa com manchas e leves arranhões."
+        },
+        {
+            "_id": 4,
+            "nome": "armário",
+            "tombo": 0003,
+            "responsavel": "Carlos Pereira",
+            "descricao": "Descrição do Estado: Armário com portas soltas e desgaste nas bordas."
+        }
+    ],
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
 }
 ```
 
@@ -211,7 +224,8 @@ Rota que lista todos os itens presentes naquela sala.
 
 
 #### Descrição:
-Auditar bem como encontrado ou não encotrado
+Auditar bem como encontrado ou não encontrado dentro de uma sala,
+essa rota deve ser um post pois, quando um item é encontrado ele não necessariamente vai estar 
 #### Rota:
 <div>http://localhost:3000/sala/{id}/bem/{id}"<div>
 
@@ -219,10 +233,13 @@ Auditar bem como encontrado ou não encotrado
 
 ```json
 {
-    "_id": 2,
-    "nome": "Sala de refeições",
-    "estado_item": "para uso",
-    "item_ocioso": false
+    "sala":10,
+    "item":11,
+    "auditor":2,
+    "estado":"Item apto para uso",
+    "descricao":"O item foi encontrado na sala de manutenções",
+    "ocioso":true,
+    "encontrado": true
 }
 ```
 
