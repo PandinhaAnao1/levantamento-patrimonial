@@ -1,27 +1,72 @@
-# Rotas:
 
-## Inventarios:
 
+--- OLHA A INOCENCIA DAS CRIANÇAS KKKKKKKK
+CRIAMOS UMA TABELA CHAMADA ITEM ADICIONADO SEM TOMBO
+QUANDO NÃO PRECISA POIS É SÓ DEIXAR O CAMPO TOMBO DE ITEM OPICIONAL
+OU SEJA QUAL A NECESSIDADE DE CRIAR UMA TABELA A PARTE COM OS MESMO CAMPOS
+COM OS MESMO RELACIONAMENTOS SENDO QUE ERA SO DEIXAR O CAMPO OPICIONALLLLLLLLLLLLL?????
+# INDEX
 <table>
     <tr>
         <th>Verbo</th>
         <th>Funcionalidade</th>
+        <th>Rota</th>
     </tr>
     <tr>
         <td>GET</td>
-        <td>listar todos os dados</td>
+        <td><a href="#listar_iventario">listar todos os dados</a></td>
+        <td>INVENTARIO</td>
     </tr>
     <tr>
         <td>GET ID</td>
-        <td>lista um item especifico</td>
+        <td><a href="#listar_iventario_id">lista um item especifico</a></td>
+        <td>INVENTARIO</td>
     </tr>
     <tr>
         <td>POST</td>
-        <td>cria um novo inventario</td>
+        <td><a href="#cadastra_iventario">cria um novo inventario</a></td>
+        <td>INVENTARIO</td>
+    </tr>
+    <tr>
+        <td>GET ID SALA</td>
+        <td><a href="#listar_iventario_id_sala">Na verdade essa rota vai ser uma query no get de salas</a></td>
+        <td>INVENTARIO</td>
+    </tr>
+    <tr>
+        <td>GET ID DE SALA</td>
+        <td><a href="#listar_bens_da_sala">tambem vai ser uma query no get de itens</a></td>
+        <td>SALAS</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td><a href="#auditar_bem">rota para poder auditar um bem</a></td>
+        <td>BEM</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td><a href="#cadastrar_bem">rota para cadastrar novos itens</a></td>
+        <td>BEM</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td><a href="#listar_usuario">rota para cadastrar novos itens</a></td>
+        <td>USUARIO</td>
     </tr>
 </table>
 
+<tr>
+        <td>POST</td>
+        <td><a href="#"></a></td>
+        <td>BEM</td>
+</tr>
+
+# Rotas:
+
+## INVENTARIO:
+
 ### GET:
+
+<a id="listar_iventario"></a>
 
 #### Descrição:
 Rota que vai retornar o inventario paginado, isso para poder ter uma visualização ampla de todos os inventários
@@ -64,6 +109,8 @@ de forma paginada, o retorno não deve conter os subcampos populados para não p
 ```
 ### GET ID:
 
+<a id="listar_iventario_id"></a>
+
 #### Descrição:
 Rota que retorna os dados do inventario como campus nome status etc, proposito da rota é poder
 detalhar mais sobre o inventario.
@@ -92,9 +139,9 @@ detalhar mais sobre o inventario.
   "errors": []
 }
 ```
-
-
 ### POST:
+
+<a id="cadastra_iventario"></a>
 
 #### Descrição:
 
@@ -139,8 +186,9 @@ inserir um csv com dados de um inventario, itens salas ect.
   "errors": []
 }
 ```
-
 ### GET SALAS POR ID DE INVENTARIO:
+
+<a id="listar_iventario_id_sala"></a>
 
 
 #### Descrição:
@@ -178,21 +226,15 @@ ampla de todos as salas onde o usuário vai poder procurar quais salas ele quer 
 ```
 
 ## SALAS:
-<table>
-    <tr>
-        <th>Verbo</th>
-        <th>Funcionalidade</th>
-    </tr>
-    <tr>
-        <td>POST</td>
-        <td> <a href="#auditar_bem">rota para poder auditar um bem</a></td>
-    </tr>
-</table>
 
-
-<a id="rota_bens_salas"></a>
+TEM QUE ADICIONAR 
+LISTAR AS SALAS
+CRIAR UMA SALA
+ATUALIZAR UMA SALA
 
 ### GET BENS DA SALAS:
+
+<a id="listar_bens_da_sala"></a>
 
 #### Descrição:
 
@@ -240,9 +282,9 @@ pagina deve retornar a quantidade de 10 itens
 
 ## BENS:
 
-<a id="auditar_bem"></a>
-
 ### POST PARA AUDITAR UM BEM POR ID:
+
+<a id="auditar_bem"></a>
 
 comentário: (Encontrado é um atributo sem função, pois se o item esta no histórico ele ja foi encontrado)
 
@@ -325,23 +367,162 @@ sala.
 }
 ```
 
-10. get-http://localhost:3000/conta - Adison 
+## USUARIO
 
-Retorna todos as contas cadastradas
-nome
-cpf 
-id
+### GET:
 
-11. get-http://localhost:3000/conta/:id - 
+<a id="listar_usuario"></a>
 
-retorna todos os dados de apenas uma conta
+#### Descrição:
 
-12. post-http://localhost:3000/conta - Levi
+Deve ser possivel listar quais usuario temos que poder ver quais usuario nosso sistema possui, para
+podermos vizualizarmos as usuario de forma paginada.
 
-cria uma conta, você recebe todos os dados pelo body da requisição
+#### Rota:
+            
+<div>http://localhost:3000/usuario"<div>
 
-13. patch-http://localhost:3000/conta
+#### Saida:
+```json
+{
+    "data": [
+        {
+            "_id": 3,
+            "email": "marta.silva@example.com",
+            "funcao": "coordenador",
+            "status": true,
+            "nome": "Marta Silva"
+        },
+        {
+            "_id": 4,
+            "email": "joao.pereira@example.com",
+            "funcao": "desenvolvedor",
+            "status": false,
+            "nome": "João Pereira"
+        },
+        {
+            "_id": 5,
+            "email": "lucas.santos@example.com",
+            "funcao": "analista",
+            "status": true,
+            "nome": "Lucas Santos"
+        },
+    ],
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "total": 1000,
+    "total_pagina":10,
+    "errors": []
+}
+```
 
-atualiza os dados de uma conta, deve receber todos os dados atualizados pelo body, e atualizar no banco a conta.
+### GET ID:
+
+<a id="listar_usuario_id"></a>
+
+#### Descrição:
+
+Deve ser possivel listar quais usuario temos que poder ver quais usuario nosso sistema possui, para
+podermos vizualizarmos as usuario de forma paginada.
+
+#### Rota:
+            
+<div>http://localhost:3000/usuario/{id}"<div>
+
+#### Saida:
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": true,
+    "nome": "Lucas Santos",
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
+
+### POST:
+<a id="cadastrar_usuario"></a>
+
+#### Descrição:
+Para o sistema funcionar devemos ser capaz de cadastrar um usuario para poder fazer
+a audição dos itens e ultilizar o sistema.
+#### Rota:
+            
+<div>http://localhost:3000/usuario/"<div>
+
+#### Entrada:
+
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": true,
+    "nome": "Lucas Santos",
+}
+```
+
+#### Saida:
+
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": true,
+    "nome": "Lucas Santos",
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
+
+
+
+### PATCH:
+<a id="atualizar_usuario"></a>
+
+#### Descrição:
+
+O sistema deve ser capaz de atualizar um usuario alterando os atributo desse usario, vai
+ser usada principalmente quando for alterar o status do usuario para inativo,
+#### Rota:
+            
+<div>http://localhost:3000/usuario/"<div>
+
+#### Entrada:
+
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": false,
+    "nome": "Lucas Santos",
+}
+```
+
+#### Saida:
+
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": false,
+    "nome": "Lucas Santos",
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
+
 
 
