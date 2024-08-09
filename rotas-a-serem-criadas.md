@@ -1,30 +1,76 @@
-# Rotas:
 
-## Inventarios:
 
+--- OLHA A INOCENCIA DAS CRIANÇAS KKKKKKKK
+CRIAMOS UMA TABELA CHAMADA ITEM ADICIONADO SEM TOMBO
+QUANDO NÃO PRECISA POIS É SÓ DEIXAR O CAMPO TOMBO DE ITEM OPICIONAL
+OU SEJA QUAL A NECESSIDADE DE CRIAR UMA TABELA A PARTE COM OS MESMO CAMPOS
+COM OS MESMO RELACIONAMENTOS SENDO QUE ERA SO DEIXAR O CAMPO OPICIONALLLLLLLLLLLLL?????
+# INDEX
 <table>
     <tr>
         <th>Verbo</th>
         <th>Funcionalidade</th>
+        <th>Rota</th>
     </tr>
     <tr>
         <td>GET</td>
-        <td>listar todos os dados</td>
+        <td><a href="#listar_iventario">listar todos os dados</a></td>
+        <td>INVENTARIO</td>
     </tr>
     <tr>
         <td>GET ID</td>
-        <td>lista um item especifico</td>
+        <td><a href="#listar_iventario_id">lista um item especifico</a></td>
+        <td>INVENTARIO</td>
     </tr>
     <tr>
         <td>POST</td>
-        <td>cria um novo inventario</td>
+        <td><a href="#cadastra_iventario">cria um novo inventario</a></td>
+        <td>INVENTARIO</td>
+    </tr>
+    <tr>
+        <td>GET ID SALA</td>
+        <td><a href="#listar_iventario_id_sala">Na verdade essa rota vai ser uma query no get de salas</a></td>
+        <td>INVENTARIO</td>
+    </tr>
+    <tr>
+        <td>GET ID DE SALA</td>
+        <td><a href="#listar_bens_da_sala">tambem vai ser uma query no get de itens</a></td>
+        <td>SALAS</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td><a href="#auditar_bem">rota para poder auditar um bem</a></td>
+        <td>BEM</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td><a href="#cadastrar_bem">rota para cadastrar novos itens</a></td>
+        <td>BEM</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td><a href="#listar_usuario">rota para cadastrar novos itens</a></td>
+        <td>USUARIO</td>
     </tr>
 </table>
 
+<tr>
+        <td>POST</td>
+        <td><a href="#"></a></td>
+        <td>BEM</td>
+</tr>
+
+# Rotas:
+
+## INVENTARIO:
+
 ### GET:
 
+<a id="listar_iventario"></a>
+
 #### Descrição:
-Rota generica que retorna todos os inventarios paginados para o usuario.
+Rota que vai retornar o inventario paginado, isso para poder ter uma visualização ampla de todos os inventários
+de forma paginada, o retorno não deve conter os subcampos populados para não pesar a rota e a API.
 
 #### Rota:
 <div>http://localhost:3000/invetario<div>
@@ -63,8 +109,11 @@ Rota generica que retorna todos os inventarios paginados para o usuario.
 ```
 ### GET ID:
 
+<a id="listar_iventario_id"></a>
+
 #### Descrição:
-Rota generica que retorna um objeto especifico por id.
+Rota que retorna os dados do inventario como campus nome status etc, proposito da rota é poder
+detalhar mais sobre o inventario.
 
 #### Rota:
 <div>http://localhost:3000/invetario/{id}<div>
@@ -90,13 +139,14 @@ Rota generica que retorna um objeto especifico por id.
   "errors": []
 }
 ```
-
-
 ### POST:
+
+<a id="cadastra_iventario"></a>
 
 #### Descrição:
 
-Rota que cria um novo inventario com dados de um campos o nome e a data de duração
+Rota que cria um novo inventario com dados de um campos o nome e a data de duração, tambem futuramente vai ser possivel 
+inserir um csv com dados de um inventario, itens salas ect.
 
 #### Rota:
 <div>http://localhost:3000/invetario<div>
@@ -136,17 +186,19 @@ Rota que cria um novo inventario com dados de um campos o nome e a data de dura�
   "errors": []
 }
 ```
-
 ### GET SALAS POR ID DE INVENTARIO:
+
+<a id="listar_iventario_id_sala"></a>
 
 
 #### Descrição:
-Rota que lista todas as salas a que existem dentro de um inventario de forma paginada.
+Rota que lista todas as salas a que existem dentro de um inventario de forma paginada, isso para poder tem uma visão 
+ampla de todos as salas onde o usuário vai poder procurar quais salas ele quer selecionar.
+
 #### Rota:
 <div>http://localhost:3000/invetario/{id}/sala<div>
 
 #### Saida:
-
 
 ```json
 {
@@ -173,13 +225,22 @@ Rota que lista todas as salas a que existem dentro de um inventario de forma pag
 }
 ```
 
-## Tela salas:
+## SALAS:
 
-### GET BENS POR ID DE SALAS:
+TEM QUE ADICIONAR 
+LISTAR AS SALAS
+CRIAR UMA SALA
+ATUALIZAR UMA SALA
 
+### GET BENS DA SALAS:
+
+<a id="listar_bens_da_sala"></a>
 
 #### Descrição:
-Rota que lista todos os itens presentes naquela sala.
+
+Rota que lista todos os itens presentes em uma sala, os subcampos não devem vim populados pois 
+isso pesa mais a rota, essa rota também deve ser pagina, com os atributos: total, paginas. Cada
+pagina deve retornar a quantidade de 10 itens
 #### Rota:
 <div>http://localhost:3000/sala/{id}/bem"<div>
 
@@ -213,24 +274,29 @@ Rota que lista todos os itens presentes naquela sala.
     "error": false,
     "code": 200,
     "message": "Requisição bem sucedida.",
+    "total": 1000,
+    "total_pagina":10,
     "errors": []
 }
 ```
 
+## BENS:
 
+### POST PARA AUDITAR UM BEM POR ID:
 
+<a id="auditar_bem"></a>
 
-# POST PARA AUDITAR UM BEM POR ID:
-
+comentário: (Encontrado é um atributo sem função, pois se o item esta no histórico ele ja foi encontrado)
 
 #### Descrição:
 Auditar bem como encontrado ou não encontrado dentro de uma sala,
 essa rota deve ser um post pois, quando um item é encontrado ele não necessariamente vai estar 
+na sua sala de origem.
 #### Rota:
-<div>http://localhost:3000/sala/{id}/bem/{id}"<div>
+            
+<div>http://localhost:3000/bem"<div>
 
 #### Entrada:
-
 ```json
 {
     "sala":10,
@@ -247,132 +313,216 @@ essa rota deve ser um post pois, quando um item é encontrado ele não necessari
 
 ```json
 {
-    "data": {
-        "_id": 2,
-        "nome": "Sala de refeições",
-        "campus":{
-            "_id": 10,
-            "nome":"Campus vilhena"
+    "auditado":true,
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
+
+### COLOCAR A OPÇÃO NA TELA DOS ITENS ABRIR UMA CAMERA E POR ISSO,
+
+Dentro das ideias futuras, podemos colocar uma forma de auditar um item pela a câmera, isso 
+seria uma query dentro do get onde passamos o tombo, isso buscaria o item dentro do banco, retornando
+todos os dados dentro da tela, facilitando a audição do item pro usuário.
+
+
+
+### POST CADASTRAR UM BEM:
+
+<a id="cadastrar_bem"></a>
+
+#### Descrição:
+
+O sistema deve ser capa de cadastrar um item dentro do sistema, esse bem vai ter uma sala, um bem com inventario e sala
+sala.
+
+#### Rota:
+            
+<div>http://localhost:3000/bem"<div>
+
+#### Entrada:
+```json
+{
+    "sala":10,
+    "item":11,
+    "auditor":2,
+    "estado":"Item apto para uso",
+    "descricao":"O item foi encontrado na sala de manutenções",
+    "ocioso":true,
+    "encontrado": true
+}
+```
+
+#### Saida:
+
+```json
+{
+    "auditado":true,
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
+
+## USUARIO
+
+### GET:
+
+<a id="listar_usuario"></a>
+
+#### Descrição:
+
+Deve ser possivel listar quais usuario temos que poder ver quais usuario nosso sistema possui, para
+podermos vizualizarmos as usuario de forma paginada.
+
+#### Rota:
+            
+<div>http://localhost:3000/usuario"<div>
+
+#### Saida:
+```json
+{
+    "data": [
+        {
+            "_id": 3,
+            "email": "marta.silva@example.com",
+            "funcao": "coordenador",
+            "status": true,
+            "nome": "Marta Silva"
         },
-        "created_at": "2024-06-10",
-        "updated_at": "2024-06-10"
-    },
-  "error": false,
-  "code": 200,
-  "message": "Requisição bem sucedida.",
-  "errors": []
+        {
+            "_id": 4,
+            "email": "joao.pereira@example.com",
+            "funcao": "desenvolvedor",
+            "status": false,
+            "nome": "João Pereira"
+        },
+        {
+            "_id": 5,
+            "email": "lucas.santos@example.com",
+            "funcao": "analista",
+            "status": true,
+            "nome": "Lucas Santos"
+        },
+    ],
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "total": 1000,
+    "total_pagina":10,
+    "errors": []
+}
+```
+
+### GET ID:
+
+<a id="listar_usuario_id"></a>
+
+#### Descrição:
+
+Deve ser possivel listar quais usuario temos que poder ver quais usuario nosso sistema possui, para
+podermos vizualizarmos as usuario de forma paginada.
+
+#### Rota:
+            
+<div>http://localhost:3000/usuario/{id}"<div>
+
+#### Saida:
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": true,
+    "nome": "Lucas Santos",
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
+
+### POST:
+<a id="cadastrar_usuario"></a>
+
+#### Descrição:
+Para o sistema funcionar devemos ser capaz de cadastrar um usuario para poder fazer
+a audição dos itens e ultilizar o sistema.
+#### Rota:
+            
+<div>http://localhost:3000/usuario/"<div>
+
+#### Entrada:
+
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": true,
+    "nome": "Lucas Santos",
+}
+```
+
+#### Saida:
+
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": true,
+    "nome": "Lucas Santos",
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
 }
 ```
 
 
 
+### PATCH:
+<a id="atualizar_usuario"></a>
 
+#### Descrição:
 
+O sistema deve ser capaz de atualizar um usuario alterando os atributo desse usario, vai
+ser usada principalmente quando for alterar o status do usuario para inativo,
+#### Rota:
+            
+<div>http://localhost:3000/usuario/"<div>
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+#### Entrada:
 
-# COLOCAR A OPÇÃO NA TELA DOS ITENS ABRIR UMA CAMERA E POR ISSO,
-ESCANIAR O TOMBOM PRA ISSO EU DEVO CRIAR UMA ROTA QUE VAI RECEBER A
-QUERY COM TOMBO 
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": false,
+    "nome": "Lucas Santos",
+}
+```
 
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+#### Saida:
 
+```json
+{
+    "_id": 5,
+    "email": "lucas.santos@example.com",
+    "funcao": "analista",
+    "status": false,
+    "nome": "Lucas Santos",
+    "error": false,
+    "code": 200,
+    "message": "Requisição bem sucedida.",
+    "errors": []
+}
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-prixima
-auditar bem como encontrado ou não encotrado
-4. patch-http://localhost:3000/sala/:idBem
-
-o front deve retornar na rota o id do bem e no body os seguintes dados
-- hist_estado_item
-- hist_item_ocioso
-
-
-buscar bens da sala 
-6. get-http://localhost:3000/sala/:idSala
-deve receber por dentro da rota o id da sala e a rota deve retornar os seguintes dados
-- iten_id
-- iten_nome
-- iten_tombo
-
-# tela auditar bens
-
-busca os dados do bem 
-7. get-http://localhost:3000/bem/:idBem
-deve receber por dentro da rota o id do item e a rota deve retornar os seguintes dados
-- iten_id
-- iten_nome
-- iten_tombo
-- iten_descrição
-
-audita bem passando o estado 
-8. putch-http://localhost:3000/bem/:idBem
-o front deve retornar o id do item e os seguintes dados
-- hist_estado_item
-- hist_item_ocioso
-
-
-# proximas a serem feitas
-
-
-
-# tela sala
-
-prixima
-auditar bem como encontrado ou não encotrado
-4. patch-http://localhost:3000/sala/:idBem
-
-o front deve retornar na rota o id do bem e no body os seguintes dados
-- hist_estado_item
-- hist_item_ocioso
-
-# tela cadastrar bem
-
-
-cria um bem passando todos os dados e o estado dele
-9. post-http://localhost:3000/bemAdicionado  - Daniel
-
-o front deve retornar os dados para adicionar o bem
-- iten_nome
-- iten_tombo
-- iten_descrição
-- hist_estado_item
-- hist_item_ocioso
-
-10. get-http://localhost:3000/conta - Adison 
-
-Retorna todos as contas cadastradas
-nome
-cpf 
-id
-
-11. get-http://localhost:3000/conta/:id - 
-
-retorna todos os dados de apenas uma conta
-
-12. post-http://localhost:3000/conta - Levi
-
-cria uma conta, você recebe todos os dados pelo body da requisição
-
-13. patch-http://localhost:3000/conta
-
-atualiza os dados de uma conta, deve receber todos os dados atualizados pelo body, e atualizar no banco a conta.
 
 

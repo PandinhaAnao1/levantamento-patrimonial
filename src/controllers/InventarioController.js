@@ -1,9 +1,10 @@
-import { prisma } from "../configs/prismaClient.js"
+import inventarioService from "../services/inventarioService.js";
 
 class systemBemController {
     static listarInventarios = async (req, res) => {
         try {
-            const unitExists = await prisma.inventarios.findMany({
+
+            let filtro = {
                 select:{
                 inve_id: true,
                 inve_nome: true,
@@ -11,10 +12,12 @@ class systemBemController {
                 inve_campus: true,
                 inve_concluido: true,
                 },
-            });
+            }
+
+            const unitExists = await inventarioService.listarAll(filtro)
 
             if(unitExists.length === 0){
-                return res.status(200).json([{
+                return res.status(400).json([{
                     error: true,
                     code:400,
                     message:"NÃO FOI ENCONTRADO NENHUM INVENTARIO"
@@ -29,8 +32,6 @@ class systemBemController {
             code: 500, 
             message: "OCORREU UM ERRO INTERNO"
         }])
-    }{
-
     }
   }
 
@@ -46,24 +47,26 @@ class systemBemController {
             });
         }
 
-
-        const salas = await prisma.inventarios.findMany({
+        let filtro = {
             where:{
-                 inve_id: parseInt(idInventario)
+                inve_id: parseInt(idInventario)
             },
             select: {
                 sala_invent: {
                     select: {
                         sala: {
                             select:{
-                                sala_id: true,
+                                Sala_id: true,
                                 sala_nome: true
                             }
                         }
                     }
                 }
             }
-        })
+        }
+
+
+        const salas = await inventarioService.listarById(filtro)
 
 
         if(salas.length === 0){
