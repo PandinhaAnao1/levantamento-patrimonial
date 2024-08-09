@@ -10,8 +10,8 @@
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "dev": "nodemon server.js",
     "prisma": "npx prisma db pull & npx prisma migrate",
-    "docker_on": "cd docker && docker compose up -d",
-    "docker_off": "cd docker && docker compose down"
+    "docker_on": "cd Database && docker compose up -d",
+    "docker_off": "cd Database && docker compose down"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +21,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jest": "^29.7.0",
-    "nodemon": "^3.1.0",
+    "nodemon": "^3.1.4",
     "supertest": "^7.0.0"
   },
   "devDependencies": {
