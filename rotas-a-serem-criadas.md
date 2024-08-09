@@ -1,10 +1,11 @@
 
 
---- OLHA A INOCENCIA DAS CRIANÇAS KKKKKKKK
+OLHA A INOCENCIA DAS CRIANÇAS KKKKKKKK
 CRIAMOS UMA TABELA CHAMADA ITEM ADICIONADO SEM TOMBO
 QUANDO NÃO PRECISA POIS É SÓ DEIXAR O CAMPO TOMBO DE ITEM OPICIONAL
 OU SEJA QUAL A NECESSIDADE DE CRIAR UMA TABELA A PARTE COM OS MESMO CAMPOS
 COM OS MESMO RELACIONAMENTOS SENDO QUE ERA SO DEIXAR O CAMPO OPICIONALLLLLLLLLLLLL?????
+
 # INDEX
 <table>
     <tr>
@@ -34,31 +35,43 @@ COM OS MESMO RELACIONAMENTOS SENDO QUE ERA SO DEIXAR O CAMPO OPICIONALLLLLLLLLLL
     </tr>
     <tr>
         <td>GET ID DE SALA</td>
-        <td><a href="#listar_bens_da_sala">tambem vai ser uma query no get de itens</a></td>
+        <td><a href="#listar_bens_da_sala">também vai ser uma query no get de itens</a></td>
         <td>SALAS</td>
     </tr>
     <tr>
         <td>POST</td>
-        <td><a href="#auditar_bem">rota para poder auditar um bem</a></td>
+        <td><a href="#auditar_bem">rota para poder auditar um bem.</a></td>
         <td>BEM</td>
     </tr>
     <tr>
         <td>POST</td>
-        <td><a href="#cadastrar_bem">rota para cadastrar novos itens</a></td>
+        <td><a href="#cadastrar_bem">rota para cadastrar novos itens.</a></td>
         <td>BEM</td>
     </tr>
     <tr>
         <td>GET</td>
-        <td><a href="#listar_usuario">rota para cadastrar novos itens</a></td>
+        <td><a href="#listar_usuario">rota para listar os usuários.</a></td>
+        <td>USUARIO</td>
+    </tr>
+    <tr>
+        <td>GET ID</td>
+        <td><a href="#listar_usuario_id">rota para listar um usuário.</a></td>
+        <td>USUARIO</td>
+    </tr>
+    <tr>
+        <td>PATCH</td>
+        <td><a href="#atualizar_usuario">rota para atualizar os dados de um usuário.</a></td>
+        <td>USUARIO</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td><a href="#cadastrar_usuario">rota para cadastrar um novo usuário.</a></td>
         <td>USUARIO</td>
     </tr>
 </table>
 
-<tr>
-        <td>POST</td>
-        <td><a href="#"></a></td>
-        <td>BEM</td>
-</tr>
+-- Esta faltando as rotas serem idependentes, cadastra, listar, atualizar pois se elas ficarem
+depende de um csv o sistema fica inutilizado pois tem uma dependência muito forte de um arquivo
 
 # Rotas:
 
