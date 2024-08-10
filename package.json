@@ -9,6 +9,7 @@
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "dev": "nodemon server.js",
+    "server": "docker compose build && docker compose up",
     "prisma": "npx prisma db pull & npx prisma migrate",
     "docker_on": "cd Database && docker compose up -d",
     "docker_off": "cd Database && docker compose down"
