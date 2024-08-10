@@ -14,7 +14,7 @@ const messages = {
         301: "O recurso solicitado foi movido permanentemente para um novo endereço",
         302: "O recurso solicitado foi encontrado, mas foi movido temporariamente para um novo endereço.",
         303: "Recurso encontrado, mas atenção a referência mais adequada a seguir.",
-        304: "A requisição foi bem sucedida, cliente possui a versãomais atualizada.",
+        304: "A requisição foi bem sucedida, cliente possui a versão mais atualizada.",
         305: "Recurso solicitado só está disponível por meio do proxy",
         307: "O recurso solicitado foi temporariamente movido para um novo endereço.",
         308: "O recurso solicitado foi permanentemente movido para um novo endereço.",
@@ -34,7 +34,6 @@ const messages = {
         431: "Cabeçalhos da requisição são muito grandes.",
         451: "Acesso negado por motivos legais.",
         498: "Acesso negado devido o token ser inválido.",
-
         500: "Servidor encontrou um erro interno.",
         501: "Funcionalidade não suportada.",
         502: "O servidor atuando como gateway ou proxy recebeu uma resposta inválida.",

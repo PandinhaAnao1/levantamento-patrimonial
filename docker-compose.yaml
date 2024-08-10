@@ -1,0 +1,24 @@
+services:
+  levantamentop-services:
+    container_name: "levantamento-api"
+    build: "./"
+    ports:
+      - "3000:3000"
+  mysql:
+    build: ./Database/mysql
+    restart: always
+    container_name: "data-base-container"
+    env_file:
+      - ./Database/db.env
+    environment:
+      MYSQL_ROOT_PASSWORD: fslab
+      MYSQL_DATABASE: db_Levantamento_Patrimonial
+      MYSQL_USER: levantamento
+      MYSQL_PASSWORD: fslab
+    ports:
+      - '3307:3306'
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
