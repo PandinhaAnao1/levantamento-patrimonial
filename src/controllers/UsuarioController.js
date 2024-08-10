@@ -1,7 +1,12 @@
 import { prisma } from "../configs/prismaClient.js"
 
-class ContaController {
+class UsuarioController {
 
+    static login = (req,res) => {
+        const { email, senha } = req.body;
+
+        
+    }
     static listarUsuarios = (req, res) => {
         return null // listar todas as contas
     }
@@ -52,4 +57,4 @@ class ContaController {
     }
 }
 
-export default ContaController;
+export default UsuarioController;
