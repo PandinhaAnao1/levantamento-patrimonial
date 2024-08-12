@@ -42,10 +42,6 @@ class systemSalaController {
     
         }
     }
-
-    static auditarBem = (req, res) => {
-        return null
-    }
 }
 
 

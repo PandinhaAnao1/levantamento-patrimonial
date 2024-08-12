@@ -7,103 +7,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  usua_id            Int                  @id @unique(map: "audi_id_UNIQUE") @default(autoincrement())
-  usua_email         String               @unique(map: "audi_email_UNIQUE") @db.VarChar(80)
-  usua_senha         String               @db.VarChar(40)
-  usua_funcao        String               @db.VarChar(30)
-  usua_status        Int                  @db.TinyInt
-  usua_nome          String               @db.VarChar(100)
-  auditor_inventario auditor_inventario[]
-}
-
-model auditor_inventario {
-  au_in_id        Int               @id @default(autoincrement())
-  au_in_inve_id   Int
-  au_in_usua_id   Int
-  Usuario         Usuario           @relation(fields: [au_in_usua_id], references: [usua_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_audi_id_ivent")
-  inventarios     inventarios       @relation(fields: [au_in_inve_id], references: [inve_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_audi_iventa_inventarios")
-  historico       historico[]
-  item_adicionado item_adicionado[]
-
-  @@index([au_in_usua_id], map: "fk_audi_id_ivent")
-  @@index([au_in_inve_id], map: "fk_audi_iventa_inventarios")
-}
-
-model historico {
-  hist_id            Int                @id @unique(map: "hist_id_UNIQUE") @default(autoincrement())
-  hist_iten_id       Int
-  hist_au_in_id      Int
-  hist_estado_item   String             @db.VarChar(60)
-  hist_item_ocioso   Int                @db.TinyInt
-  hist_imagem        String?            @db.VarChar(200)
-  hist_encontrado    Int                @db.TinyInt
-  hist_sala_id       Int
-  auditor_inventario auditor_inventario @relation(fields: [hist_au_in_id], references: [au_in_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_audi_ivent_id")
-  itens              itens              @relation(fields: [hist_iten_id], references: [iten_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_item_id")
-  sala               sala               @relation(fields: [hist_sala_id], references: [Sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_sala_id")
-
-  @@index([hist_au_in_id], map: "fk_historico_audi_ivent_id")
-  @@index([hist_iten_id], map: "fk_historico_item_id")
-  @@index([hist_sala_id], map: "fk_historico_sala_id")
-}
-
 model inventarios {
-  inve_id            Int                  @id @unique(map: "inve_id_UNIQUE") @default(autoincrement())
-  inve_nome          String               @db.VarChar(80)
-  inve_data          DateTime             @db.Date
-  inve_concluido     Int                  @db.TinyInt
-  inve_campus        String               @db.VarChar(100)
-  auditor_inventario auditor_inventario[]
-  sala_invent        sala_invent[]
+  inve_id        Int      @id @unique(map: "inve_id_UNIQUE") @default(autoincrement())
+  inve_nome      String   @db.VarChar(80)
+  inve_data      DateTime @db.Date
+  inve_concluido Int      @db.TinyInt
+  inve_campus    String   @db.VarChar(100)
+  salas          salas[]
 }
 
-model item_adicionado {
-  item_add_id        Int                @id @unique(map: "item_add_id_UNIQUE") @default(autoincrement())
-  item_add_nome      String             @db.VarChar(200)
-  item_add_estado    String             @db.VarChar(60)
-  item_add_descricao String?            @db.MediumText
-  item_add_au_in_id  Int
-  item_add_sala_id   Int
-  item_add_imagem    String?            @db.VarChar(200)
-  item_add_ocioso    Int                @db.TinyInt
-  auditor_inventario auditor_inventario @relation(fields: [item_add_au_in_id], references: [au_in_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_item_adicionado_audi_iventa")
-  sala               sala               @relation(fields: [item_add_sala_id], references: [Sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_item_adicionado_sala")
+model bens {
+  bens_id          Int      @default(autoincrement())
+  bens_sala_id     Int
+  bens_nome        String   @db.VarChar(200)
+  bens_tombo       String   @db.VarChar(15)
+  bens_responsavel String   @db.VarChar(80)
+  bens_decricao    String?  @db.MediumText
+  bens_valor       Decimal? @db.Decimal(10, 2)
+  salas            salas    @relation(fields: [bens_sala_id], references: [sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_itens_sala1")
 
-  @@index([item_add_au_in_id], map: "fk_item_adicionado_audi_iventa")
-  @@index([item_add_sala_id], map: "fk_item_adicionado_sala")
+  @@id([bens_id, bens_sala_id])
+  @@index([bens_sala_id], map: "fk_itens_sala1_idx")
 }
 
-model itens {
-  iten_nome        String      @db.VarChar(200)
-  iten_id          Int         @id @default(autoincrement())
-  iten_tombo       String      @db.VarChar(15)
-  iten_responsavel String      @db.VarChar(80)
-  iten_decricao    String?     @db.MediumText
-  iten_sala_id     Int
-  iten_valor       Decimal?    @db.Decimal(10, 2)
-  historico        historico[]
-  sala             sala        @relation(fields: [iten_sala_id], references: [Sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_itens_sala_id")
+model salas {
+  sala_id      Int         @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
+  sala_Nome    String      @db.VarChar(150)
+  sala_inve_id Int
+  bens         bens[]
+  inventarios  inventarios @relation(fields: [sala_inve_id], references: [inve_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sala_inventarios1")
 
-  @@index([iten_sala_id], map: "fk_itens_sala_id")
+  @@id([sala_id, sala_inve_id])
+  @@index([sala_inve_id], map: "fk_sala_inventarios1_idx")
 }
 
-model sala {
-  Sala_id         Int               @id @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
-  sala_nome       String            @db.VarChar(150)
-  historico       historico[]
-  item_adicionado item_adicionado[]
-  itens           itens[]
-  sala_invent     sala_invent[]
-}
-
-model sala_invent {
-  sa_in_id      Int         @id @unique(map: "sala_ivent_id_UNIQUE") @default(autoincrement())
-  sa_in_sala_id Int
-  sa_in_inve_id Int
-  sala          sala        @relation(fields: [sa_in_sala_id], references: [Sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_campus_sala")
-  inventarios   inventarios @relation(fields: [sa_in_inve_id], references: [inve_id], onUpdate: Restrict, map: "fk_inventarios_campus_id")
-
-  @@index([sa_in_sala_id], map: "fk_campus_sala")
-  @@index([sa_in_inve_id], map: "fk_inventarios_campus_id")
+model usuarios {
+  usua_id     Int    @id @unique(map: "audi_id_UNIQUE") @default(autoincrement())
+  usua_email  String @unique(map: "audi_email_UNIQUE") @db.VarChar(80)
+  usua_senha  String @db.VarChar(40)
+  usua_funcao String @db.VarChar(30)
+  usua_status Int    @db.TinyInt
+  usua_nome   String @db.VarChar(100)
 }

@@ -8,8 +8,7 @@ class inventarioRepository{
     }
 
     async findById(filtro){
-
-        return await prisma.inventarios.findMany(filtro)
+        return await prisma.sala.findMany(filtro)
 
     }
 
