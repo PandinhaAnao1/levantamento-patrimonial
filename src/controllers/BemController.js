@@ -5,24 +5,11 @@ class systemBemController {
     static listarbens = async (req, res) => {
         try {
 
-            let filtro = {
-                where: {
-                    iten_id: parseInt(req.params.id),
-                },
-                select: {
-                    iten_nome:true,
-                    iten_id:true,
-                    iten_tombo:true,
-                    iten_responsavel:true,
-                    //  iten_decri__o:true,
-                }
-            }
-
-            const userExists = await bemService.listarById(filtro)
+            const { sala_id } = req.body;
+            const userExists = await bemService.listar(sala_id)
         
             return res.status(200).json(userExists);
             
-
         } catch (err) {
             console.error(err);
             return res.status(500).json([{ error: true, code: 500, message: "Error interno do Servidor"}])

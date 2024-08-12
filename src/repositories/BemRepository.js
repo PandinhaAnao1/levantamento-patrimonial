@@ -2,8 +2,12 @@ import { prisma } from "../configs/prismaClient.js"
 
 class BemRepository{
 
+    async findAll(filtro){
+        return await prisma.bens.findMany(filtro)
+    }
+
     async findById(filtro){
-        return await prisma.itens.findFirst(filtro)
+        return await prisma.bens.findFirst(filtro)
     }
 
     async createBem(data){
@@ -12,6 +16,27 @@ class BemRepository{
 
     async createHistorico(data){
         await prisma.historico.create(data)
+    }
+
+    createFilter(sala_id){
+        let filtro = {
+            select: {
+                bens_nome:true,
+                bens_id:true,
+                bens_tombo:true,
+                bens_responsavel:true
+                //  bens_decri__o:true,
+            },
+            where: {
+                ...(sala_id && { bens_sala_id: sala_id }) // Adiciona o filtro se sala_id estiver presente
+            }
+        }
+
+        // if (nome) filtro.where.name = { contains: nome };
+        // if (email) filtro.where.email = { contains: email };
+        // if (sala_id) filtro.where.bens_sala_id = {equals : sala_id };
+        console.log(filtro)
+        return filtro;
     }
 }
 
