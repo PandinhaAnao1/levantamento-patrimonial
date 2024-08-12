@@ -1,6 +1,6 @@
 
 -- Inserindo dados na tabela Usuario
-INSERT INTO db_Levantamento_Patrimonial.usuario (usua_email, usua_funcao, usua_nome, usua_senha, usua_status)
+INSERT INTO db_Levantamento_Patrimonial.usuarios (usua_email, usua_funcao, usua_nome, usua_senha, usua_status)
 VALUES 
     ('usuario1@example.com', 'auditor', 'João Silva', 'senha123',  1),
     ('usuario2@example.com', 'auditor', 'Maria Santos', 'senha456',  1),
@@ -100,7 +100,7 @@ VALUES
     ('Mesa de Apoio', 'TOMBO060', 'Ricardo Santos', 'Mesa de apoio redonda, com base de metal', 5, 800.00);
 
     
-INSERT INTO db_Levantamento_Patrimonial.historico (hist_usuarios_id, hist_encontrado, hist_estado_item, hist_imagem, hist_item_ocioso, hist_bens_id, hist_salas_id, hist_inventarios_id)
+INSERT INTO db_Levantamento_Patrimonial.historico (hist_usuarios_id, hist_encontrado, hist_estado_bem, hist_imagem, hist_item_ocioso, hist_bens_id, hist_salas_id, hist_inventarios_id)
 VALUES 
 	(1, 1, 'em bom estado', 'https://exemplo.com/imagem1.jpg', 0, 1, 1, 1),
 	(2, 1, 'em bom estado', NULL, 0, 2, 2, 1),

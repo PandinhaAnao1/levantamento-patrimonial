@@ -53,7 +53,7 @@ class systemBemController {
             },
             select:{
                 sala_id: true,
-                sala_nome: true
+                sala_Nome: true
             }
         }
                 

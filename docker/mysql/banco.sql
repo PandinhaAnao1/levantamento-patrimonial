@@ -55,7 +55,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`salas` (
   `sala_id` INT NOT NULL AUTO_INCREMENT,
-  `sala_Nome` VARCHAR(150) NOT NULL,
+  `sala_nome` VARCHAR(150) NOT NULL,
   `sala_inve_id` INT NOT NULL,
   PRIMARY KEY (`sala_id`, `sala_inve_id`),
   UNIQUE INDEX `Sala_id_UNIQUE` (`sala_id` ASC) VISIBLE,
@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`bens` (
   `bens_nome` VARCHAR(200) NOT NULL,
   `bens_tombo` VARCHAR(15) NOT NULL,
   `bens_responsavel` VARCHAR(80) NOT NULL,
-  `bens_decrição` MEDIUMTEXT NULL DEFAULT NULL,
+  `bens_decricao` MEDIUMTEXT NULL DEFAULT NULL,
+  `bens_valor` DECIMAL(10,2) NULL,
   PRIMARY KEY (`bens_id`, `bens_sala_id`),
   INDEX `fk_itens_sala1_idx` (`bens_sala_id` ASC) VISIBLE,
   CONSTRAINT `fk_itens_sala1`
