@@ -1,7 +1,8 @@
 services:
-  db:
+  mysql:
     build: ./mysql/
-    restart: always
+    restart: "always"
+    container_name: "data-base-container"
     env_file:
       - ./db.env
     environment:

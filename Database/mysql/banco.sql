@@ -1,20 +1,5 @@
--- MySQL Workbench Forward Engineering
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema db_Levantamento_Patrimonial
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema db_Levantamento_Patrimonial
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `db_Levantamento_Patrimonial` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+CREATE SCHEMA IF NOT EXISTS `db_Levantamento_Patrimonial`;
 USE `db_Levantamento_Patrimonial` ;
 
 -- -----------------------------------------------------
@@ -29,9 +14,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`Usuario` (
   `usua_nome` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`usua_id`),
   UNIQUE INDEX `audi_id_UNIQUE` (`usua_id` ASC),
-  UNIQUE INDEX `audi_email_UNIQUE` (`usua_email` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+  UNIQUE INDEX `audi_email_UNIQUE` (`usua_email` ASC));
 
 
 -- -----------------------------------------------------
@@ -44,10 +27,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`inventarios` (
   `inve_concluido` TINYINT NOT NULL,
   `inve_campus` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`inve_id`),
-  UNIQUE INDEX `inve_id_UNIQUE` (`inve_id` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  UNIQUE INDEX `inve_id_UNIQUE` (`inve_id` ASC));
 
 
 -- -----------------------------------------------------
@@ -65,22 +45,17 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`auditor_inventario` (
     REFERENCES `db_Levantamento_Patrimonial`.`Usuario` (`usua_id`),
   CONSTRAINT `fk_audi_iventa_inventarios`
     FOREIGN KEY (`au_in_inve_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`inventarios` (`inve_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    REFERENCES `db_Levantamento_Patrimonial`.`inventarios` (`inve_id`));
 
 
 -- -----------------------------------------------------
--- Table `db_Levantamento_Patrimonial`.`sala`
+-- Table `db_Levantamentod_Patrimonial`.`sala`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`sala` (
-  `sala_id` INT NOT NULL AUTO_INCREMENT,
+  `Sala_id` INT NOT NULL AUTO_INCREMENT,
   `sala_nome` VARCHAR(150) NOT NULL,
-  PRIMARY KEY (`sala_id`),
-  UNIQUE INDEX `sala_id_UNIQUE` (`Sala_id` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+  PRIMARY KEY (`Sala_id`),
+  UNIQUE INDEX `sala_id_UNIQUE` (`Sala_id` ASC));
 
 
 -- -----------------------------------------------------
@@ -98,10 +73,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`itens` (
   INDEX `fk_itens_sala_id` (`iten_sala_id` ASC),
   CONSTRAINT `fk_itens_sala_id`
     FOREIGN KEY (`iten_sala_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`Sala_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`Sala_id`));
 
 
 -- -----------------------------------------------------
@@ -129,10 +101,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`historico` (
     REFERENCES `db_Levantamento_Patrimonial`.`itens` (`iten_id`),
   CONSTRAINT `fk_historico_sala_id`
     FOREIGN KEY (`hist_sala_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`Sala_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`Sala_id`));
 
 
 -- -----------------------------------------------------
@@ -156,10 +125,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`item_adicionado` (
     REFERENCES `db_Levantamento_Patrimonial`.`auditor_inventario` (`au_in_id`),
   CONSTRAINT `fk_item_adicionado_sala`
     FOREIGN KEY (`item_add_sala_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`Sala_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`Sala_id`));
 
 
 -- -----------------------------------------------------
@@ -180,12 +146,5 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`sala_invent` (
     FOREIGN KEY (`sa_in_inve_id`)
     REFERENCES `db_Levantamento_Patrimonial`.`inventarios` (`inve_id`)
     ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE RESTRICT);
 
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

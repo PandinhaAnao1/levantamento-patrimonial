@@ -6,7 +6,7 @@ services:
       - "3000:3000"
   mysql:
     build: ./Database/mysql
-    restart: always
+    restart: "unless-stopped"
     container_name: "data-base-container"
     env_file:
       - ./Database/db.env

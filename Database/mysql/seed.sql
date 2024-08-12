@@ -2,7 +2,7 @@
 -- Inserindo dados na tabela Usuario
 INSERT INTO db_Levantamento_Patrimonial.Usuario (usua_email, usua_funcao, usua_nome, usua_senha, usua_status)
 VALUES 
-    ('usuario1@example.com', 'auditor', 'João Silva', 'senha123',  1),
+    ('usuario1@example.com', 'auditor', 'João Silva', '$2b$10$lu.cw6pVBl4FrpTZ3zWUKetA2wH5laGkjYhCxgZt/eAq6B/vIznfm',  1),
     ('usuario2@example.com', 'auditor', 'Maria Santos', 'senha456',  1),
     ('usuario3@example.com', 'funcionario cpalm', 'Carlos Oliveira', 'senha789',  1 ),
     ('usuario1@email.com', 'funcionário cpalm', 'João Silva', 'senha1', 1),

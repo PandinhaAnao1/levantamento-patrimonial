@@ -1,9 +1,17 @@
 import { prisma } from "../configs/prismaClient.js"
-
+import UsuarioRepository from '../services/UsuariosService.js'
+import messages from '../utils/mensages.js';
 class UsuarioController {
 
-    static login = (req,res) => {
-        const { email, senha } = req.body;
+    static async login(req,res){
+        try{
+            const { email, senha } = req.body;
+            const data =  await UsuarioRepository.login({ email, senha });    
+            res.status(200).json({"token":data.token,"user":data.user})
+        }catch(error){
+            return res.status(401).json(messages.httpCodes[401]);
+        }
+
 
         
     }
