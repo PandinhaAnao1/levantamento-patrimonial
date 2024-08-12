@@ -2,6 +2,33 @@ import bemService from "../services/bemService.js";
 
 class systemBemController {
 
+    static listarbens = async (req, res) => {
+        try {
+
+            let filtro = {
+                where: {
+                    iten_id: parseInt(req.params.id),
+                },
+                select: {
+                    iten_nome:true,
+                    iten_id:true,
+                    iten_tombo:true,
+                    iten_responsavel:true,
+                    //  iten_decri__o:true,
+                }
+            }
+
+            const userExists = await bemService.listarById(filtro)
+        
+            return res.status(200).json(userExists);
+            
+
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json([{ error: true, code: 500, message: "Error interno do Servidor"}])
+        }
+    }
+
     static listarPorId = async (req, res) => {
         try {
 

@@ -79,7 +79,7 @@ model itens {
   iten_id          Int         @id @default(autoincrement())
   iten_tombo       String      @db.VarChar(15)
   iten_responsavel String      @db.VarChar(80)
-  iten_decricao    String?     @db.MediumText
+  iten_descricao   String      @db.VarChar(250)
   iten_sala_id     Int
   iten_valor       Decimal?    @db.Decimal(10, 2)
   historico        historico[]
