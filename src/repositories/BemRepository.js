@@ -2,52 +2,78 @@ import { prisma } from "../configs/prismaClient.js"
 
 class BemRepository{
 
-    async findById(id){
-        return await prisma.erp_pessoa_fornecedor.findUnique({
-            where: { id },
-            select: {
-                bens_nome:true,
-                bens_id:true,
-                bens_tombo:true,
-                bens_responsavel:true
-                //  bens_decri__o:true,
-            }
-          });
-        // return await prisma.bens.findFirst(filtro);
-    }
-
     async findAll(filtro){
         return await prisma.bens.findMany(filtro);
     }
 
+    async findById(filtro){
+        return await prisma.bens.findUnique(filtro);
+    }
+
     async createBem(data){
-        await prisma.item_adicionado.create(data);
+        await prisma.bens.create(data);
     }
 
     async createHistorico(data){
         await prisma.historico.create(data)
     }
 
-    createFilter(sala_id){
+    createFilter(parametros){
         let filtro = {
             where: {
-                ...(sala_id && { bens_sala_id: sala_id }) // Adiciona o filtro se sala_id estiver presente
+                ...(parametros.sala_id && { bens_sala_id: parametros.sala_id }),
+                ...(parametros.bens_id && { bens_id: parametros.bens_id })
             },
             select: {
-                bens_nome:true,
                 bens_id:true,
+                bens_sala_id:true,
+                bens_nome:true,
                 bens_tombo:true,
-                bens_responsavel:true
-                //  bens_decri__o:true,
+                bens_responsavel:true,
+                bens_decricao:true,
+                bens_valor:true,
+                bens_estado:true,
+                bens_ocioso:true,
+                bens_encontrado:true,
             }
         }
-
-        // if (nome) filtro.where.name = { contains: nome };
-        // if (email) filtro.where.email = { contains: email };
-        // if (sala_id) filtro.where.bens_sala_id = {equals : sala_id };
-        console.log(filtro)
         return filtro;
     }
+
+    async userExist(usua_id){
+        return await prisma.usuarios.findFirst({
+            where:{
+                usua_id: usua_id
+            },
+            select:{
+                usua_id: true
+            }
+        })
+    }
+
+    async salaExist(sala_id){
+        return await prisma.salas.findFirst({
+            where:{
+                sala_id: sala_id
+            },
+            select:{
+                sala_id:true
+            }
+        })
+    }
+
+    async inventarioExist(inve_id){
+        return await prisma.inventarios.findFirst({
+            where:{
+                inve_id: inve_id
+            },
+            select:{
+                inve_id:true
+            }
+        })
+    }
 }
+
+
 
 export default new BemRepository()
