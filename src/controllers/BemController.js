@@ -4,25 +4,19 @@ class systemBemController {
 
     static listarbens = async (req, res) => {
         try {
-
-            let filtro = {
-                where: {
-                    iten_id: parseInt(req.params.id),
-                },
-                select: {
-                    iten_nome:true,
-                    iten_id:true,
-                    iten_tombo:true,
-                    iten_responsavel:true,
-                    //  iten_decri__o:true,
-                }
+            const {sala_id} = req.body;
+            const parametros = {
+                sala_id: sala_id
             }
+            const bensExists = await bemService.listar(parametros)
 
-            const userExists = await bemService.listarById(filtro)
-        
-            return res.status(200).json(userExists);
-            
+            if(bensExists.length == 0){
+                return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
 
+            }else{
+                return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
+
+            }
         } catch (err) {
             console.error(err);
             return res.status(500).json([{ error: true, code: 500, message: "Error interno do Servidor"}])
@@ -31,24 +25,19 @@ class systemBemController {
 
     static listarPorId = async (req, res) => {
         try {
-
-            let filtro = {
-                where: {
-                    iten_id: parseInt(req.params.id),
-                },
-                select: {
-                    iten_nome:true,
-                    iten_id:true,
-                    iten_tombo:true,
-                    iten_responsavel:true,
-                    //  iten_decri__o:true,
-                }
+            let bens_id =  parseInt(req.params.id)
+            const parametros = {
+                bens_id: parseInt(bens_id)
             }
+            const bensExist = await bemService.listarPorId(parametros)
 
-            const userExists = await bemService.listarById(filtro)
-        
-            return res.status(200).json(userExists);
-            
+            if(!bensExist){
+                return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
+
+            }else{
+                return res.status(200).json({ error: false, code: 200, message: "Registro encontrado", data: bensExist});
+
+            }
 
         } catch (err) {
             console.error(err);
@@ -57,71 +46,58 @@ class systemBemController {
     }
 
     static adicionarBem = async (req, res) => {
-        
-        console.log("pegou a funcao")
 
-        const {
-            item_add_id,
-            item_add_nome,
-            item_add_descricao,
-            item_add_estado,
-            item_au_in_id,
-            item_add_imagem,
-            item_add_sala_id,
-            item_add_ocioso
-          } = req.body;
+        // Paramentros recebidos no req.body
+        // sala_id,
+        // inve_id,
+        // user_id,
+        // bens_nome,
+        // bens_decricao,
+        // bens_estado,
+        // bens_ocioso,
+        // bens_imagem,
+        // bens_tombo
+        // bens_responsavel
+        // bens_valor
         
-
-     
         try {
-            // select para cada au_inve_id e sala_id  (chaves estrangeiras)
-            // tem que ter validação para todos os items (FALTA VALIDAÇÃO!!!!! falta a falidação do que não)
 
-            const audior_inveExists = await prisma.auditor_inventario.findFirst({
-                where:{
-                    au_in_id: item_au_in_id
-                },
-                select:{
-                    au_in_id: true
-                }
-            })
+            const parametros = {
+                ...req.body,
+                bens_encontrado: true 
+            };
 
-            const salaExists = await prisma.sala.findFirst({
-                where:{
-                    Sala_id: item_add_sala
-                },
-                select:{
-                    item_add_sala:true
-                }
-            })
+            let composObrigatorios = ['sala_id',
+                                        'inve_id',
+                                        'usua_id',
+                                        'bens_nome',
+                                        'bens_decricao',
+                                        'bens_estado',
+                                        'bens_ocioso']
 
-            //Corrijir o parse int, deixar apenas nesses atributos:
-            //item_add_id,item_add_au_in_id,item_add_sala_id
-            //O item add id deve ser retirado pois a chave primaria é auto increment
-            //deve ser adicionado tambem ocioso com parser int pois ele é tyni int
-            let data = {
-                item_adicionado:{
-                    item_add_nome:parseInt(item_add_nome),
-                    item_add_estado:(item_add_estado),
-                    item_add_descricao:parseInt(item_add_descricao),
-                    item_add_au_in_id:parseInt(item_add_au_in_id),
-                    item_add_sala_id:parseInt(item_add_sala_id),
-                    item_add_imagem:parseInt(item_add_imagem),
-                    item_add_ocioso:parseInt(item_add_ocioso),
-                }
+            const composObrigatorio = composObrigatorios.filter(prop => !parametros.hasOwnProperty(prop));
+
+            if(!composObrigatorio){
+                return res.status(400).json({ error: true, code: 400, message: "Valores faltando ou incorretos"});
             }
 
-            const unitExists = await bemService.adicionarBem(data)
+            const unitExists = await bemService.adicionarBem(parametros)
 
-        return res.status(200).json(unitExists);
-     }catch(err){
-        console.error(err);
-        return res.status(500).json([{
-            error: true,
-            code: 500,
-            message: "OCORREU UM ERRO INTERNO"
-        }])
-     }  
+            return res.status(200).json(unitExists);
+
+        }catch(err){
+            console.error(err);
+
+            if (err.message === 'usuario, sala ou inventario não existem') {
+                return res.status(404).json({ error: true, code: 404, message: err.message});
+            }
+
+            return res.status(500).json([{
+                error: true,
+                code: 500,
+                message: "OCORREU UM ERRO INTERNO"
+            }])
+        }  
     }
     
     static auditarBem = async (req, res) => {
