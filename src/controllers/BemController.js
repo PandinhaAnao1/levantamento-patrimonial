@@ -4,7 +4,6 @@ class systemBemController {
 
     static listarbens = async (req, res) => {
         try {
-
             const { sala_id } = req.body;
             const userExists = await bemService.listar(sala_id)
         
@@ -18,24 +17,10 @@ class systemBemController {
 
     static listarPorId = async (req, res) => {
         try {
-
-            let filtro = {
-                where: {
-                    iten_id: parseInt(req.params.id),
-                },
-                select: {
-                    iten_nome:true,
-                    iten_id:true,
-                    iten_tombo:true,
-                    iten_responsavel:true,
-                    //  iten_decri__o:true,
-                }
-            }
-
-            const userExists = await bemService.listarById(filtro)
+            let bem_id =  parseInt(req.params.id)
+            const userExists = await bemService.listarPorId(bem_id)
         
             return res.status(200).json(userExists);
-            
 
         } catch (err) {
             console.error(err);

@@ -1,4 +1,3 @@
-
 -- Inserindo dados na tabela Usuario
 INSERT INTO db_Levantamento_Patrimonial.usuarios (usua_email, usua_funcao, usua_nome, usua_senha, usua_status)
 VALUES 

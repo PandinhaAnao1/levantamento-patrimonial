@@ -3,6 +3,10 @@ import BemRepository from "../repositories/BemRepository.js"
 
 class bemService{
 
+    async listarPorId(id){
+        return await BemRepository.findById(id)
+    }
+
     async listar(parametros){
         const filtro = BemRepository.createFilter(parametros)
         console.log(filtro)

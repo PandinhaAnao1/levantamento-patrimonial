@@ -2,12 +2,22 @@ import { prisma } from "../configs/prismaClient.js"
 
 class BemRepository{
 
-    async findAll(filtro){
-        return await prisma.bens.findMany(filtro)
+    async findById(id){
+        return await prisma.erp_pessoa_fornecedor.findUnique({
+            where: { id },
+            select: {
+                bens_nome:true,
+                bens_id:true,
+                bens_tombo:true,
+                bens_responsavel:true
+                //  bens_decri__o:true,
+            }
+          });
+        // return await prisma.bens.findFirst(filtro);
     }
 
-    async findById(filtro){
-        return await prisma.bens.findFirst(filtro)
+    async findAll(filtro){
+        return await prisma.bens.findMany(filtro);
     }
 
     async createBem(data){
@@ -20,15 +30,15 @@ class BemRepository{
 
     createFilter(sala_id){
         let filtro = {
+            where: {
+                ...(sala_id && { bens_sala_id: sala_id }) // Adiciona o filtro se sala_id estiver presente
+            },
             select: {
                 bens_nome:true,
                 bens_id:true,
                 bens_tombo:true,
                 bens_responsavel:true
                 //  bens_decri__o:true,
-            },
-            where: {
-                ...(sala_id && { bens_sala_id: sala_id }) // Adiciona o filtro se sala_id estiver presente
             }
         }
 
