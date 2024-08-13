@@ -61,7 +61,6 @@ class systemBemController {
         // bens_valor
         
         try {
-
             const parametros = {
                 ...req.body,
                 bens_encontrado: true 

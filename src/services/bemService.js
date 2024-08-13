@@ -1,4 +1,3 @@
-import { runInThisContext } from "vm"
 import BemRepository from "../repositories/BemRepository.js"
 
 class bemService{
@@ -26,11 +25,29 @@ class bemService{
         }
         
         const { usua_id, inve_id, sala_id, ...camposInsert } = parametros;
-        const insert = {salas:{connect: { sala_id: sala_id }}, ...camposInsert };
+        const insertbem = {salas:{connect: { sala_id: sala_id }}, ...camposInsert };
 
-        const bem =  await BemRepository.createBem({data: insert, select: {bens_nome:true}})
-        console.log(bem)
 
+        const bem =  await BemRepository.createBem({
+            data: insertbem, 
+            select: BemRepository.createFilter({}).select
+        })
+
+        const insertHistorico = {
+            hist_usuarios_id: usua_id,
+            hist_inventarios_id: inve_id,
+            hist_salas_id: sala_id,
+            hist_bens_id: bem.bens_id
+        }
+
+        const historico = await BemRepository.createHistorico({
+            data: insertHistorico,
+            select: {
+                hist_id:true
+            }
+        })
+
+        return bem
     }
 
     async auditarBem(data){

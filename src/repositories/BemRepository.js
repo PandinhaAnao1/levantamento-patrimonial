@@ -11,11 +11,11 @@ class BemRepository{
     }
 
     async createBem(data){
-        await prisma.bens.create(data);
+        return await prisma.bens.create(data);
     }
 
     async createHistorico(data){
-        await prisma.historico.create(data)
+        return await prisma.historico.create(data)
     }
 
     createFilter(parametros){
