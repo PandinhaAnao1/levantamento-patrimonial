@@ -26,20 +26,16 @@ class ContaController {
       console.log("aqui");
       const id_conta = parseInt(req.params.id);
       console.log(id_conta);
-      const unitExists = await contaService.listarPorId(id_conta);
+      const unitExists = await contaService.listarPorId(id_conta)
 
       if (unitExists === null) {
-        return res.status(200).json([
+        return res.status(400).json([
           {
             error: true,
             code: 400,
             message: "NÃO FOI ENCONTRADO NENHUM INVENTARIO",
           },
         ]);
-
-  
-
-
       }
 
       return res.status(200).json(unitExists);

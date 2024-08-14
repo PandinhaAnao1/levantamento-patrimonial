@@ -1,4 +1,3 @@
-
 import ContaRepository from "../repositories/ContaRepository.js";
 
 class contaService{

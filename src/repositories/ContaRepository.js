@@ -29,9 +29,6 @@ class contaRepository {
       },
     });
   }
-
-
 }
-
 
 export default new contaRepository();
