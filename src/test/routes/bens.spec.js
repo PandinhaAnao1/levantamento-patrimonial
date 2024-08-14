@@ -1,6 +1,7 @@
 import request from "supertest";
 import { describe, expect, it, test } from '@jest/globals';
 import app from '../../app.js'
+import faker from 'faker-br';
 
 const sala_id = 1
 
@@ -9,7 +10,6 @@ describe('get bens', () => {
         const req = await request(app)
         .get('/bens')
         .set("Accept", "aplication/json")
-        console.log(req.body)
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
         expect(req.body.message).toEqual("Registros encontrados")
@@ -76,6 +76,15 @@ describe('get bens', () => {
         expect(req.body.error).toEqual(true)
         expect(req.body.message).toEqual("Nem um registro encontrado")
     })
+
+    it("Deve retornar um error se o id do bem for uma string", async () => {
+        const req = await request(app)
+        .get('/bens/string')
+        .set("Accept", "aplication/json")
+        expect(req.status).toBe(400)
+        expect(req.body.error).toEqual(true)
+        expect(req.body.message).toEqual("id não informado, ou em formato incorreto")
+    })
 })
 
 describe('post bens', () => {
@@ -87,13 +96,13 @@ describe('post bens', () => {
                 "sala_id":1,
                 "inve_id":1,
                 "usua_id":1,
-                "bens_nome":"test",
-                "bens_decricao":"teste de insert",
+                "bens_nome": faker.commerce.productName(),
+                "bens_decricao": faker.lorem.text(),
                 "bens_estado":"bom",
                 "bens_ocioso":false,
                 "bens_imagem":null,
                 "bens_tombo": null,
-                "bens_responsavel": "",
+                "bens_responsavel": faker.name.findName(),
                 "bens_valor": null 
         })
         expect(req.body.error).toEqual(false)
@@ -105,4 +114,71 @@ describe('post bens', () => {
         expect(req.body.data.bens_tombo).toBeDefined()
         expect(req.body.data.bens_responsavel).toBeDefined()
     })
+
+    it("deve retornar error ao tentar adicionar um bem sem um dos campos obrigatorios.", async () => {
+        const req = await request(app)
+        .post('/bens/adicionar')
+        .set("Accept", "aplication/json")
+        .send({
+                "sala_id":1,
+                "inve_id":1,
+                "usua_id":null,
+                "bens_nome": faker.commerce.productName(),
+                "bens_decricao": faker.lorem.text(),
+                "bens_estado":"bom",
+                "bens_ocioso":false,
+                "bens_imagem":null,
+                "bens_tombo": null,
+                "bens_responsavel": faker.name.findName(),
+                "bens_valor": null 
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Um parâmetro faltando ou é inválido.")
+    })
+
+    it("deve retornar error ao tentar adicionar um bem com uma sala_id que não existe", async () => {
+        const req = await request(app)
+        .post('/bens/adicionar')
+        .set("Accept", "aplication/json")
+        .send({
+                "sala_id":100000,
+                "inve_id":1,
+                "usua_id":1,
+                "bens_nome": faker.commerce.productName(),
+                "bens_decricao": faker.lorem.text(),
+                "bens_estado":"bom",
+                "bens_ocioso":false,
+                "bens_imagem":null,
+                "bens_tombo": null,
+                "bens_responsavel": faker.name.findName(),
+                "bens_valor": null 
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(404)
+        expect(req.body.message).toEqual("usuario, sala ou inventario não existem")
+    })
+
+    it("deve retornar error ao tentar adicionar um bem com uma sala_id que não existe", async () => {
+        const req = await request(app)
+        .post('/bens/adicionar')
+        .set("Accept", "aplication/json")
+        .send({
+                "sala_id":100000,
+                "inve_id":1,
+                "usua_id":1,
+                "bens_nome": faker.commerce.productName(),
+                "bens_decricao": faker.lorem.text(),
+                "bens_estado":"bom",
+                "bens_ocioso":false,
+                "bens_imagem":null,
+                "bens_tombo": null,
+                "bens_responsavel": faker.name.findName(),
+                "bens_valor": null 
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(404)
+        expect(req.body.message).toEqual("usuario, sala ou inventario não existem")
+    })
+
 })

@@ -18,6 +18,11 @@ class BemRepository{
         return await prisma.historico.create(data)
     }
 
+    async updataBem(data){
+        console.log(data)
+        return await prisma.bens.update(data)
+    }
+
     createFilter(parametros){
         let filtro = {
             where: {
@@ -69,6 +74,17 @@ class BemRepository{
             },
             select:{
                 inve_id:true
+            }
+        })
+    }
+
+    async bemJaFoiAuditado(bens_id){
+        return await prisma.historico.findFirst({
+            where:{
+                hist_bens_id: bens_id
+            },
+            select:{
+                hist_id:true
             }
         })
     }

@@ -13,7 +13,6 @@ class bemService{
 
     async listarPorId(parametros){
         if(isNaN(parametros.bens_id)){
-            console.log("chegou")
             throw new Error("id não informado, ou em formato incorreto");
         }
 
@@ -28,19 +27,30 @@ class bemService{
 
     async adicionarBem(parametros){
 
-        let composObrigatorios = ['sala_id',
-            'inve_id',
-            'usua_id',
-            'bens_nome',
-            'bens_decricao',
-            'bens_estado',
-            'bens_ocioso']
+        const verificarParametroString = (parms) => {
+            parms.forEach(parm => {
+                if (parm === undefined || parm === null) {
+                    throw new Error("Um parâmetro faltando ou é inválido.");
+                }  
+            });
+        };
 
-        const composObrigatorio = composObrigatorios.filter(prop => !parametros.hasOwnProperty(prop));
+        const verificarParametroInt = (parms) => {
+            parms.forEach(parm => {
+                if (parm === undefined || parm === null || isNaN(parm)) {
+                    throw new Error("Um parâmetro faltando ou é inválido.");
+                }  
+            });
+        };
+        
+        verificarParametroString([parametros.bens_nome,
+                                parametros.bens_decricao,
+                                parametros.bens_estado,
+                                parametros.bens_ocioso]);
 
-        if(!composObrigatorio){
-            throw new Error("Valores faltando ou incorretos");
-        }
+        verificarParametroInt([parametros.sala_id, 
+                                parametros.inve_id,
+                                parametros.usua_id,]);
 
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -74,8 +84,73 @@ class bemService{
         return bem
     }
 
-    async auditarBem(data){
-        return await BemRepository.createHistorico(data)
+    async auditarBem(parametros){
+        const verificarParametroString = (parms) => {
+            parms.forEach(parm => {
+                if (parm === undefined || parm === null) {
+                    throw new Error("Um parâmetro faltando ou é inválido.");
+                }  
+            });
+        };
+
+        const verificarParametroInt = (parms) => {
+            parms.forEach(parm => {
+                if (parm === undefined || parm === null || isNaN(parm)) {
+                    throw new Error("Um parâmetro faltando ou é inválido.");
+                }  
+            });
+        };        
+
+        verificarParametroString([parametros.bens_estado,
+                                parametros.bens_ocioso]);
+                                
+
+        verificarParametroInt([parametros.bens_id,
+                                parametros.sala_id, 
+                                parametros.inve_id,
+                                parametros.usua_id]);
+
+        const usuarioExists = await BemRepository.userExist(parametros.usua_id)
+
+        const salaExists = await BemRepository.salaExist(parametros.sala_id)
+
+        const inventarioExists = await BemRepository.inventarioExist(parametros.inve_id)
+
+        const auditadoExists = await BemRepository.bemJaFoiAuditado(parametros.bens_id)
+
+        if(!usuarioExists || !salaExists || !inventarioExists || auditadoExists){
+            throw new Error("usuario, sala ou inventario não existem");
+        }
+
+        const { usua_id, inve_id, sala_id, bens_id, ...camposInsert } = parametros;
+
+        await BemRepository.updataBem({
+            where: {bens_id: bens_id},
+            data: camposInsert,
+        })
+
+        const historico = await BemRepository.createHistorico({
+            data: {
+                hist_usuarios_id: usua_id,
+                hist_inventarios_id: inve_id,
+                hist_salas_id: sala_id,
+                hist_bens_id: bens_id
+            },
+            select: {
+                hist_id: true,
+                hist_usuarios_id: true,
+                hist_inventarios_id: true,
+                hist_salas_id: true,
+                hist_bens_id: true
+            }
+        })
+
+        const filtro = BemRepository.createFilter({bens_id: bens_id})
+        const bens =  await BemRepository.findById(filtro)
+
+        return {historico: historico, bem: bens}
+
+
     }
 
 }
