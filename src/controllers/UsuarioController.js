@@ -5,16 +5,13 @@ class UsuarioController {
 
     static async login(req,res){
         try{
-            const { email, senha } = req.body;
-            const data =  await UsuarioRepository.login({ email, senha });    
+            const data =  await UsuarioRepository.login(req.body);    
             res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
             return res.status(401).json(messages.httpCodes[401]);
-        }
-
-
-        
+        }  
     }
+    
     static listarUsuarios = (req, res) => {
         return null // listar todas as contas
     }
