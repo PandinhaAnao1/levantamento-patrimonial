@@ -4,11 +4,12 @@ import app from '../../app.js'
 
 const sala_id = 1
 
-describe('bens', () => {
+describe('get bens', () => {
     it("Deve retornar um array com os dados dos bens", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Accept", "aplication/json")
+        console.log(req.body)
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
         expect(req.body.message).toEqual("Registros encontrados")
@@ -74,5 +75,34 @@ describe('bens', () => {
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
         expect(req.body.message).toEqual("Nem um registro encontrado")
+    })
+})
+
+describe('post bens', () => {
+    it("deve adicionar um bem e retornar o bem criado", async () => {
+        const req = await request(app)
+        .post('/bens/adicionar')
+        .set("Accept", "aplication/json")
+        .send({
+                "sala_id":1,
+                "inve_id":1,
+                "usua_id":1,
+                "bens_nome":"test",
+                "bens_decricao":"teste de insert",
+                "bens_estado":"bom",
+                "bens_ocioso":false,
+                "bens_imagem":null,
+                "bens_tombo": null,
+                "bens_responsavel": "",
+                "bens_valor": null 
+        })
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(201)
+        expect(req.body.message).toEqual("Bem adicionado")
+        expect(req.body.data).toBeInstanceOf(Object)
+        expect(req.body.data.bens_id).toBeDefined()
+        expect(req.body.data.bens_nome).toBeDefined()
+        expect(req.body.data.bens_tombo).toBeDefined()
+        expect(req.body.data.bens_responsavel).toBeDefined()
     })
 })

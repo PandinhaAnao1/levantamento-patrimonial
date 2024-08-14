@@ -6,9 +6,9 @@ class bemService{
         const filtro = BemRepository.createFilter(parametros)
         const bens =  await BemRepository.findAll(filtro)
         if(bens.length == 0){
-            return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
-
+            throw new Error("Nem um registro encontrado");
         }
+        return bens
     }
 
     async listarPorId(parametros){

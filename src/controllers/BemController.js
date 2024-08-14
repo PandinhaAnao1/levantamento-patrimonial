@@ -10,14 +10,15 @@ class systemBemController {
             }
             const bensExists = await bemService.listar(parametros)
 
-            if(bensExists.length == 0){
-                return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
+            return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
 
-            }else{
-                return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
-            }
         } catch (err) {
             console.error(err);
+
+            if(err.message === "Nem um registro encontrado") {
+                return res.status(404).json({ error: true, code: 404, message: err.message});
+            }
+            
             return res.status(500).json([{ error: true, code: 500, message: "Error interno do Servidor"}])
         }
     }
@@ -65,7 +66,7 @@ class systemBemController {
 
             const unitExists = await bemService.adicionarBem(parametros)
 
-            return res.status(200).json({data: unitExists});
+            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: unitExists});
 
         }catch(err){
             console.error(err);
