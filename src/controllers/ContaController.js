@@ -1,9 +1,24 @@
+import { prisma } from "../configs/prismaClient.js";
 import contaService from "../services/contaService.js";
 
 class ContaController {
-  static listarContas = (req, res) => {
-    return null; // listar todas as contas
-    
+  static listarContas = async (req, res) => {
+    try {
+
+      const lista_contas = await contaService.listarTodos();
+
+      return res.status(200).json({ lista_contas });
+
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json([
+        {
+          error: true,
+          code: 500,
+          message: "OCORREU UM ERRO INTERNO",
+        },
+      ]);
+    }
   };
 
   static listarPorId = async (req, res) => {
@@ -25,9 +40,13 @@ class ContaController {
 
       return res.status(200).json(unitExists);
     } catch (err) {
+      if (err.message === 'usuario não existe') {
+        return res.status(404).json({ error: true, code: 404, message: err.message});
+    }
       console.error(err);
       return res.status(500).json([
         {
+          
           error: true,
           code: 500,
           message: "OCORREU UM ERRO INTERNO",
