@@ -3,17 +3,18 @@ import ContaRepository from "../repositories/ContaRepository.js";
 
 class contaService{
 
-    async findFirst(id){
-
-        return await ContaRepository.findFirst(id)
-
+    async listarTodos(){
+        return await ContaRepository.listarTodos()
     }
 
+    async listarPorId(id){
 
-    async findMany(){
-        return await ContaRepository.findMany()
+        if(!usuariosExists){
+            throw new Error ("usuario não existe");
+        }
+
+        return await ContaRepository.listar(id)
     }
-
 }
 
 export default new contaService()

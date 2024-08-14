@@ -4,8 +4,11 @@ import contaService from "../services/contaService.js";
 class ContaController {
   static listarContas = async (req, res) => {
     try {
-      const lista_contas = await contaService.findMany();
+
+      const lista_contas = await contaService.listarTodos();
+
       return res.status(200).json({ lista_contas });
+
     } catch (err) {
       console.error(err);
       return res.status(500).json([
@@ -23,7 +26,7 @@ class ContaController {
       console.log("aqui");
       const id_conta = parseInt(req.params.id);
       console.log(id_conta);
-      const unitExists = await contaService.findFirst(id_conta);
+      const unitExists = await contaService.listarPorId(id_conta);
 
       if (unitExists === null) {
         return res.status(200).json([
@@ -33,13 +36,21 @@ class ContaController {
             message: "NÃO FOI ENCONTRADO NENHUM INVENTARIO",
           },
         ]);
+
+  
+
+
       }
 
       return res.status(200).json(unitExists);
     } catch (err) {
+      if (err.message === 'usuario não existe') {
+        return res.status(404).json({ error: true, code: 404, message: err.message});
+    }
       console.error(err);
       return res.status(500).json([
         {
+          
           error: true,
           code: 500,
           message: "OCORREU UM ERRO INTERNO",
