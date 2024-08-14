@@ -29,12 +29,23 @@ describe('contas', () => {
         expect(req.body.error.error).toEqual(false)
         expect(req.status).toBe(200)
         expect(req.body.data).toBeInstanceOf(Object)
-         expect(req.body.data[0].usua_id).toBeDefined();
-         expect(req.body.data[0].usua_email).toBeDefined();
-         expect(req.body.data[0].usua_senha).toBeDefined();
-         expect(req.body.data[0].usua_funcao).toBeDefined();
-         expect(req.body.data[0].usua_status).toBeDefined();
-         expect(req.body.data[0].usua_nome).toBeDefined();
+        expect(req.body.data.usua_id).toBeDefined();
+        expect(req.body.data.usua_email).toBeDefined();
+        expect(req.body.data.usua_senha).toBeDefined();
+        expect(req.body.data.usua_funcao).toBeDefined();
+        expect(req.body.data.usua_status).toBeDefined();
+        expect(req.body.data.usua_nome).toBeDefined();
+
+    })
+
+    it("Deve retornar um error se algum id da conta não existir", async () => {
+
+        const req = await request(app)
+        .get('/bens/10101010010101010')
+        .set("Accept", "aplication/json")
+        expect(req.status).toBe(404)
+        expect(req.body.error).toEqual(true)
+        expect(req.body.message).toEqual("Nem um registro encontrado")
 
     })
     
