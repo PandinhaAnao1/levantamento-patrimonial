@@ -5,8 +5,6 @@ export const PRIVATE_KEY = '1010FFF'
 
 const AuthMiddleware = (req,res,next) => {
   
-  
-  
   try {
     const header = req.headers['authorization'];
   

@@ -4,17 +4,8 @@ class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
             const {id, nome, data, concluido, campus} = req.params;
-            let filtro = {
-                where:{
-                    inve_id: id ?? '',
-                    inve_nome: nome ?? '',
-                    inve_data: data ?? '',
-                    inve_concluido: concluido ?? '',
-                    inve_campus: campus ?? ''
-                }
-            }
 
-            const unitExists = await InventarioService.listarInventarios(filtro)
+            const unitExists = await InventarioService.listarInventarios(req.params)
 
             if(unitExists.length === 0){
                 return res.status(400).json([{

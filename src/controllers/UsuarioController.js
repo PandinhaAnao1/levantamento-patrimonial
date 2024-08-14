@@ -16,16 +16,18 @@ class UsuarioController {
         */
         
         try{
-            const data =  await UsuarioService.login(req.body);    
+            const data =  await UsuarioService.login(req.body);
+            console.log(data);   
             res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
+            console.log(error);
             if(error instanceof TypeError) return res.status(401).json(messages.httpCodes[401]);
             if(error instanceof ReferenceError) return res.status(401).json(messages.httpCodes[401]);
             return res.status(401).json(messages.httpCodes[401]);
         }  
     }
     
-    static listarUsuario = async (req, res) => {
+    static listarUsuarios = async (req, res) => {
         try {
     
           const lista_contas = await UsuarioService.listarUsuarios();

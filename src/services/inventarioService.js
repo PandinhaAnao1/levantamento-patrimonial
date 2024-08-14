@@ -2,18 +2,23 @@ import InventarioRepository from "../repositories/InventarioRepository.js"
 
 class InventarioService{
     
-    static async listarInventarios(filtro){
+    static async listarInventarios(filtros){
+        const {id, nome, data, concluido, campus} = filtros;
         let filtro = {
-            where:{
-                inve_id: id ?? '',
-                inve_nome: nome ?? '',
-                inve_data: data ?? '',
-                inve_concluido: concluido ?? '',
-                inve_campus: campus ?? ''
+            where: {
+                ...(id && { inve_id: id }),
+                ...(nome && { inve_nome: nome }),
+                ...(data && { inve_data: data }),
+                ...(concluido && { inve_concluido: concluido }),
+                ...(campus && { inve_campus: campus })
             }
-        }
+        };
+        
+        const iventario = await InventarioRepository.listarInventarios(filtro);
 
-        return await InventarioRepository.findAll(filtro);
+        if(!iventario) throw TypeError("Não foi possível encontrar nenhum inventario!");
+
+        return iventario;
         
     }
 

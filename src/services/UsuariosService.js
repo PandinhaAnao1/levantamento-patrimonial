@@ -32,6 +32,7 @@ class UsuarioService{
             },
         }
         //await bcrypt.hash(senha, 10);
+        console.log(flitros)
         const usuario = await UsuarioRepository.login(flitros);
         console.log("Usuario: "+ usuario)
         if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
