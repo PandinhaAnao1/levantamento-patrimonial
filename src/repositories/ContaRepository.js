@@ -1,7 +1,7 @@
 import { prisma } from "../configs/prismaClient.js";
 
 class contaRepository {
-  async findFirst(id) {
+  async listar(id) {
     return await prisma.usuarios.findFirst({
       select: {
         usua_id: true,

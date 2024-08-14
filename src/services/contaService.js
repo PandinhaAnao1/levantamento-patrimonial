@@ -2,9 +2,8 @@ import ContaRepository from "../repositories/ContaRepository.js";
 
 class contaService{
 
-    async findFirst(id){
-
-        return await ContaRepository.findFirst(id)
+    async listarPorId(id){
+        return await ContaRepository.listar(id)
 
     }
 

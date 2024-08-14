@@ -1,4 +1,3 @@
-import { prisma } from "../configs/prismaClient.js";
 import contaService from "../services/contaService.js";
 
 class ContaController {
@@ -12,7 +11,7 @@ class ContaController {
       console.log("aqui");
       const id_conta = parseInt(req.params.id);
       console.log(id_conta);
-      const unitExists = await contaService.findFirst(id_conta)
+      const unitExists = await contaService.listarPorId(id_conta)
 
       if (unitExists === null) {
         return res.status(400).json([
