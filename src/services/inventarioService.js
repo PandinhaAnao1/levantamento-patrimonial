@@ -1,20 +1,29 @@
 import InventarioRepository from "../repositories/InventarioRepository.js"
 
-class inventarioService{
+class InventarioService{
+    
+    static async listarInventarios(filtro){
+        let filtro = {
+            where:{
+                inve_id: id ?? '',
+                inve_nome: nome ?? '',
+                inve_data: data ?? '',
+                inve_concluido: concluido ?? '',
+                inve_campus: campus ?? ''
+            }
+        }
 
-    async listarAll(filtro){
-
-        return await InventarioRepository.findAll(filtro)
+        return await InventarioRepository.findAll(filtro);
         
     }
 
-    async listarById(filtro){
+    static async listarById(filtro){
 
-        return await InventarioRepository.findById(filtro)
+        return await InventarioRepository.findById(filtro);
 
     }
 
 
 }
 
-export default new inventarioService()
+export default InventarioService;

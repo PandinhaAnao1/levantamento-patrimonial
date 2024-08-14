@@ -1,6 +1,6 @@
-import salaService  from '../services/salaService.js';
+import SalaService  from '../services/salaService.js';
 
-class systemSalaController {
+class SalaController {
 
     static listarBensSalas = async (req, res) => {
    
@@ -19,7 +19,7 @@ class systemSalaController {
                 }
             }
 
-            const itemExiste = await salaService.listarPorIdSala(filtro)
+            const itemExiste = await SalaService.listarPorIdSala(filtro)
 
             if (itemExiste.length === 0) {
                 return res.status(400).json([{
@@ -42,11 +42,7 @@ class systemSalaController {
     
         }
     }
-
-    static auditarBem = (req, res) => {
-        return null
-    }
 }
 
 
-export default systemSalaController;
+export default SalaController;

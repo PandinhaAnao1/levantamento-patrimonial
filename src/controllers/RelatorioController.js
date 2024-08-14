@@ -1,6 +1,6 @@
 import { prisma } from "../configs/prismaClient.js"
 
-class systemRelatorioController {
+class RelatorioController {
 
     static gerarRelatorio = (req, res) => {
         return null
@@ -8,4 +8,4 @@ class systemRelatorioController {
 
 }
 
-export default systemRelatorioController;
+export default RelatorioController;
