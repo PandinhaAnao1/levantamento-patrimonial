@@ -1,19 +1,19 @@
 import { runInThisContext } from "vm"
 import BemRepository from "../repositories/BemRepository.js"
 
-class bemService{
+class BemService{
 
-    async listar(parametros){
+    static async listar(parametros){
         const filtro = BemRepository.createFilter(parametros)
         return await BemRepository.findAll(filtro)
     }
 
-    async listarPorId(parametros){
+    static async listarPorId(parametros){
         const filtro = BemRepository.createFilter(parametros)
         return await BemRepository.findById(filtro)
     }
 
-    async adicionarBem(parametros){
+    static async adicionarBem(parametros){
 
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -33,10 +33,10 @@ class bemService{
 
     }
 
-    async auditarBem(data){
+    static async auditarBem(data){
         return await BemRepository.createHistorico(data)
     }
 
 }
 
-export default new bemService()
+export default BemService;

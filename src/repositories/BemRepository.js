@@ -2,23 +2,23 @@ import { prisma } from "../configs/prismaClient.js"
 
 class BemRepository{
 
-    async findAll(filtro){
+    static async findAll(filtro){
         return await prisma.bens.findMany(filtro);
     }
 
-    async findById(filtro){
+    static async findById(filtro){
         return await prisma.bens.findUnique(filtro);
     }
 
-    async createBem(data){
+    static async createBem(data){
         await prisma.bens.create(data);
     }
 
-    async createHistorico(data){
+    static async createHistorico(data){
         await prisma.historico.create(data)
     }
 
-    createFilter(parametros){
+    static createFilter(parametros){
         let filtro = {
             where: {
                 ...(parametros.sala_id && { bens_sala_id: parametros.sala_id }),
@@ -40,7 +40,7 @@ class BemRepository{
         return filtro;
     }
 
-    async userExist(usua_id){
+    static async userExist(usua_id){
         return await prisma.usuarios.findFirst({
             where:{
                 usua_id: usua_id
@@ -51,7 +51,7 @@ class BemRepository{
         })
     }
 
-    async salaExist(sala_id){
+    static async salaExist(sala_id){
         return await prisma.salas.findFirst({
             where:{
                 sala_id: sala_id
@@ -62,7 +62,7 @@ class BemRepository{
         })
     }
 
-    async inventarioExist(inve_id){
+    static async inventarioExist(inve_id){
         return await prisma.inventarios.findFirst({
             where:{
                 inve_id: inve_id
@@ -76,4 +76,4 @@ class BemRepository{
 
 
 
-export default new BemRepository()
+export default BemRepository;

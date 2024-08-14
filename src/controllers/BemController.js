@@ -1,6 +1,6 @@
-import bemService from "../services/bemService.js";
+import BemService from "../services/bemService.js";
 
-class systemBemController {
+class BemController {
 
     static listarbens = async (req, res) => {
         try {
@@ -8,7 +8,7 @@ class systemBemController {
             const parametros = {
                 sala_id: sala_id
             }
-            const bensExists = await bemService.listar(parametros)
+            const bensExists = await BemService.listar(parametros)
 
             if(bensExists.length == 0){
                 return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
@@ -29,7 +29,7 @@ class systemBemController {
             const parametros = {
                 bens_id: parseInt(bens_id)
             }
-            const bensExist = await bemService.listarPorId(parametros)
+            const bensExist = await BemService.listarPorId(parametros)
 
             if(!bensExist){
                 return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
@@ -81,7 +81,7 @@ class systemBemController {
                 return res.status(400).json({ error: true, code: 400, message: "Valores faltando ou incorretos"});
             }
 
-            const unitExists = await bemService.adicionarBem(parametros)
+            const unitExists = await BemService.adicionarBem(parametros)
 
             return res.status(200).json(unitExists);
 
@@ -143,7 +143,7 @@ class systemBemController {
                     hist_sala_id:parseInt(sala)
                 }
                 const historicoInserido = 
-                    await bemService.auditarBem({
+                    await BemService.auditarBem({
                         data: historico
                     })
                 res.status(201).json({
@@ -161,4 +161,4 @@ class systemBemController {
     }
 }
 
-export default systemBemController;
+export default BemController;

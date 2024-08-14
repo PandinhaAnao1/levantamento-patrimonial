@@ -6,7 +6,7 @@ const router = express.Router();
 router
     .post("/login",UsuarioController.login)
     .get("/usuario", AuthMiddleware, UsuarioController.listarUsuarios) // lista todas as contas existentes
-    .get("/usuario/:id", UsuarioController.listarUsuariosId) // busca uma conta
+    .get("/usuario/:id", UsuarioController.listarUsuarioPorId) // busca uma conta
     .post("/usuario", UsuarioController.criarUsuario) // criar uma conta de usuario
     .patch("/usuario", UsuarioController.atualizarUsuario) // Atualiza os dados de uma conta
 

@@ -1,5 +1,5 @@
 import { prisma } from "../configs/prismaClient.js"
-import UsuarioRepository from '../services/UsuariosService.js'
+import UsuarioService from '../services/UsuariosService.js'
 import messages from '../utils/mensages.js';
 class UsuarioController {
 
@@ -14,8 +14,9 @@ class UsuarioController {
         *
         * @return {Object}        o retorno é o objeto res com dados inseridos.
         */
+        
         try{
-            const data =  await UsuarioRepository.login(req.body);    
+            const data =  await UsuarioService.login(req.body);    
             res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
             if(error instanceof TypeError) return res.status(401).json(messages.httpCodes[401]);
@@ -24,54 +25,66 @@ class UsuarioController {
         }  
     }
     
-    static listarUsuarios = (req, res) => {
-        return null // listar todas as contas
-    }
-
-    static listarUsuariosId = async (req, res) => {
+    static listarUsuario = async (req, res) => {
         try {
-            const id_conta = parseInt(req.params.id)
-            console.log(id_conta)
-            const unitExists = await prisma.usuario.findFirst({
-                select: {
-                    usua_id: true,
-                    usua_email: true,
-                    usua_senha: true,
-                    usua_funcao: true,
-                    usua_status: true,
-                    usua_nome: true,
-                },
-                where: {
-                    usua_id: id_conta
-                }
-            });
-
-            if (unitExists === null) {
-                return res.status(200).json([{
-                    error: true,
-                    code: 400,
-                    message: "NÃO FOI ENCONTRADO NENHUM INVENTARIO"
-                }])
-            }
-
-            return res.status(200).json(unitExists);
+    
+          const lista_contas = await UsuarioService.listarUsuarios();
+    
+          return res.status(200).json({ lista_contas });
+    
         } catch (err) {
-            console.error(err);
-            return res.status(500).json([{
-                error: true,
-                code: 500,
-                message: "OCORREU UM ERRO INTERNO"
-            }])
+          console.error(err);
+          return res.status(500).json([
+            {
+              error: true,
+              code: 500,
+              message: "OCORREU UM ERRO INTERNO",
+            },
+          ]);
         }
-    }
-
-    static criarUsuario = (req, res) => {
-        return null // criar a conta com todos os dados
-    }
-
-    static atualizarUsuario = (req, res) => {
-        return null // atualiza todos os campos
-    }
+      };
+    
+      static listarUsuarioPorId = async (req, res) => {
+        try {
+          console.log("aqui");
+          const id_conta = parseInt(req.params.id);
+          console.log(id_conta);
+          const unitExists = await UsuarioService.listarUsuarioPorId(id_conta)
+    
+          if (unitExists === null) {
+            return res.status(400).json([
+              {
+                error: true,
+                code: 400,
+                message: "NÃO FOI ENCONTRADO NENHUM INVENTARIO",
+              },
+            ]);
+          }
+    
+          return res.status(200).json(unitExists);
+        } catch (err) {
+          if (err.message === 'usuario não existe') {
+            return res.status(404).json({ error: true, code: 404, message: err.message});
+        }
+          console.error(err);
+          return res.status(500).json([
+            {
+              
+              error: true,
+              code: 500,
+              message: "OCORREU UM ERRO INTERNO",
+            },
+          ]);
+        }
+      };
+    
+      static criarUsuario = (req, res) => {
+        return null; // criar a conta com todos os dados
+      };
+    
+      static atualizarUsuario = (req, res) => {
+        return null; // atualiza todos os campos
+      };
 }
 
 export default UsuarioController;

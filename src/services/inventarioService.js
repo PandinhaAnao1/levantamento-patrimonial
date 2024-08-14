@@ -1,14 +1,14 @@
 import InventarioRepository from "../repositories/InventarioRepository.js"
 
-class inventarioService{
+class InventarioService{
 
-    async listarAll(filtro){
+    static async listarAll(filtro){
 
         return await InventarioRepository.findAll(filtro)
         
     }
 
-    async listarById(filtro){
+    static async listarById(filtro){
 
         return await InventarioRepository.findById(filtro)
 
@@ -17,4 +17,4 @@ class inventarioService{
 
 }
 
-export default new inventarioService()
+export default InventarioService

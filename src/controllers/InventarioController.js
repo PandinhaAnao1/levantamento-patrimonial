@@ -1,6 +1,6 @@
 import inventarioService from "../services/inventarioService.js";
 
-class systemBemController {
+class BemController {
     static listarInventarios = async (req, res) => {
         try {
 
@@ -90,4 +90,4 @@ class systemBemController {
 
 }
 
-export default systemBemController;
+export default BemController;

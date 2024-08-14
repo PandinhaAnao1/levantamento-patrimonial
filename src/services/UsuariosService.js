@@ -44,6 +44,19 @@ class UsuarioService{
             'token':token
         }
     }
+
+    static async listarUsuarios(){
+        return await ContaRepository.listarTodos()
+    }
+
+    static async listarUsuarioPorId(id){
+
+        if(!usuariosExists){
+            throw new Error ("usuario não existe");
+        }
+
+        return await ContaRepository.listar(id)
+    }
 }
 
 export default UsuarioService;
