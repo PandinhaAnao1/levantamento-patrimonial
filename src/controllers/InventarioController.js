@@ -49,22 +49,14 @@ class systemBemController {
 
         let filtro = {
             where:{
-                inve_id: parseInt(idInventario)
+                sala_inve_id: parseInt(idInventario)
             },
-            select: {
-                sala_invent: {
-                    select: {
-                        sala: {
-                            select:{
-                                Sala_id: true,
-                                sala_nome: true
-                            }
-                        }
-                    }
-                }
+            select:{
+                sala_id: true,
+                sala_Nome: true
             }
         }
-
+                
 
         const salas = await inventarioService.listarById(filtro)
 

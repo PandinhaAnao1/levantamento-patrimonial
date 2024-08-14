@@ -24,25 +24,24 @@ class UsuarioService{
         
         if(!emailRegex.test(email) && senha == null || senha == undefined) throw new TypeError("E-mail inválido e senha não fornecida.");
         
-        try{
-            const senhaHash = senha;
-            //await bcrypt.hash(senha, 10);
-            const usuario = await UsuarioRepository.login({email, senhaHash});
-            console.log("Usuario: "+ usuario)
-            if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
-            const jwtConfig = {
-                expiresIn: '4d',  
-                algorithm: 'HS256', 
-              };
+        const senhaHash = senha;
+        const flitros = {
+            where: {
+                usua_email: email,
+                usua_senha: senhaHash,
+            },
+        }
+        //await bcrypt.hash(senha, 10);
+        const usuario = await UsuarioRepository.login(flitros);
+        console.log("Usuario: "+ usuario)
+        if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
+        const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 
-            const token = jwt.sign({ data: {'_id': usuario.usua_id} }, PRIVATE_KEY, jwtConfig); 
+        const token = jwt.sign({ data: {'_id': usuario.usua_id} }, PRIVATE_KEY, jwtConfig);
         
-            return {
-                'user':usuario,
-                'token':token
-            }
-        }catch(error){
-            throw new Error("Erro desconhecido opereção não ocorreu!");
+        return {
+            'user':usuario,
+            'token':token
         }
     }
 }
