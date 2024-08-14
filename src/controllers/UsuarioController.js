@@ -4,10 +4,22 @@ import messages from '../utils/mensages.js';
 class UsuarioController {
 
     static async login(req,res){
+        /**
+        * Controller da rota de login, rota com o proposito de fazer o login 
+        * para que funcione deacordo o usuario deve enviar a senha e email no
+        * corpo da requisição para que seja procurado no banco de dados se esse usuario exite.
+        *
+        * @param {Object}   req   esse é o objeto http contendo a requisição para a api.
+        * @param {Object}   res   esse é o objeto que a api ira usar para responde ao usuario.
+        *
+        * @return {Object}        o retorno é o objeto res com dados inseridos.
+        */
         try{
             const data =  await UsuarioRepository.login(req.body);    
             res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
+            if(error instanceof TypeError) return res.status(401).json(messages.httpCodes[401]);
+            if(error instanceof ReferenceError) return res.status(401).json(messages.httpCodes[401]);
             return res.status(401).json(messages.httpCodes[401]);
         }  
     }
