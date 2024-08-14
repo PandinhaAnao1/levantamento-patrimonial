@@ -4,15 +4,43 @@ class bemService{
 
     async listar(parametros){
         const filtro = BemRepository.createFilter(parametros)
-        return await BemRepository.findAll(filtro)
+        const bens =  await BemRepository.findAll(filtro)
+        if(bens.length == 0){
+            return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
+
+        }
     }
 
     async listarPorId(parametros){
+        if(isNaN(parametros.bens_id)){
+            console.log("chegou")
+            throw new Error("id não informado, ou em formato incorreto");
+        }
+
         const filtro = BemRepository.createFilter(parametros)
-        return await BemRepository.findById(filtro)
+        const bem = await BemRepository.findById(filtro)
+
+        if(!bem){
+            throw new Error("Nem um registro encontrado");
+        }
+        return bem
     }
 
     async adicionarBem(parametros){
+
+        let composObrigatorios = ['sala_id',
+            'inve_id',
+            'usua_id',
+            'bens_nome',
+            'bens_decricao',
+            'bens_estado',
+            'bens_ocioso']
+
+        const composObrigatorio = composObrigatorios.filter(prop => !parametros.hasOwnProperty(prop));
+
+        if(!composObrigatorio){
+            throw new Error("Valores faltando ou incorretos");
+        }
 
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -21,7 +49,7 @@ class bemService{
         const inventarioExists = await BemRepository.inventarioExist(parametros.inve_id)
 
         if(!usuarioExists || !salaExists || !inventarioExists){
-            throw new Error ("usuario, sala ou inventario não existem");
+            throw new Error("usuario, sala ou inventario não existem");
         }
         
         const { usua_id, inve_id, sala_id, ...camposInsert } = parametros;
@@ -33,18 +61,14 @@ class bemService{
             select: BemRepository.createFilter({}).select
         })
 
-        const insertHistorico = {
-            hist_usuarios_id: usua_id,
-            hist_inventarios_id: inve_id,
-            hist_salas_id: sala_id,
-            hist_bens_id: bem.bens_id
-        }
-
-        const historico = await BemRepository.createHistorico({
-            data: insertHistorico,
-            select: {
-                hist_id:true
+        await BemRepository.createHistorico({
+            data: {
+                hist_usuarios_id: usua_id,
+                hist_inventarios_id: inve_id,
+                hist_salas_id: sala_id,
+                hist_bens_id: bem.bens_id
             }
+
         })
 
         return bem

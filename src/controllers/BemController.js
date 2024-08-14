@@ -15,7 +15,6 @@ class systemBemController {
 
             }else{
                 return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
-
             }
         } catch (err) {
             console.error(err);
@@ -29,68 +28,54 @@ class systemBemController {
             const parametros = {
                 bens_id: parseInt(bens_id)
             }
+
             const bensExist = await bemService.listarPorId(parametros)
-
-            if(!bensExist){
-                return res.status(404).json({ error: true, code: 404, message: "Nem um registro encontrado"});
-
-            }else{
-                return res.status(200).json({ error: false, code: 200, message: "Registro encontrado", data: bensExist});
-
-            }
+            return res.status(200).json({ error: false, code: 200, message: "Registro encontrado", data: bensExist});
 
         } catch (err) {
             console.error(err);
+
+            if (err.message === "id não informado, ou em formato incorreto") {
+                return res.status(400).json({ error: true, code: 400, message: err.message});
+
+            }else if(err.message === "Nem um registro encontrado"){
+                return res.status(404).json({ error: true, code: 404, message: err.message});
+            }
             return res.status(500).json([{ error: true, code: 500, message: "Error interno do Servidor"}])
         }
     }
 
     static adicionarBem = async (req, res) => {
-
-        // Paramentros recebidos no req.body
-        // sala_id,
-        // inve_id,
-        // user_id,
-        // bens_nome,
-        // bens_decricao,
-        // bens_estado,
-        // bens_ocioso,
-        // bens_imagem,
-        // bens_tombo
-        // bens_responsavel
-        // bens_valor
         
         try {
             const parametros = {
-                ...req.body,
-                bens_encontrado: true 
-            };
-
-            let composObrigatorios = ['sala_id',
-                                        'inve_id',
-                                        'usua_id',
-                                        'bens_nome',
-                                        'bens_decricao',
-                                        'bens_estado',
-                                        'bens_ocioso']
-
-            const composObrigatorio = composObrigatorios.filter(prop => !parametros.hasOwnProperty(prop));
-
-            if(!composObrigatorio){
-                return res.status(400).json({ error: true, code: 400, message: "Valores faltando ou incorretos"});
+                sala_id : req.body.sala_id,
+                inve_id : req.body.inve_id,
+                usua_id : req.body.usua_id,
+                bens_nome : req.body.bens_nome,
+                bens_decricao : req.body.bens_decricao,
+                bens_estado : req.body.bens_estado,
+                bens_ocioso : req.body.bens_ocioso,
+                bens_imagem : req.body.bens_imagem,
+                bens_tombo : req.body.bens_tombo,
+                bens_responsavel : req.body.bens_responsavel,
+                bens_valor : req.body.bens_valor,
+                bens_encontrado: true,
             }
 
             const unitExists = await bemService.adicionarBem(parametros)
 
-            return res.status(200).json(unitExists);
+            return res.status(200).json({data: unitExists});
 
         }catch(err){
             console.error(err);
 
             if (err.message === 'usuario, sala ou inventario não existem') {
                 return res.status(404).json({ error: true, code: 404, message: err.message});
-            }
 
+            }else if (err.message === 'Valores faltando ou incorretos') {
+                return res.status(400).json({ error: true, code: 400, message: err.message});
+            }
             return res.status(500).json([{
                 error: true,
                 code: 500,
