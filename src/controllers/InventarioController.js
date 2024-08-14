@@ -1,20 +1,20 @@
-import inventarioService from "../services/inventarioService.js";
+import InventarioService from "../services/inventarioService.js";
 
-class BemController {
+class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
-
+            const {id, nome, data, concluido, campus} = req.params;
             let filtro = {
-                select:{
-                inve_id: true,
-                inve_nome: true,
-                inve_data: true,
-                inve_campus: true,
-                inve_concluido: true,
-                },
+                where:{
+                    inve_id: id ?? '',
+                    inve_nome: nome ?? '',
+                    inve_data: data ?? '',
+                    inve_concluido: concluido ?? '',
+                    inve_campus: campus ?? ''
+                }
             }
 
-            const unitExists = await inventarioService.listarAll(filtro)
+            const unitExists = await InventarioService.listarInventarios(filtro)
 
             if(unitExists.length === 0){
                 return res.status(400).json([{
@@ -58,7 +58,7 @@ class BemController {
         }
                 
 
-        const salas = await inventarioService.listarById(filtro)
+        const salas = await InventarioService.listarById(filtro)
 
 
         if(salas.length === 0){
@@ -90,4 +90,4 @@ class BemController {
 
 }
 
-export default BemController;
+export default InventarioController;
