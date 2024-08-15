@@ -32,6 +32,30 @@ class bemService{
         return bem
     }
 
+    async createBems(parametros){
+
+        const schema = new bemSchema().adicionarBemSchema()
+        schema.parse(parametros)
+        console.log(parametros)
+        const salaExists = await BemRepository.salaExist(parametros.sala_id)
+
+        if(!salaExists){
+            throw new Error("o sala_id informado não existem");
+        }
+        
+        const { sala_id, ...camposInsert } = parametros;
+        const insertbem = {salas:{connect: { sala_id: sala_id }}, ...camposInsert };
+
+
+        const bem =  await BemRepository.createBem({
+            data: insertbem, 
+            select: BemRepository.createFilter({}).select
+        })
+
+        console.log(bem)
+        return bem
+    }
+
     async adicionarBem(parametros){
 
         const schema = new bemSchema().adicionarBemSchema()

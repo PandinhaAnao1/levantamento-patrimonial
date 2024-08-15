@@ -28,6 +28,28 @@ class bemSchema{
         })
     }
 
+    createBensSchema(){
+        return z.object({
+            sala_id: z.preprocess((val) => Number(val), z.number({
+                invalid_type_error: "sala_id informado não é do tipo number",
+            }).int({
+                message: "sala_id informado não é um número inteiro"
+            }).positive({
+                message: "sala_id informado não é positivo"
+            })),
+            bens_nome: z.string({invalid_type_error: "bens_nome informado não é do tipo string"}),
+            bens_tombo: z.string({invalid_type_error: "bens_tombo informado não é do tipo string"}),
+            bens_decricao: z.string({invalid_type_error: "bens_decricao informado não é do tipo string"}),
+            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}),
+            bens_encontrado: z.boolean().default(false),
+            bens_valor: z.preprocess((val) => Number(val), z.number({
+                invalid_type_error: "bens_valor informado não é do tipo number",
+            }).positive({
+                message: "bens_valor informado não é positivo"
+            })),
+        })
+    }
+
     adicionarBemSchema(){
         return z.object({
             sala_id: z.preprocess((val) => Number(val), z.number({

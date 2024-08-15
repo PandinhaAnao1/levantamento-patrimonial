@@ -94,9 +94,10 @@ class systemBemController {
                 bens_decricao: req.body.bens_decricao ,
                 bens_responsavel: req.body.bens_responsavel ?? "",
                 bens_encontrado: false,
+                bens_valor: req.body.bens_valor,
             };
-            const unitExists = await bemService.adicionarBem(parametros)
-
+            console.log(parametros)
+            const unitExists = await bemService.createBems(parametros)
             return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: unitExists});
 
         }catch(err){
