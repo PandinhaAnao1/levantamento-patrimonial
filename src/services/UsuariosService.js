@@ -22,7 +22,7 @@ class UsuarioService{
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
-        if(!emailRegex.test(email) && senha == null || senha == undefined) throw new TypeError("E-mail inválido e senha não fornecida.");
+        if(!emailRegex.test(email) || !senha || !email) throw new TypeError("E-mail inválido ou senha não fornecida.");
         
         const senhaHash = senha;
         const flitros = {
@@ -32,9 +32,7 @@ class UsuarioService{
             },
         }
         //await bcrypt.hash(senha, 10);
-        console.log(flitros)
         const usuario = await UsuarioRepository.login(flitros);
-        console.log("Usuario: "+ usuario)
         if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
         const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 

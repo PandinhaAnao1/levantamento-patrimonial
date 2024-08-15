@@ -34,14 +34,19 @@ class InventarioService{
 
     static async listarInventarioPorId(id){
 
+        if(!id) throw TypeError("O id enviado é invalido!");
+
         let filtro = {
             where:{
-                id: id
+                inve_id: id
             }
         }
         const inventario =  await InventarioRepository.listarPorId(filtro);
+        console.log(inventario);
 
         if(!inventario) throw TypeError(`Não foi possivel encontrar o inventario com o id: ${id}.`);
+
+        return inventario;
 
     }
 

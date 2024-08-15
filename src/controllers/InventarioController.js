@@ -1,26 +1,27 @@
 import { error } from "node:console";
 import InventarioService from "../services/inventarioService.js";
-
+import {sendResponse, sendError} from "../utils/mensages.js";
 class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
 
             const data = await InventarioService.listarInventarios(req.query)
 
-            return res.status(200).json({
+            return sendResponse(res,200, {
                 data:data.inventarios ?? [],
-                erro: false,
-                code: 200,
                 resultados:data.total ?? 1,
                 totalPaginas: Math.ceil((data.total ?? 1)/10),
                 limite: 10,
                 pagina: req.query.pagina ?? 1,
-                message: "Inventarios encontrados com sucesso!"
-                
-            });
+
+            }); 
+            
         }catch (erro){
+            console.log(erro)
             if(erro instanceof TypeError){
-                return res.status(400).json([{
+                return sendError();
+                
+                res.status(400).json([{
                     data:[],
                     erro: false,
                     code: 200,
@@ -46,10 +47,20 @@ class InventarioController {
 
   static listarInventarioPorId = async (req, res) => {
     try{
-       
 
+        let idInventario = parseInt(req.params.id);
+        console.log(idInventario);
 
-    }catch(err){
+        const inventario = await InventarioService.listarInventarioPorId(idInventario);
+        
+        console.log(inventario);
+        return res.status(200).json({
+            data: [inventario]
+        });
+   
+    }catch(erro){
+
+        console.log(erro);
     }
 
 }

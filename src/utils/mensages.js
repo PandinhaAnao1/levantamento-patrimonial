@@ -42,13 +42,59 @@ const messages = {
 
 };
 
-export const sendResponse = (res, code, data = [], errors = []) => {
+
+/**
+ * Envia uma resposta de erro com o código e a mensagem especificada
+ * de acordo com o padrão de envio de respostas da API
+ * 
+ * @example
+ * //Exemplos de diferentes formas aceitáveis de usar:
+ * sendError(res, 400, "Mensagem de erro")
+ * sendError(res, 400, [{message:"msg A"}, {message:"msg B"}])
+ * sendError(res, 400, {message:"Campo Obrigatório", field:"senha"})
+ */
+export const sendError = (res,code, errors = []) => {
+    // Detecta diferentes formas de usar:
+    let _errors = undefined;
+    if(Array.isArray(errors)) { 
+        // Se for um array de erros --> sendError(res, 400, [{message:"A"},{message:"B"}])
+        _errors = errors;
+    } else if(typeof errors === "object" && errors.message !== undefined) {
+        // Se for um objeto com a propriedade message --> sendError(res, 400, {message:"A"})
+        _errors = [errors];
+    } else {
+        // Se for uma string ou qualquer outro tipo --> sendError(res, 400, "A")
+        _errors = [{message: ""+errors}];
+    }
+
+    //console.log(_errors);
     return res.status(code).json({
-        data: data,
-        error: false,
+        data: [],
+        error: true,
         code: code,
         message: messages.httpCodes[code],
-        errors: errors
+        errors: _errors,
+    });
+};
+
+/**
+ * Envia uma resposta com o código e a mensagem especificada
+ * de acordo com o padrão de envio de respostas da API
+ * 
+ * @example
+ * sendResponse(res, 200, {
+ *    data: usuario
+ * });
+ */
+export const sendResponse = (res,code, resp = {}) => {
+    return res.status(code).json({
+        ...{
+            data: [],
+            error: false,
+            code: code,
+            message: messages.httpCodes[code],
+            errors: []
+        }, ...resp
     });
 };
 

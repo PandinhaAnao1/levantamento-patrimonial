@@ -5,7 +5,7 @@ const router = express.Router();
 
 router
     .get("/inventarios", AuthMiddleware, InventarioController.listarInventarios) 
-    .get("/inventarios", AuthMiddleware, )
+    .get("/inventarios/:id", AuthMiddleware, InventarioController.listarInventarioPorId )
     //.post("/inventario", systemInventarioController.criarInventario)
 
 

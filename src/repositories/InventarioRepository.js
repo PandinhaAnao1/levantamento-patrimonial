@@ -12,7 +12,7 @@ class InventarioRepository {
   }
 
   static async listarPorId(filtro) {
-    return await prisma.salas.findMany(filtro);
+    return await prisma.inventarios.findUnique(filtro);
   }
 }
 

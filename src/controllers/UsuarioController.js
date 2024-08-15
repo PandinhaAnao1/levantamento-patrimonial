@@ -1,6 +1,6 @@
 import { prisma } from "../configs/prismaClient.js"
 import UsuarioService from '../services/UsuariosService.js'
-import messages from '../utils/mensages.js';
+import {sendResponse, sendError} from '../utils/mensages.js';
 class UsuarioController {
 
     static async login(req,res){
@@ -17,13 +17,18 @@ class UsuarioController {
         
         try{
             const data =  await UsuarioService.login(req.body);
-            console.log(data);   
+
+            return sendResponse(res,200, {
+              
+            })
             res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
             console.log(error);
-            if(error instanceof TypeError) return res.status(401).json(messages.httpCodes[401]);
-            if(error instanceof ReferenceError) return res.status(401).json(messages.httpCodes[401]);
-            return res.status(401).json(messages.httpCodes[401]);
+            if(error instanceof TypeError) return sendError(res,401,error.message);
+            
+            if(error instanceof ReferenceError) return sendError(res,401,error.message);
+            
+            return sendError(res,500,"Ocorreu um erro interno no servidor!");
         }  
     }
     
