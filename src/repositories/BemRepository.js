@@ -11,11 +11,15 @@ class BemRepository{
     }
 
     async createBem(data){
-        await prisma.bens.create(data);
+        return await prisma.bens.create(data);
     }
 
     async createHistorico(data){
-        await prisma.historico.create(data)
+        return await prisma.historico.create(data)
+    }
+
+    async updataBem(data){
+        return await prisma.bens.update(data)
     }
 
     createFilter(parametros){
@@ -51,6 +55,22 @@ class BemRepository{
         })
     }
 
+    async getIds(bem_id){
+        return await prisma.bens.findFirst({
+            where: {
+                bens_id: bem_id
+            },
+            select: {
+                bens_sala_id: true,
+                salas: {
+                    select: {
+                    sala_inve_id: true
+                    }
+                }
+            }
+        });
+    }
+
     async salaExist(sala_id){
         return await prisma.salas.findFirst({
             where:{
@@ -69,6 +89,17 @@ class BemRepository{
             },
             select:{
                 inve_id:true
+            }
+        })
+    }
+
+    async bemJaFoiAuditado(bens_id){
+        return await prisma.historico.findFirst({
+            where:{
+                hist_bens_id: bens_id
+            },
+            select:{
+                hist_id:true
             }
         })
     }
