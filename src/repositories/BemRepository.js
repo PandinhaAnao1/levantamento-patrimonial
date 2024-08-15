@@ -19,7 +19,6 @@ class BemRepository{
     }
 
     async updataBem(data){
-        console.log(data)
         return await prisma.bens.update(data)
     }
 
@@ -54,6 +53,22 @@ class BemRepository{
                 usua_id: true
             }
         })
+    }
+
+    async getIds(bem_id){
+        return await prisma.bens.findFirst({
+            where: {
+              bens_id: bem_id
+            },
+            select: {
+              bens_sala_id: true,
+              salas: {
+                select: {
+                  sala_inve_id: true
+                }
+              }
+            }
+        });
     }
 
     async salaExist(sala_id){

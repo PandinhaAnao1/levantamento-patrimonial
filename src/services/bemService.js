@@ -76,14 +76,19 @@ class bemService{
                         
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
-        const salaExists = await BemRepository.salaExist(parametros.sala_id)
-
-        const inventarioExists = await BemRepository.inventarioExist(parametros.inve_id)
-
         const auditadoExists = await BemRepository.bemJaFoiAuditado(parametros.bens_id)
 
-        if(!usuarioExists || !salaExists || !inventarioExists){
-            throw new Error("usuario, sala ou inventario não existem");
+        const idsSalaInventario = await BemRepository.getIds(parametros.bens_id)
+
+        const { bens_sala_id, salas } = idsSalaInventario;
+        const sala_inve_id = salas.sala_inve_id;
+
+        if(!usuarioExists){
+            throw new Error("Usuario não existem");
+        }
+
+        if(bens_sala_id != parametros.inve_id || sala_inve_id != parametros.sala_id){
+            throw new Error("O Bem não pertence a sala ou inventario informado");
         }
 
         if(!auditadoExists){
