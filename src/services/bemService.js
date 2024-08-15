@@ -91,7 +91,7 @@ class bemService{
             throw new Error("O Bem não pertence a sala ou inventario informado");
         }
 
-        if(!auditadoExists){
+        if(auditadoExists){
             throw new Error("Bem já foi auditado.");
         }
 

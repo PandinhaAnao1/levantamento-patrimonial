@@ -26,7 +26,6 @@ class systemBemController {
                     code: 400,
                     message: errorMessages
                 })
-
             }else{
                 return res.status(500).json([{
                     error: true,
@@ -50,7 +49,7 @@ class systemBemController {
         } catch (err) {
             console.error(err);
 
-             if(err.message === "Nem um registro encontrado"){
+            if(err.message === "Nem um registro encontrado"){
                 return res.status(404).json({ error: true, code: 404, message: err.message});
             }else if (err instanceof z.ZodError) {
 
@@ -69,6 +68,59 @@ class systemBemController {
                 }])
             }
         }
+    }
+    // model bens {
+    //     bens_id          Int         @id @unique(map: "bens_id_UNIQUE") @default(autoincrement())
+    //     bens_sala_id     Int
+    //     bens_nome        String      @db.VarChar(200)
+    //     bens_tombo       String?     @db.VarChar(15)
+    //     bens_responsavel String?     @db.VarChar(80)
+    //     bens_decricao    String      @db.MediumText
+    //     bens_estado      String?     @db.VarChar(30)
+    //     bens_ocioso      Boolean?
+    //     bens_imagem      String?     @db.VarChar(200)
+    //     bens_encontrado  Boolean?
+    //     bens_valor       Decimal?    @db.Decimal(10, 2)
+    //     salas            salas       @relation(fields: [bens_sala_id], references: [sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_itens_sala1")
+    //     historico        historico[]
+    //     @@index([bens_sala_id], map: "fk_itens_sala1_idx")
+    //   }
+    static createBem = async (req, res) => {
+        try {
+            const parametros = {
+                sala_id: parseInt(req.body.sala_id),
+                bens_nome: req.body.bens_nome,
+                bens_tombo: req.body.bens_tombo,
+                bens_decricao: req.body.bens_decricao ,
+                bens_responsavel: req.body.bens_responsavel ?? "",
+                bens_encontrado: false,
+            };
+            const unitExists = await bemService.adicionarBem(parametros)
+
+            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: unitExists});
+
+        }catch(err){
+            console.error(err);
+
+            if (err.message === "usuario, sala ou inventario não existem") {
+                return res.status(404).json({ error: true, code: 404, message: err.message});
+
+            }else if (err instanceof z.ZodError) {
+                const errorMessages = err.issues.map((issue) => issue.message);
+                return res.status(400).json({
+                    error: true,
+                    code: 400,
+                    message: errorMessages
+                })
+
+            }else{
+                return res.status(500).json([{
+                    error: true,
+                    code: 500,
+                    message: "OCORREU UM ERRO INTERNO"
+                }])
+            }
+        } 
     }
 
     static adicionarBem = async (req, res) => {

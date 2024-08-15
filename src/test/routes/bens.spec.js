@@ -168,7 +168,6 @@ describe('post bens', () => {
         expect(req.status).toBe(404)
         expect(req.body.message).toEqual("usuario, sala ou inventario não existem")
     })
-
 })
 
 describe('auditar bens', () => {
@@ -177,7 +176,7 @@ describe('auditar bens', () => {
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":2,
+            "bens_id":1,
             "sala_id":1,
             "inve_id":1,
             "usua_id":1,
@@ -215,7 +214,7 @@ describe('auditar bens', () => {
         console.log(req.body)
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("usuario, sala ou inventario não existem")
+        expect(req.body.message).toEqual("O Bem não pertence a sala ou inventario informado")
     })
 
     it("deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto", async () => {
@@ -243,7 +242,7 @@ describe('auditar bens', () => {
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":2000,
+            "bens_id":1,
             "sala_id":1,
             "inve_id":1,
             "usua_id":1,

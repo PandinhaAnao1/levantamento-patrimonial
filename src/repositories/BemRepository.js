@@ -58,15 +58,15 @@ class BemRepository{
     async getIds(bem_id){
         return await prisma.bens.findFirst({
             where: {
-              bens_id: bem_id
+                bens_id: bem_id
             },
             select: {
-              bens_sala_id: true,
-              salas: {
-                select: {
-                  sala_inve_id: true
+                bens_sala_id: true,
+                salas: {
+                    select: {
+                    sala_inve_id: true
+                    }
                 }
-              }
             }
         });
     }
