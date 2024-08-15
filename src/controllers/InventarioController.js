@@ -1,13 +1,14 @@
+import { error } from "node:console";
 import InventarioService from "../services/inventarioService.js";
 
 class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
-            const {id, nome, data, concluido, campus} = req.params;
+            console.log(req.Params);
 
-            const unitExists = await InventarioService.listarInventarios(req.params)
+            const data = await InventarioService.listarInventarios(req.query)
 
-            if(unitExists.length === 0){
+            if(data.inventarios?.length === 0){
                 return res.status(400).json([{
                     error: true,
                     code:400,
@@ -15,9 +16,18 @@ class InventarioController {
                 }])
             }
 
-            return res.status(200).json(unitExists);
+            return res.status(200).json({
+                data:data.inventarios ?? [],
+                erro: false,
+                code: 200,
+                resultados:data.total ?? 1,
+                totalPaginas: Math.ceil((data.total ?? 1)/10),
+                limite: 10,
+                pagina: req.query.pagina ?? 1
+
+            });
     }catch (err){
-        console.error(err);
+        console.log(err);
         return res.status(500).json([{ 
             error: true, 
             code: 500, 
