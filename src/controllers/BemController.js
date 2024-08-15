@@ -181,7 +181,7 @@ class systemBemController {
             };
 
             const unitExists = await bemService.auditarBem(parametros)
-            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: unitExists});
+            return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: unitExists});
 
         }catch(err  ){
             console.error(err)
@@ -209,7 +209,6 @@ class systemBemController {
                     code: 500,
                     message: "OCORREU UM ERRO INTERNO"
                 }])
-
             }
         }
     }

@@ -184,9 +184,10 @@ describe('auditar bens', () => {
             "bens_ocioso":true,
             "bens_imagem":faker.image.imageUrl(),
         })
+        console.log(req.body)
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
-        expect(req.body.message).toEqual("Bem adicionado")
+        expect(req.body.message).toEqual("Bem auditado")
         expect(req.body.data).toBeInstanceOf(Object)
         expect(req.body.data.bem.bens_id).toBeDefined()
         expect(req.body.data.bem.bens_nome).toBeDefined()
