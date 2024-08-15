@@ -7,7 +7,7 @@ class ContaController {
 
       const lista_contas = await contaService.listarTodos();
 
-      return res.status(200).json({ lista_contas });
+      return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: lista_contas});
 
     } catch (err) {
       console.error(err);
@@ -38,7 +38,7 @@ class ContaController {
         ]);
       }
 
-      return res.status(200).json(unitExists);
+      return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: unitExists});
     } catch (err) {
       if (err.message === 'usuario não existe') {
         return res.status(404).json({ error: true, code: 404, message: err.message});
