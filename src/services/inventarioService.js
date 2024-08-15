@@ -4,8 +4,9 @@ import InventarioRepository from "../repositories/InventarioRepository.js"
 class InventarioService{
     
     static async listarInventarios(filtros){
-        console.log(filtros);
+        
         const {id, nome, data, concluido, campus, pagina} = filtros;
+        
         let filtro = {
             ...(pagina && { take: 10 ,skip: pagina * 10}),
             where: {
@@ -22,15 +23,25 @@ class InventarioService{
         const totalDeItens = await InventarioRepository.contarInventarios(filtro);
     
 
-        if(!iventario) throw TypeError("Não foi possível encontrar nenhum inventario!");
+        if(!iventario && !totalDeItens || totalDeItens == 0) throw TypeError("Não foi possível encontrar nenhum inventario!");
 
-        return {inventarios : iventario, total: totalDeItens};
+        return {
+            inventarios : iventario, 
+            total: totalDeItens
+        };
         
     }
 
-    static async listarInventarioPorId(filtro){
+    static async listarInventarioPorId(id){
 
-        return await InventarioRepository.findById(filtro);
+        let filtro = {
+            where:{
+                id: id
+            }
+        }
+        const inventario =  await InventarioRepository.listarPorId(filtro);
+
+        if(!inventario) throw TypeError(`Não foi possivel encontrar o inventario com o id: ${id}.`);
 
     }
 

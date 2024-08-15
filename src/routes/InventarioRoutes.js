@@ -4,7 +4,8 @@ import AuthMiddleware from '../middleware/AuthMiddleware.js';
 const router = express.Router();
 
 router
-    .get("/inventarios", AuthMiddleware, InventarioController.listarInventarios) // Daniel criar a rota que buscar os inventarios
+    .get("/inventarios", AuthMiddleware, InventarioController.listarInventarios) 
+    .get("/inventarios", AuthMiddleware, )
     //.post("/inventario", systemInventarioController.criarInventario)
 
 
