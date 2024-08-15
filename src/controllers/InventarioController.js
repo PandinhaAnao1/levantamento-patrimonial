@@ -1,80 +1,55 @@
+import { error } from "node:console";
 import InventarioService from "../services/inventarioService.js";
 
 class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
-            const {id, nome, data, concluido, campus} = req.params;
 
-            const unitExists = await InventarioService.listarInventarios(req.params)
+            const data = await InventarioService.listarInventarios(req.query)
 
-            if(unitExists.length === 0){
+            return res.status(200).json({
+                data:data.inventarios ?? [],
+                erro: false,
+                code: 200,
+                resultados:data.total ?? 1,
+                totalPaginas: Math.ceil((data.total ?? 1)/10),
+                limite: 10,
+                pagina: req.query.pagina ?? 1,
+                message: "Inventarios encontrados com sucesso!"
+                
+            });
+        }catch (erro){
+            if(erro instanceof TypeError){
                 return res.status(400).json([{
-                    error: true,
-                    code:400,
-                    message:"NÃO FOI ENCONTRADO NENHUM INVENTARIO"
+                    data:[],
+                    erro: false,
+                    code: 200,
+                    resultados:0,
+                    totalPaginas: 1,
+                    limite: 10,
+                    pagina: 1,
+                    message:"Não existe nehum inventario com essas caracteristicas!"
                 }])
             }
-
-            return res.status(200).json(unitExists);
-    }catch (err){
-        console.error(err);
-        return res.status(500).json([{ 
+        return res.status(500).json([{
+            data:[],
+            resultados:0,
+            totalPaginas: 1,
+            limite: 10,
+            pagina: 1,
             error: true, 
             code: 500, 
-            message: "OCORREU UM ERRO INTERNO"
+            message: "Ocorreu um erro interno no servidor!"
         }])
     }
   }
 
-  static listarSalas = async (req, res) => {
+  static listarInventarioPorId = async (req, res) => {
     try{
-        const idInventario = parseInt(req.params.id)
-
-        if(!idInventario){
-            return res.status(400).json({
-                error: true,
-                code: 400,
-                message: "id do inventario não é valido"
-            });
-        }
-
-        let filtro = {
-            where:{
-                sala_inve_id: parseInt(idInventario)
-            },
-            select:{
-                sala_id: true,
-                sala_Nome: true
-            }
-        }
-                
-
-        const salas = await InventarioService.listarById(filtro)
-
-
-        if(salas.length === 0){
-            return res.status(400).json({
-                error: true,
-                code: 400,
-                message: "Nem uma sala foi encontrada",
-              });
-        }else{
-            return res.status(200).json({
-                error: false,
-                code: 200,
-                message: "salas encontradas",
-                data: salas
-            });
-        }
+       
 
 
     }catch(err){
-        console.log(err)
-        return res.status(500).json({
-            error: true,
-            code: 500,
-            message: "Erro interno do servido",
-          });
     }
 
 }

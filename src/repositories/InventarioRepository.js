@@ -7,7 +7,11 @@ class InventarioRepository {
     return await prisma.inventarios.findMany(filtro);
   }
 
-  static async findById(filtro) {
+  static async contarInventarios(filtro) {
+    return await prisma.inventarios.count(filtro);
+  }
+
+  static async listarPorId(filtro) {
     return await prisma.salas.findMany(filtro);
   }
 }
