@@ -1,8 +1,13 @@
 import BemRepository from "../repositories/BemRepository.js"
+import bemSchema from "../shemas/bemSchema.js";
 
 class bemService{
 
     async listar(parametros){
+
+        const schema = new bemSchema().listarSchema()
+        schema.parse(parametros)
+
         const filtro = BemRepository.createFilter(parametros)
         const bens =  await BemRepository.findAll(filtro)
         if(bens.length == 0){
@@ -12,9 +17,11 @@ class bemService{
     }
 
     async listarPorId(parametros){
-        if(isNaN(parametros.bens_id)){
-            throw new Error("id não informado, ou em formato incorreto");
-        }
+        // if(isNaN(parametros.bens_id)){
+        //     throw new Error("id não informado, ou em formato incorreto");
+        // }
+        const schema = new bemSchema().listarPorIdSchema()
+        schema.parse(parametros)
 
         const filtro = BemRepository.createFilter(parametros)
         const bem = await BemRepository.findById(filtro)
@@ -27,30 +34,8 @@ class bemService{
 
     async adicionarBem(parametros){
 
-        const verificarParametroString = (parms) => {
-            parms.forEach(parm => {
-                if (parm === undefined || parm === null) {
-                    throw new Error("Um parâmetro faltando ou é inválido.");
-                }  
-            });
-        };
-
-        const verificarParametroInt = (parms) => {
-            parms.forEach(parm => {
-                if (parm === undefined || parm === null || isNaN(parm)) {
-                    throw new Error("Um parâmetro faltando ou é inválido.");
-                }  
-            });
-        };
-        
-        verificarParametroString([parametros.bens_nome,
-                                parametros.bens_decricao,
-                                parametros.bens_estado,
-                                parametros.bens_ocioso]);
-
-        verificarParametroInt([parametros.sala_id, 
-                                parametros.inve_id,
-                                parametros.usua_id,]);
+        const schema = new bemSchema().adicionarBemSchema()
+        schema.parse(parametros)
 
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -85,31 +70,10 @@ class bemService{
     }
 
     async auditarBem(parametros){
-        const verificarParametroString = (parms) => {
-            parms.forEach(parm => {
-                if (parm === undefined || parm === null) {
-                    throw new Error("Um parâmetro faltando ou é inválido.");
-                }  
-            });
-        };
 
-        const verificarParametroInt = (parms) => {
-            parms.forEach(parm => {
-                if (parm === undefined || parm === null || isNaN(parm)) {
-                    throw new Error("Um parâmetro faltando ou é inválido.");
-                }  
-            });
-        };        
-
-        verificarParametroString([parametros.bens_estado,
-                                parametros.bens_ocioso]);
-                                
-
-        verificarParametroInt([parametros.bens_id,
-                                parametros.sala_id, 
-                                parametros.inve_id,
-                                parametros.usua_id]);
-
+        const schema = new bemSchema().auditarBemSchema()
+        schema.parse(parametros)
+                        
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
@@ -118,8 +82,12 @@ class bemService{
 
         const auditadoExists = await BemRepository.bemJaFoiAuditado(parametros.bens_id)
 
-        if(!usuarioExists || !salaExists || !inventarioExists || auditadoExists){
+        if(!usuarioExists || !salaExists || !inventarioExists){
             throw new Error("usuario, sala ou inventario não existem");
+        }
+
+        if(!auditadoExists){
+            throw new Error("Bem já foi auditado.");
         }
 
         const { usua_id, inve_id, sala_id, bens_id, ...camposInsert } = parametros;
