@@ -35,7 +35,7 @@ class bemService{
 
         const schema = new bemSchema().createBensSchema()
         schema.parse(parametros)
-        console.log(parametros)
+        
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
 
         if(!salaExists){
