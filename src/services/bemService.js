@@ -64,7 +64,7 @@ class BemService{
         const inventarioExists = await BemRepository.inventarioExist(parametros.inve_id)
 
         if(!usuarioExists || !salaExists || !inventarioExists){
-            throw new Error("usuario, sala ou inventario não existem");
+            throw new Error("usuario, sala ou inventário não existem");
         }
         
         const { usua_id, inve_id, sala_id, ...camposInsert } = parametros;
@@ -100,16 +100,19 @@ class BemService{
 
         const idsSalaInventario = await BemRepository.getIds(parametros.bens_id)
 
+        if(!idsSalaInventario){
+            throw new Error("bem inforamdo não existe");
+        }
+
         const { bens_sala_id, salas } = idsSalaInventario;
         const sala_inve_id = salas.sala_inve_id;
 
-        // testar
         if(!usuarioExists){
             throw new Error("Usuario não existem");
         }
 
         if(bens_sala_id != parametros.inve_id || sala_inve_id != parametros.sala_id){
-            throw new Error("O Bem não pertence a sala ou inventario informado");
+            throw new Error("O Bem não pertence a sala ou inventário informado");
         }
 
         if(auditadoExists){

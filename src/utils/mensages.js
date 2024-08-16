@@ -89,11 +89,11 @@ export const sendError = (res,code, errors = []) => {
 export const sendResponse = (res,code, resp = {}) => {
     return res.status(code).json({
         ...{
-            data: [],
             error: false,
             code: code,
             message: messages.httpCodes[code],
-            errors: []
+            errors: [],
+            data: []
         }, ...resp
     });
 };
