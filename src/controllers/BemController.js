@@ -1,5 +1,6 @@
 import bemService from "../services/bemService.js";
 import {z} from 'zod';
+import {sendResponse, sendError} from "../utils/mensages.js";
 
 class BemController {
 
@@ -9,29 +10,23 @@ class BemController {
             const parametros = {
                 sala_id: sala_id
             }
-            const bensExists = await BemService.listar(parametros)
+            const bensExists = await bemService.listar(parametros)
 
-            return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
+            return sendResponse(res,200,{data: bensExists})
+
+            // return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
 
         } catch (err) {
-            console.error(err);
+            
             if(err.message === "Nem um registro encontrado") {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+                return sendError(res, 404, ["Nem um registro encontrado"])
 
             }else if (err instanceof z.ZodError) {
-
                 const errorMessages = err.issues.map((issue) => issue.message);
-                return res.status(400).json({
-                    error: true,
-                    code: 400,
-                    message: errorMessages
-                })
+                return sendError(res, 400, errorMessages)
+
             }else{
-                return res.status(500).json([{
-                    error: true,
-                    code: 500,
-                    message: "OCORREU UM ERRO INTERNO"
-                }])
+                return sendError(res, 500, ["OCORREU UM ERRO INTERNO"])
             }
         }
     }
@@ -44,51 +39,24 @@ class BemController {
             }
 
             const bensExist = await bemService.listarPorId(parametros)
-            return res.status(200).json({ error: false, code: 200, message: "Registro encontrado", data: bensExist});
+            return sendResponse(res,200,{data: bensExist})
 
         } catch (err) {
-            console.error(err);
 
-            if(err.message === "id não informado, ou em formato incorreto"){
-                return res.status(404).json({ error: true, code: 404, message: err.message});
-                
-            }else if(err.message === "Nem um registro encontrado") {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+            if(err.message === "Nem um registro encontrado") {
+                return sendError(res, 404, ["Nem um registro encontrado"])
 
             }else if (err instanceof z.ZodError) {
 
                 const errorMessages = err.issues.map((issue) => issue.message);
-                return res.status(400).json({
-                    error: true,
-                    code: 400,
-                    message: errorMessages
-                })
+                return sendError(res, 400, errorMessages)
 
             }else {
-                return res.status(500).json([{
-                    error: true,
-                    code: 500,
-                    message: "OCORREU UM ERRO INTERNO"
-                }])
+                return sendError(res, 500, ["OCORREU UM ERRO INTERNO"])
             }
         }
     }
-    // model bens {
-    //     bens_id          Int         @id @unique(map: "bens_id_UNIQUE") @default(autoincrement())
-    //     bens_sala_id     Int
-    //     bens_nome        String      @db.VarChar(200)
-    //     bens_tombo       String?     @db.VarChar(15)
-    //     bens_responsavel String?     @db.VarChar(80)
-    //     bens_decricao    String      @db.MediumText
-    //     bens_estado      String?     @db.VarChar(30)
-    //     bens_ocioso      Boolean?
-    //     bens_imagem      String?     @db.VarChar(200)
-    //     bens_encontrado  Boolean?
-    //     bens_valor       Decimal?    @db.Decimal(10, 2)
-    //     salas            salas       @relation(fields: [bens_sala_id], references: [sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_itens_sala1")
-    //     historico        historico[]
-    //     @@index([bens_sala_id], map: "fk_itens_sala1_idx")
-    //   }
+
     static createBem = async (req, res) => {
         try {
             const parametros = {
@@ -100,29 +68,20 @@ class BemController {
                 bens_encontrado: false,
                 bens_valor: req.body.bens_valor,
             };
-            const bemCreate = await bemService.createBems(parametros)
-            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: bemCreate});
+            const bemCreate = await bemService.create(parametros)
+            return sendResponse(res,201,{data: bemCreate})
 
         }catch(err){
-            console.error(err);
-
-            if (err.message === "usuario, sala ou inventario não existem") {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+            
+            if (err.message === "O sala_id informado não existem") {
+                return sendError(res, 404, ["O sala_id informado não existem"])
 
             }else if (err instanceof z.ZodError) {
                 const errorMessages = err.issues.map((issue) => issue.message);
-                return res.status(400).json({
-                    error: true,
-                    code: 400,
-                    message: errorMessages
-                })
+                return sendError(res, 400, errorMessages)
 
             }else{
-                return res.status(500).json([{
-                    error: true,
-                    code: 500,
-                    message: "OCORREU UM ERRO INTERNO"
-                }])
+                return sendError(res, 500, ["OCORREU UM ERRO INTERNO"])
             }
         } 
     }
@@ -144,28 +103,18 @@ class BemController {
             };
             const bemAdicionado = await bemService.adicionarBem(parametros)
 
-            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: bemAdicionado});
+            return sendResponse(res,201,{data: bemAdicionado})
 
         }catch(err){
-            console.error(err);
-
-            if (err.message === "usuario, sala ou inventario não existem") {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+            if (err.message === "usuario, sala ou inventário não existem") {
+                return sendError(res, 404, ["usuario, sala ou inventário não existem"])
 
             }else if (err instanceof z.ZodError) {
                 const errorMessages = err.issues.map((issue) => issue.message);
-                return res.status(400).json({
-                    error: true,
-                    code: 400,
-                    message: errorMessages
-                })
+                return sendError(res, 400, errorMessages)
 
             }else{
-                return res.status(500).json([{
-                    error: true,
-                    code: 500,
-                    message: "OCORREU UM ERRO INTERNO"
-                }])
+                return sendError(res, 500, ["OCORREU UM ERRO INTERNO"])
             }
         }  
     }
@@ -186,32 +135,25 @@ class BemController {
             const bemAuditado = await bemService.auditarBem(parametros)
             return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
-        }catch(err  ){
-            console.error(err)
+        }catch(err){
             if (err.message === "Usuario não existem") {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+                return sendError(res, 404, ["Usuario não existem"])
 
-            }else if (err.message === "O Bem não pertence a sala ou inventario informado") {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+            }else if (err.message === "bem inforamdo não existe") {
+                return sendError(res, 404, ["bem inforamdo não existe"])
+
+            }else if (err.message === "O Bem não pertence a sala ou inventário informado") {
+                return sendError(res, 400, ["O Bem não pertence a sala ou inventário informado"])
 
             }else if(err.message === 'Bem já foi auditado.') {
-                return res.status(404).json({ error: true, code: 404, message: err.message});
+                return sendError(res, 403, ['Bem já foi auditado.'])
 
             }else if(err instanceof z.ZodError) {
-
                 const errorMessages = err.issues.map((issue) => issue.message);
-                return res.status(400).json({
-                    error: true,
-                    code: 400,
-                    message: errorMessages
-                })
+                return sendError(res, 400, errorMessages)
 
             }else{
-                return res.status(500).json([{
-                    error: true,
-                    code: 500,
-                    message: "OCORREU UM ERRO INTERNO"
-                }])
+                return sendError(res, 500, ["OCORREU UM ERRO INTERNO"])
             }
         }
     }

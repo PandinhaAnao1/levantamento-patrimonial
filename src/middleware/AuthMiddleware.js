@@ -18,7 +18,7 @@ const AuthMiddleware = (req,res,next) => {
       }
 
     return res.status(401).json({ message: messages.httpCodes[401]});
- 
+
   } catch(error) {
     return res.status(401).json({ message: messages.httpCodes[401]});
   }
