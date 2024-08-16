@@ -49,8 +49,12 @@ class systemBemController {
         } catch (err) {
             console.error(err);
 
-            if(err.message === "Nem um registro encontrado"){
+            if(err.message === "id não informado, ou em formato incorreto"){
                 return res.status(404).json({ error: true, code: 404, message: err.message});
+                
+            }else if(err.message === "Nem um registro encontrado") {
+                return res.status(404).json({ error: true, code: 404, message: err.message});
+
             }else if (err instanceof z.ZodError) {
 
                 const errorMessages = err.issues.map((issue) => issue.message);
@@ -96,9 +100,8 @@ class systemBemController {
                 bens_encontrado: false,
                 bens_valor: req.body.bens_valor,
             };
-            console.log(parametros)
-            const unitExists = await bemService.createBems(parametros)
-            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: unitExists});
+            const bemCreate = await bemService.createBems(parametros)
+            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: bemCreate});
 
         }catch(err){
             console.error(err);
@@ -139,9 +142,9 @@ class systemBemController {
                 bens_responsavel: req.body.bens_responsavel ?? "",
                 bens_encontrado: true,
             };
-            const unitExists = await bemService.adicionarBem(parametros)
+            const bemAdicionado = await bemService.adicionarBem(parametros)
 
-            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: unitExists});
+            return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: bemAdicionado});
 
         }catch(err){
             console.error(err);
@@ -180,8 +183,8 @@ class systemBemController {
                 bens_encontrado: true,
             };
 
-            const unitExists = await bemService.auditarBem(parametros)
-            return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: unitExists});
+            const bemAuditado = await bemService.auditarBem(parametros)
+            return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
         }catch(err  ){
             console.error(err)

@@ -17,11 +17,10 @@ class bemService{
     }
 
     async listarPorId(parametros){
-        // if(isNaN(parametros.bens_id)){
-        //     throw new Error("id não informado, ou em formato incorreto");
-        // }
+        if(isNaN(parametros.bens_id)){
+            throw new Error("id não informado, ou em formato incorreto");
+        }
         const schema = new bemSchema().listarPorIdSchema()
-        schema.parse(parametros)
 
         const filtro = BemRepository.createFilter(parametros)
         const bem = await BemRepository.findById(filtro)
@@ -34,7 +33,7 @@ class bemService{
 
     async createBems(parametros){
 
-        const schema = new bemSchema().adicionarBemSchema()
+        const schema = new bemSchema().createBensSchema()
         schema.parse(parametros)
         console.log(parametros)
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
