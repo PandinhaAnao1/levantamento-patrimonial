@@ -1,7 +1,7 @@
 import {describe, expect, test} from '@jest/globals';
-import userService from '../../services/bemService.js'
-import userRepository from '../../repositories/BemRepository.js';
-
+import bemService from '../../services/bemService.js'
+import bensRepository from '../../repositories/BemRepository.js';
+import { z } from 'zod';
 
 jest.mock('../../repositories/BemRepository', () => ({
     findAll: jest.fn(),
@@ -17,12 +17,17 @@ jest.mock('../../repositories/BemRepository', () => ({
     createFilter: jest.fn()
 }));
 
-describe('bens', () => {
+jest.mock('../../utils/mensages.js', () => ({
+    sendResponse: jest.fn(),
+    sendError: jest.fn()
+}));
+
+describe('bens-listar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    test('Deve chamar o banco e listar todos os bens', async () => {
+    test('1-Deve chamar o banco e listar todos os bens', async () => {
 
         const mockBens = [
             { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
@@ -31,14 +36,139 @@ describe('bens', () => {
 
         const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
 
-        userRepository.createFilter.mockReturnValue(filter); 
-        userRepository.findAll.mockResolvedValue(mockBens);
+        bensRepository.createFilter.mockReturnValue(filter); 
+        bensRepository.findAll.mockResolvedValue(mockBens);
 
-        const users = await userService.listar({sala_id: 1});
+        const bens = await bemService.listar({sala_id: 1});
 
-        expect(users).toEqual(mockBens);
-        expect(userRepository.findAll).toHaveBeenCalledWith(filter);
+        expect(bens).toEqual(mockBens);
+        expect(bensRepository.findAll).toHaveBeenCalledWith(filter);
     });
+
+    test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
+
+        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+
+        bensRepository.createFilter.mockReturnValue(filter); 
+        bensRepository.findAll.mockResolvedValue([]);
+
+        await expect(bemService.listar({})).rejects.toThrow('Nem um registro encontrado');
+
+        expect(bensRepository.findAll).toHaveBeenCalledWith(filter);
+    });
+
+    test('3-Deve retonar um erro quando sala_id estiver no formato ou tipo errado.', async () => {
+
+        const mockBens = [
+            { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
+            { bens_id: 1, bens_sala_id: 2, bens_nome: 'Mesa Gamer', bens_estado: 'ruim', bens_encontrado: true },
+        ];
+
+        bensRepository.createFilter.mockReturnValue({});
+        bensRepository.findAll.mockResolvedValue(mockBens);
+
+        await expect(bemService.listar({sala_id:"n"})).rejects.toBeInstanceOf(z.ZodError);
+    });
+});
+
+describe('bens-listar', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('1-Deve chamar o banco e buscar um bem pelo id dele', async () => {
+
+        const mockBens = [
+            { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true }
+        ];
+
+        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+
+        bensRepository.createFilter.mockReturnValue(filter); 
+        bensRepository.findById.mockResolvedValue(mockBens);
+
+        const bens = await bemService.listarPorId({bens_id: 1});
+
+        expect(bens).toEqual(mockBens);
+        expect(bensRepository.findById).toHaveBeenCalledWith(filter);
+    });
+
+    test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
+
+        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+
+        bensRepository.createFilter.mockReturnValue(filter); 
+        bensRepository.findById.mockResolvedValue(null);
+
+        await expect(bemService.listarPorId({bens_id: 1})).rejects.toThrow('Nem um registro encontrado');
+
+        expect(bensRepository.findById).toHaveBeenCalledWith(filter);
+    });
+
+    test('3-Deve retonar um erro quando sala_id estiver no formato ou tipo errado.', async () => {
+
+        const mockBens = [
+            { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
+            { bens_id: 1, bens_sala_id: 2, bens_nome: 'Mesa Gamer', bens_estado: 'ruim', bens_encontrado: true },
+        ];
+
+        bensRepository.createFilter.mockReturnValue({});
+        bensRepository.findById.mockResolvedValue(mockBens);
+
+        await expect(bemService.listarPorId({bens_id:"n"})).rejects.toBeInstanceOf(z.ZodError);
+    });
+});
+
+describe('bens-create', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('1-Deve criar um bem e retornar o bem criado', async () => {
+
+        const mockBens = {
+                sala_id:parseInt(1),
+                bens_nome:"test unitario",
+                bens_decricao:"teste feliz",
+                bens_tombo: "23535TB",
+                bens_responsavel: "lucas ferreira",
+                bens_valor: parseInt(200)
+            };
+
+        bensRepository.salaExist.mockReturnValue({sala_nome: "teste unitario"});
+        bensRepository.createBem.mockResolvedValue(mockBens);
+
+        const bens = await bemService.create(mockBens);
+
+        expect(bens).toEqual(mockBens);
+        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockBens.sala_id);
+    });
+
+    test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
+
+        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+
+        bensRepository.createFilter.mockReturnValue(filter); 
+        bensRepository.findById.mockResolvedValue(null);
+
+        await expect(bemService.listarPorId({bens_id: 1})).rejects.toThrow('Nem um registro encontrado');
+
+        expect(bensRepository.findById).toHaveBeenCalledWith(filter);
+    });
+
+    test('3-Deve retonar um erro quando sala_id estiver no formato ou tipo errado.', async () => {
+
+        const mockBens = [
+            { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
+            { bens_id: 1, bens_sala_id: 2, bens_nome: 'Mesa Gamer', bens_estado: 'ruim', bens_encontrado: true },
+        ];
+
+        bensRepository.createFilter.mockReturnValue({});
+        bensRepository.findById.mockResolvedValue(mockBens);
+
+        await expect(bemService.listarPorId({bens_id:"n"})).rejects.toBeInstanceOf(z.ZodError);
+    });
+});
 
     // test('should return user by ID', async () => {
     //     // Arrange
@@ -119,4 +249,3 @@ describe('bens', () => {
     //     await expect(userService.excluir(1)).rejects.toThrow('Usuário não encontrado');
     //     expect(userRepository.findById).toHaveBeenCalledWith(1);
     // });
-});
