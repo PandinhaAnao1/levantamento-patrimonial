@@ -1,7 +1,7 @@
 import bemService from "../services/bemService.js";
-import {z} from 'zod'
+import {z} from 'zod';
 
-class systemBemController {
+class BemController {
 
     static listarbens = async (req, res) => {
         try {
@@ -9,7 +9,7 @@ class systemBemController {
             const parametros = {
                 sala_id: sala_id
             }
-            const bensExists = await bemService.listar(parametros)
+            const bensExists = await BemService.listar(parametros)
 
             return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
 
@@ -217,4 +217,4 @@ class systemBemController {
     }
 }
 
-export default systemBemController;
+export default BemController;

@@ -1,93 +1,70 @@
-import inventarioService from "../services/inventarioService.js";
-
-class systemBemController {
+import { error } from "node:console";
+import InventarioService from "../services/inventarioService.js";
+import {sendResponse, sendError} from "../utils/mensages.js";
+class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
 
-            let filtro = {
-                select:{
-                inve_id: true,
-                inve_nome: true,
-                inve_data: true,
-                inve_campus: true,
-                inve_concluido: true,
-                },
-            }
+            const data = await InventarioService.listarInventarios(req.query)
 
-            const unitExists = await inventarioService.listarAll(filtro)
+            return sendResponse(res,200, {
+                data:data.inventarios ?? [],
+                resultados:data.total ?? 1,
+                totalPaginas: Math.ceil((data.total ?? 1)/10),
+                limite: 10,
+                pagina: req.query.pagina ?? 1,
 
-            if(unitExists.length === 0){
-                return res.status(400).json([{
-                    error: true,
-                    code:400,
-                    message:"NÃO FOI ENCONTRADO NENHUM INVENTARIO"
+            }); 
+            
+        }catch (erro){
+            console.log(erro)
+            if(erro instanceof TypeError){
+                return sendError();
+                
+                res.status(400).json([{
+                    data:[],
+                    erro: false,
+                    code: 200,
+                    resultados:0,
+                    totalPaginas: 1,
+                    limite: 10,
+                    pagina: 1,
+                    message:"Não existe nehum inventario com essas caracteristicas!"
                 }])
             }
-
-            return res.status(200).json(unitExists);
-    }catch (err){
-        console.error(err);
-        return res.status(500).json([{ 
+        return res.status(500).json([{
+            data:[],
+            resultados:0,
+            totalPaginas: 1,
+            limite: 10,
+            pagina: 1,
             error: true, 
             code: 500, 
-            message: "OCORREU UM ERRO INTERNO"
+            message: "Ocorreu um erro interno no servidor!"
         }])
     }
   }
 
-  static listarSalas = async (req, res) => {
+  static listarInventarioPorId = async (req, res) => {
     try{
-        const idInventario = parseInt(req.params.id)
 
-        if(!idInventario){
-            return res.status(400).json({
-                error: true,
-                code: 400,
-                message: "id do inventario não é valido"
-            });
-        }
+        let idInventario = parseInt(req.params.id);
+        console.log(idInventario);
 
-        let filtro = {
-            where:{
-                sala_inve_id: parseInt(idInventario)
-            },
-            select:{
-                sala_id: true,
-                sala_Nome: true
-            }
-        }
-                
+        const inventario = await InventarioService.listarInventarioPorId(idInventario);
+        
+        console.log(inventario);
+        return res.status(200).json({
+            data: [inventario]
+        });
+   
+    }catch(erro){
 
-        const salas = await inventarioService.listarById(filtro)
-
-
-        if(salas.length === 0){
-            return res.status(400).json({
-                error: true,
-                code: 400,
-                message: "Nem uma sala foi encontrada",
-              });
-        }else{
-            return res.status(200).json({
-                error: false,
-                code: 200,
-                message: "salas encontradas",
-                data: salas
-            });
-        }
-
-
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({
-            error: true,
-            code: 500,
-            message: "Erro interno do servido",
-          });
+        console.log(erro);
     }
 
 }
 
 }
 
-export default systemBemController;
+export default InventarioController;

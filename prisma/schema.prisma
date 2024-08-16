@@ -7,37 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model usuarios {
-  usua_id     Int         @id @unique(map: "audi_id_UNIQUE") @default(autoincrement())
-  usua_nome   String      @db.VarChar(80)
-  usua_email  String      @unique(map: "audi_email_UNIQUE") @db.VarChar(80)
-  usua_senha  String      @db.VarChar(30)
-  usua_funcao String      @db.VarChar(20)
-  usua_status Boolean
-  historico   historico[]
-}
-
-model inventarios {
-  inve_id        Int         @id @default(autoincrement())
-  inve_nome      String      @db.VarChar(80)
-  inve_data      DateTime    @db.Date
-  inve_concluido Boolean
-  inve_campus    String      @db.VarChar(100)
-  historico      historico[]
-  salas          salas[]
-}
-
-model salas {
-  sala_id      Int         @id @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
-  sala_inve_id Int
-  sala_nome    String      @db.VarChar(120)
-  bens         bens[]
-  historico    historico[]
-  inventarios  inventarios @relation(fields: [sala_inve_id], references: [inve_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sala_inventarios1")
-
-  @@index([sala_inve_id], map: "fk_sala_inventarios1_idx")
-}
-
 model bens {
   bens_id          Int         @id @unique(map: "bens_id_UNIQUE") @default(autoincrement())
   bens_sala_id     Int
@@ -71,4 +40,35 @@ model historico {
   @@index([hist_inventarios_id], map: "fk_historico_inventarios1_idx")
   @@index([hist_bens_id], map: "fk_historico_itens1_idx")
   @@index([hist_salas_id], map: "fk_historico_sala1_idx")
+}
+
+model inventarios {
+  inve_id        Int         @id @default(autoincrement())
+  inve_nome      String      @db.VarChar(80)
+  inve_data      DateTime    @db.Date
+  inve_concluido Boolean
+  inve_campus    String      @db.VarChar(100)
+  historico      historico[]
+  salas          salas[]
+}
+
+model salas {
+  sala_id      Int         @id @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
+  sala_inve_id Int
+  sala_nome    String      @db.VarChar(120)
+  bens         bens[]
+  historico    historico[]
+  inventarios  inventarios @relation(fields: [sala_inve_id], references: [inve_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sala_inventarios1")
+
+  @@index([sala_inve_id], map: "fk_sala_inventarios1_idx")
+}
+
+model usuarios {
+  usua_id     Int         @id @unique(map: "audi_id_UNIQUE") @default(autoincrement())
+  usua_nome   String      @db.VarChar(80)
+  usua_email  String      @unique(map: "audi_email_UNIQUE") @db.VarChar(80)
+  usua_senha  String      @db.VarChar(30)
+  usua_funcao String      @db.VarChar(20)
+  usua_status Boolean
+  historico   historico[]
 }

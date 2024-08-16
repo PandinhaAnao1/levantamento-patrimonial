@@ -39,6 +39,21 @@ COM OS MESMO RELACIONAMENTOS SENDO QUE ERA SO DEIXAR O CAMPO OPICIONALLLLLLLLLLL
         <td>SALAS</td>
     </tr>
     <tr>
+        <td>GET</td>
+        <td><a href="#">rota que deverá existir</a></td>
+        <td>SALAS</td>
+    </tr>
+    <tr>
+        <td>GET ID</td>
+        <td><a href="#">rota que deverá existir</a></td>
+        <td>SALAS</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td><a href="#">rota que deverá existir</a></td>
+        <td>SALAS</td>
+    </tr>
+    <tr>
         <td>POST</td>
         <td><a href="#auditar_bem">rota para poder auditar um bem.</a></td>
         <td>BEM</td>
@@ -46,6 +61,16 @@ COM OS MESMO RELACIONAMENTOS SENDO QUE ERA SO DEIXAR O CAMPO OPICIONALLLLLLLLLLL
     <tr>
         <td>POST</td>
         <td><a href="#cadastrar_bem">rota para cadastrar novos itens.</a></td>
+        <td>BEM</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td><a href="">rota que deverá existir.</a></td>
+        <td>BEM</td>
+    </tr>
+    <tr>
+        <td>GET ID</td>
+        <td><a href="">rota que deverá existir.</a></td>
         <td>BEM</td>
     </tr>
     <tr>

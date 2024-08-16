@@ -1,5 +1,6 @@
 import express from "express";
-import BemController from '../controllers/BemController.js'
+import BemController from '../controllers/BemController.js';
+import AuthMiddleware from '../middleware/AuthMiddleware.js';
 const router = express.Router();
 
 router

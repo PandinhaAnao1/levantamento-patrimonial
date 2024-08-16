@@ -1,10 +1,10 @@
 import SalaRepository from "../repositories/SalaRepository.js";
 
-class salaService{
+class SalaService{
     
-    async listarPorIdSala(filtro){
+    static async listarPorIdSala(filtro){
         return await SalaRepository.findById(filtro)
     }
 }
 
-export default new salaService()
+export default SalaService;

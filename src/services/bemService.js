@@ -1,7 +1,7 @@
 import BemRepository from "../repositories/BemRepository.js"
 import bemSchema from "../shemas/bemSchema.js";
 
-class bemService{
+class BemService{
 
     async listar(parametros){
 
@@ -55,7 +55,7 @@ class bemService{
         return bem
     }
 
-    async adicionarBem(parametros){
+    static async adicionarBem(parametros){
 
         const schema = new bemSchema().adicionarBemSchema()
         schema.parse(parametros)
@@ -151,4 +151,4 @@ class bemService{
 
 }
 
-export default new bemService()
+export default BemService;

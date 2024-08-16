@@ -1,13 +1,21 @@
 import { prisma } from "../configs/prismaClient.js";
 
-class inventarioRepository {
-  async findAll(filtro) {
+class InventarioRepository {
+
+
+  static async listarInventarios(filtro) {
     return await prisma.inventarios.findMany(filtro);
   }
 
-  async findById(filtro) {
-    return await prisma.sala.findMany(filtro);
+  static async contarInventarios(filtro) {
+    return await prisma.inventarios.count(filtro);
+  }
+
+  static async listarPorId(filtro) {
+    return await prisma.inventarios.findUnique(filtro);
   }
 }
 
-export default new inventarioRepository();
+export default InventarioRepository;
+
+
