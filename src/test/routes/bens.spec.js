@@ -93,16 +93,16 @@ describe('get bens', () => {
         const req = await request(app)
         .get('/bens/string')
         .set("Accept", "aplication/json")
-        expect(req.status).toBe(400)
+        expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message[0]).toEqual("ID informado não é do tipo number")
+        expect(req.body.message).toEqual("ID informado não é do tipo number")
     })
 })
 
-describe('post bens', () => {
+describe('post bens/adicinar', () => {
     it("deve adicionar um bem e retornar o bem criado", async () => {
         const req = await request(app)
-        .post('/bens/adicionar')
+        .post('/bens/criar/auditar')
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":1,
@@ -129,7 +129,7 @@ describe('post bens', () => {
 
     it("deve retornar error ao tentar adicionar um bem sem um dos campos obrigatorios.", async () => {
         const req = await request(app)
-        .post('/bens/adicionar')
+        .post('bens/criar/auditar')
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":1,
@@ -149,7 +149,7 @@ describe('post bens', () => {
 
     it("deve retornar error ao tentar adicionar um bem com uma sala_id que não existe", async () => {
         const req = await request(app)
-        .post('/bens/adicionar')
+        .post('bens/criar/auditar')
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":100000,
@@ -167,6 +167,31 @@ describe('post bens', () => {
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(404)
         expect(req.body.message).toEqual("usuario, sala ou inventario não existem")
+    })
+})
+
+describe('post bens/adicinar', () => {
+    it("deve criar um bem e retornar ele", async () => {
+        const req = await request(app)
+        .post('/bens')
+        .set("Accept", "aplication/json")
+        .send({
+                "sala_id":1,
+                "bens_nome": faker.commerce.productName(),
+                "bens_decricao": faker.lorem.text(),
+                "bens_imagem":faker.image.imageUrl(),
+                "bens_tombo": faker.random.uuid(),
+                "bens_responsavel": faker.name.findName(),
+                "bens_valor": faker.random.number(),
+        })
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(201)
+        expect(req.body.message).toEqual("Bem adicionado")
+        expect(req.body.data).toBeInstanceOf(Object)
+        expect(req.body.data.bens_id).toBeDefined()
+        expect(req.body.data.bens_nome).toBeDefined()
+        expect(req.body.data.bens_tombo).toBeDefined()
+        expect(req.body.data.bens_responsavel).toBeDefined()
     })
 })
 
