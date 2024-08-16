@@ -9,12 +9,12 @@ class BemController {
             const parametros = {
                 sala_id: sala_id
             }
-            const bensExists = await BemService.listar(parametros)
+            const bensExists = await bemService.listar(parametros)
 
             return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
 
         } catch (err) {
-            console.error(err);
+            
             if(err.message === "Nem um registro encontrado") {
                 return res.status(404).json({ error: true, code: 404, message: err.message});
 
@@ -47,12 +47,9 @@ class BemController {
             return res.status(200).json({ error: false, code: 200, message: "Registro encontrado", data: bensExist});
 
         } catch (err) {
-            console.error(err);
+            
 
-            if(err.message === "id não informado, ou em formato incorreto"){
-                return res.status(404).json({ error: true, code: 404, message: err.message});
-                
-            }else if(err.message === "Nem um registro encontrado") {
+            if(err.message === "Nem um registro encontrado") {
                 return res.status(404).json({ error: true, code: 404, message: err.message});
 
             }else if (err instanceof z.ZodError) {
@@ -73,22 +70,7 @@ class BemController {
             }
         }
     }
-    // model bens {
-    //     bens_id          Int         @id @unique(map: "bens_id_UNIQUE") @default(autoincrement())
-    //     bens_sala_id     Int
-    //     bens_nome        String      @db.VarChar(200)
-    //     bens_tombo       String?     @db.VarChar(15)
-    //     bens_responsavel String?     @db.VarChar(80)
-    //     bens_decricao    String      @db.MediumText
-    //     bens_estado      String?     @db.VarChar(30)
-    //     bens_ocioso      Boolean?
-    //     bens_imagem      String?     @db.VarChar(200)
-    //     bens_encontrado  Boolean?
-    //     bens_valor       Decimal?    @db.Decimal(10, 2)
-    //     salas            salas       @relation(fields: [bens_sala_id], references: [sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_itens_sala1")
-    //     historico        historico[]
-    //     @@index([bens_sala_id], map: "fk_itens_sala1_idx")
-    //   }
+
     static createBem = async (req, res) => {
         try {
             const parametros = {
@@ -100,13 +82,12 @@ class BemController {
                 bens_encontrado: false,
                 bens_valor: req.body.bens_valor,
             };
-            const bemCreate = await bemService.createBems(parametros)
+            const bemCreate = await bemService.create(parametros)
             return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: bemCreate});
 
         }catch(err){
-            console.error(err);
-
-            if (err.message === "usuario, sala ou inventario não existem") {
+            
+            if (err.message === "O sala_id informado não existem") {
                 return res.status(404).json({ error: true, code: 404, message: err.message});
 
             }else if (err instanceof z.ZodError) {
@@ -147,7 +128,7 @@ class BemController {
             return res.status(201).json({ error: false, code: 201, message: "Bem adicionado", data: bemAdicionado});
 
         }catch(err){
-            console.error(err);
+            
 
             if (err.message === "usuario, sala ou inventario não existem") {
                 return res.status(404).json({ error: true, code: 404, message: err.message});
@@ -187,7 +168,6 @@ class BemController {
             return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
         }catch(err  ){
-            console.error(err)
             if (err.message === "Usuario não existem") {
                 return res.status(404).json({ error: true, code: 404, message: err.message});
 

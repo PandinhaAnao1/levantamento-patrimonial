@@ -6,7 +6,7 @@ class BemService{
     async listar(parametros){
 
         const schema = new bemSchema().listarSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
 
         const filtro = BemRepository.createFilter(parametros)
         const bens =  await BemRepository.findAll(filtro)
@@ -17,10 +17,8 @@ class BemService{
     }
 
     async listarPorId(parametros){
-        if(isNaN(parametros.bens_id)){
-            throw new Error("id não informado, ou em formato incorreto");
-        }
         const schema = new bemSchema().listarPorIdSchema()
+        parametros = schema.parse(parametros)
 
         const filtro = BemRepository.createFilter(parametros)
         const bem = await BemRepository.findById(filtro)
@@ -31,15 +29,15 @@ class BemService{
         return bem
     }
 
-    async createBems(parametros){
+    async create(parametros){
 
         const schema = new bemSchema().createBensSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
         
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
 
         if(!salaExists){
-            throw new Error("o sala_id informado não existem");
+            throw new Error("O sala_id informado não existem");
         }
         
         const { sala_id, ...camposInsert } = parametros;
@@ -51,14 +49,13 @@ class BemService{
             select: BemRepository.createFilter({}).select
         })
 
-        console.log(bem)
         return bem
     }
 
-    static async adicionarBem(parametros){
+    async adicionarBem(parametros){
 
         const schema = new bemSchema().adicionarBemSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
 
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -95,7 +92,7 @@ class BemService{
     async auditarBem(parametros){
 
         const schema = new bemSchema().auditarBemSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
                         
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -106,6 +103,7 @@ class BemService{
         const { bens_sala_id, salas } = idsSalaInventario;
         const sala_inve_id = salas.sala_inve_id;
 
+        // testar
         if(!usuarioExists){
             throw new Error("Usuario não existem");
         }
@@ -151,4 +149,4 @@ class BemService{
 
 }
 
-export default BemService;
+export default new BemService();
