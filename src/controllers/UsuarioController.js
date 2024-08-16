@@ -19,7 +19,7 @@ class UsuarioController {
             const data =  await UsuarioService.login(req.body);
 
             return sendResponse(res,200, {
-              
+
             })
             res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
@@ -32,66 +32,66 @@ class UsuarioController {
         }  
     }
     
-    static listarUsuarios = async (req, res) => {
-        try {
-    
-          const lista_contas = await UsuarioService.listarUsuarios();
-    
-          return res.status(200).json({ lista_contas });
-    
-        } catch (err) {
-          console.error(err);
-          return res.status(500).json([
-            {
-              error: true,
-              code: 500,
-              message: "OCORREU UM ERRO INTERNO",
-            },
-          ]);
-        }
-      };
-    
-      static listarUsuarioPorId = async (req, res) => {
-        try {
-          console.log("aqui");
-          const id_conta = parseInt(req.params.id);
-          console.log(id_conta);
-          const unitExists = await UsuarioService.listarUsuarioPorId(id_conta)
-    
-          if (unitExists === null) {
-            return res.status(400).json([
-              {
-                error: true,
-                code: 400,
-                message: "NÃO FOI ENCONTRADO NENHUM INVENTARIO",
-              },
-            ]);
-          }
-    
-          return res.status(200).json(unitExists);
-        } catch (err) {
-          if (err.message === 'usuario não existe') {
-            return res.status(404).json({ error: true, code: 404, message: err.message});
-        }
-          console.error(err);
-          return res.status(500).json([
-            {
-              
-              error: true,
-              code: 500,
-              message: "OCORREU UM ERRO INTERNO",
-            },
-          ]);
-        }
-      };
-    
-      static criarUsuario = (req, res) => {
-        return null; // criar a conta com todos os dados
-      };
-    
-      static atualizarUsuario = (req, res) => {
-        return null; // atualiza todos os campos
-      };
+  static listarUsuario = async (req, res) => {
+    try {
+
+      const lista_contas = await UsuarioService.listarUsuarios();
+
+      return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: lista_contas});
+
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json([
+        {
+          error: true,
+          code: 500,
+          message: "OCORREU UM ERRO INTERNO",
+        },
+      ]);
+    }
+  };
+
+  static listarUsuarioPorId = async (req, res) => {
+    try {
+      console.log("aqui");
+      const id_conta = parseInt(req.params.id);
+      console.log(id_conta);
+      const unitExists = await UsuarioService.listarUsuarioPorId(id_conta)
+
+      if (unitExists === null) {
+        return res.status(400).json([
+          {
+            error: true,
+            code: 400,
+            message: "NÃO FOI ENCONTRADO NENHUM INVENTARIO",
+          },
+        ]);
+      }
+
+      return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: unitExists});
+    } catch (err) {
+      if (err.message === 'usuario não existe') {
+        return res.status(404).json({ error: true, code: 404, message: err.message});
+    }
+      console.error(err);
+      return res.status(500).json([
+        {
+          
+          error: true,
+          code: 500,
+          message: "OCORREU UM ERRO INTERNO",
+        },
+      ]);
+    }
+  };
+
+  static criarUsuario = (req, res) => {
+    return null; // criar a conta com todos os dados
+  };
+
+  static atualizarUsuario = (req, res) => {
+    return null; // atualiza todos os campos
+  };
 }
 
 export default UsuarioController;

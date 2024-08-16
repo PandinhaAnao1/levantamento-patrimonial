@@ -14,7 +14,7 @@ class UsuarioRepository{
         return await prisma.usuarios.findUnique(filtro)
     }
 
-    static async listarTodos(){
+    static async listarUsuarios(){
         return await prisma.usuarios.findMany({
           select: {
             usua_id: true,
@@ -27,7 +27,7 @@ class UsuarioRepository{
         });
       }
     
-    static async listar(id) {
+    static async listarUsuarioPorId(id) {
         return await prisma.usuarios.findFirst({
           select: {
             usua_id: true,

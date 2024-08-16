@@ -49,12 +49,13 @@ class UsuarioService{
     }
 
     static async listarUsuarioPorId(id){
-
+        const usuariosExists = await ContaRepository.listar(id)
+        
         if(!usuariosExists){
             throw new Error ("usuario não existe");
         }
 
-        return await ContaRepository.listar(id)
+        return usuariosExists
     }
 }
 
