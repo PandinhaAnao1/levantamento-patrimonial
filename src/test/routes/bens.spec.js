@@ -299,6 +299,24 @@ describe('auditar bens', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
+    it("2-deve retornar error ao tentar auditar um bem com um bens_id que não existe", async () => {
+        const req = await request(app)
+        .patch('/bens/auditar')
+        .set("Accept", "aplication/json")
+        .send({
+            "bens_id":100000000000,
+            "sala_id":sala_id,
+            "inve_id":1,
+            "usua_id":1,
+            "bens_estado":"ruim",
+            "bens_ocioso":true,
+            "bens_imagem": faker.image.imageUrl()
+        })
+        expect(req.status).toBe(404)
+        expect(req.body.error).toEqual(true)
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
+    })
+
     it("3-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
