@@ -13,7 +13,7 @@ describe('get bens', () => {
         .set("Accept", "aplication/json")
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
-        expect(req.body.message).toEqual("Registros encontrados")
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
         expect(req.body.data).toBeInstanceOf(Array)
         expect(req.body.data.length).toBeGreaterThan(0)
         expect(req.body.data[0].bens_sala_id).toBeDefined()
@@ -32,7 +32,7 @@ describe('get bens', () => {
         })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
-        expect(req.body.message).toEqual("Registros encontrados")
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
         expect(req.body.data).toBeInstanceOf(Array)
         expect(req.body.data.length).toBeGreaterThan(0)
         expect(req.body.data[0].bens_sala_id).toBeDefined()
@@ -52,7 +52,7 @@ describe('get bens', () => {
         })
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("Nem um registro encontrado")
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
     it("4-Deve retornar um error se o id da sala não for um numero", async () => {
@@ -64,7 +64,7 @@ describe('get bens', () => {
         })
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message[0]).toEqual("sala_id informado não é do tipo number")
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
     it("5-Deve retornar um objeto com os dados de apenas um bem", async () => {
@@ -73,7 +73,7 @@ describe('get bens', () => {
         .set("Accept", "aplication/json")
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
-        expect(req.body.message).toEqual("Registro encontrado")
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
         expect(req.body.data).toBeInstanceOf(Object)
         expect(req.body.data.bens_nome).toBeDefined()
         expect(req.body.data.bens_id).toBeDefined()
@@ -87,7 +87,7 @@ describe('get bens', () => {
         .set("Accept", "aplication/json")
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("Nem um registro encontrado")
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
     it("7-Deve retornar um error se o id do bem for uma string", async () => {
@@ -96,7 +96,7 @@ describe('get bens', () => {
         .set("Accept", "aplication/json")
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message[0]).toEqual("ID informado não é do tipo number")
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 })
 
@@ -120,7 +120,7 @@ describe('post adicinar bem já auditando ele', () => {
         })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
-        expect(req.body.message).toEqual("Bem adicionado")
+        expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
         expect(req.body.data).toBeInstanceOf(Object)
         expect(req.body.data.bens_id).toBeDefined()
         expect(req.body.data.bens_nome).toBeDefined()
@@ -145,7 +145,7 @@ describe('post adicinar bem já auditando ele', () => {
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(400)
-        expect(req.body.message[0]).toEqual("usua_id informado não é do tipo number")
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
     it("3-deve retornar error ao tentar adicionar um bem com uma sala_id que não existe", async () => {
@@ -167,7 +167,7 @@ describe('post adicinar bem já auditando ele', () => {
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(404)
-        expect(req.body.message).toEqual("usuario, sala ou inventario não existem")
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 })
 
@@ -190,7 +190,7 @@ describe('post criar bem', () => {
 
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
-        expect(req.body.message).toEqual("Bem adicionado")
+        expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
         expect(req.body.data).toBeInstanceOf(Object)
         expect(req.body.data.bens_id).toBeDefined()
         expect(req.body.data.bens_nome).toBeDefined()
@@ -198,7 +198,7 @@ describe('post criar bem', () => {
         expect(req.body.data.bens_responsavel).toBeDefined()
     })
 
-    it("1-deve retornar um erro ao informar uma sala que não existe", async () => {
+    it("2-deve retornar um erro ao informar uma sala que não existe", async () => {
         const req = await request(app)
         .post('/bens')
         .set("Accept", "aplication/json")
@@ -213,10 +213,10 @@ describe('post criar bem', () => {
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(404)
-        expect(req.body.message).toEqual("O sala_id informado não existem")
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("1-deve retornar um erro ao informar o bens_nome como um number", async () => {
+    it("3-deve retornar um erro ao informar o bens_nome como um number", async () => {
         const req = await request(app)
         .post('/bens')
         .set("Accept", "aplication/json")
@@ -231,7 +231,7 @@ describe('post criar bem', () => {
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(400)
-        expect(req.body.message[0]).toEqual("bens_nome informado não é do tipo string")
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 })
 
@@ -276,9 +276,9 @@ describe('auditar bens', () => {
             "bens_ocioso":true,
             "bens_imagem": faker.image.imageUrl()
         })
-        expect(req.status).toBe(404)
+        expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("O Bem não pertence a sala ou inventario informado")
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
     it("2-deve retornar error ao tentar auditar um bem com um usua_id que não existe", async () => {
@@ -296,7 +296,7 @@ describe('auditar bens', () => {
         })
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("Usuario não existem")
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
     it("3-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto", async () => {
@@ -314,7 +314,7 @@ describe('auditar bens', () => {
         })
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message[0]).toEqual("sala_id informado não é do tipo number")
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
     it("4-deve retornar error ao tentar auditar um bem que já foi auditado.", async () => {
@@ -330,8 +330,8 @@ describe('auditar bens', () => {
             "bens_ocioso":true,
             "bens_imagem": faker.image.imageUrl()
         })
-        expect(req.status).toBe(404)
+        expect(req.status).toBe(403)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("Bem já foi auditado.")
+        expect(req.body.message).toEqual("Sem permissão para atender a requisição.")
     })
 })

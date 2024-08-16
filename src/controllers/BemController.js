@@ -106,9 +106,7 @@ class BemController {
             return sendResponse(res,201,{data: bemAdicionado})
 
         }catch(err){
-            
-
-            if (err.message === "usuario, sala ou inventario não existem") {
+            if (err.message === "usuario, sala ou inventário não existem") {
                 return sendError(res, 404, ["usuario, sala ou inventário não existem"])
 
             }else if (err instanceof z.ZodError) {
