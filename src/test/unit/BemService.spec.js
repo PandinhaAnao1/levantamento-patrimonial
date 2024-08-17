@@ -95,7 +95,7 @@ describe('bens-listar', () => {
 
     test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
 
-        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+        const filter = {where: {bens_id:1}, select:{ bens_nome:true}}
 
         bensRepository.createFilter.mockReturnValue(filter); 
         bensRepository.findById.mockResolvedValue(null);
@@ -105,7 +105,7 @@ describe('bens-listar', () => {
         expect(bensRepository.findById).toHaveBeenCalledWith(filter);
     });
 
-    test('3-Deve retonar um erro quando sala_id estiver no formato ou tipo errado.', async () => {
+    test('3-Deve retonar um erro quando bens_id estiver no formato ou tipo errado.', async () => {
 
         const mockBens = [
             { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
@@ -119,6 +119,7 @@ describe('bens-listar', () => {
     });
 });
 
+
 describe('bens-create', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -127,8 +128,9 @@ describe('bens-create', () => {
     test('1-Deve criar um bem e retornar o bem criado', async () => {
 
         const mockBens = {
+                bens_id:1,
                 sala_id:parseInt(1),
-                bens_nome:"test unitario",
+                bens_nome:"teste unitario",
                 bens_decricao:"teste feliz",
                 bens_tombo: "23535TB",
                 bens_responsavel: "lucas ferreira",
@@ -144,108 +146,353 @@ describe('bens-create', () => {
         expect(bensRepository.salaExist).toHaveBeenCalledWith(mockBens.sala_id);
     });
 
-    test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
+    test('2-Deve retornar um erro quando o sala_id não existir.', async () => {
 
-        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+        const mockBens = {
+            bens_id:1,
+            sala_id:parseInt(1),
+            bens_nome:"test unitario",
+            bens_decricao:"teste feliz",
+            bens_tombo: "23535TB",
+            bens_responsavel: "lucas ferreira",
+            bens_valor: parseInt(200)
+        };
 
-        bensRepository.createFilter.mockReturnValue(filter); 
-        bensRepository.findById.mockResolvedValue(null);
+        bensRepository.salaExist.mockReturnValue(null);
+        bensRepository.createBem.mockResolvedValue(mockBens);
 
-        await expect(bemService.listarPorId({bens_id: 1})).rejects.toThrow('Nem um registro encontrado');
+        await expect(bemService.create(mockBens)).rejects.toThrow("O sala_id informado não existem");
+        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockBens.sala_id);
 
-        expect(bensRepository.findById).toHaveBeenCalledWith(filter);
     });
 
-    test('3-Deve retonar um erro quando sala_id estiver no formato ou tipo errado.', async () => {
+    test('3-Deve retonar um erro quando algum parametro não for do tipo correto.(nome, descrição)', async () => {
 
-        const mockBens = [
-            { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
-            { bens_id: 1, bens_sala_id: 2, bens_nome: 'Mesa Gamer', bens_estado: 'ruim', bens_encontrado: true },
-        ];
+        const mockBens = {
+                bens_id:1,
+                sala_id:parseInt(1),
+                bens_nome:null,
+                bens_decricao:true,
+                bens_tombo: "23535TB",
+                bens_responsavel: "lucas ferreira",
+                bens_valor: parseInt(200)
+            };
 
-        bensRepository.createFilter.mockReturnValue({});
-        bensRepository.findById.mockResolvedValue(mockBens);
+        bensRepository.salaExist.mockReturnValue({sala_nome: "teste unitario"});
+        bensRepository.createBem.mockResolvedValue(mockBens);
 
-        await expect(bemService.listarPorId({bens_id:"n"})).rejects.toBeInstanceOf(z.ZodError);
+        await expect(bemService.create(mockBens)).rejects.toBeInstanceOf(z.ZodError);
+
     });
 });
 
-    // test('should return user by ID', async () => {
-    //     // Arrange
-    //     const mockUser = { id: 1, name: 'User 1' };
-    //     userRepository.findById.mockResolvedValue(mockUser);
 
-    //     // Act
-    //     const user = await userService.listarPorID(1);
+describe('bens-adicionar', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-    //     // Assert
-    //     expect(user).toEqual(mockUser);
-    //     expect(userRepository.findById).toHaveBeenCalledWith(1);
-    // });
+    test('1-Deve criar um bem e auditar ele ao mesmo tempo, retornando o bem criado e o seu historico guardado', async () => {
 
-    // test('should create a new user', async () => {
-    //     // Arrange
-    //     const mockUser = { id: 1, name: 'User 1' };
-    //     userRepository.create.mockResolvedValue(mockUser);
+        const mockParamentros = {
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
 
-    //     // Act
-    //     const user = await userService.inserir(mockUser);
+        const mockBens = {
+            bens_id:1,
+            bens_sala_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
 
-    //     // Assert
-    //     expect(user).toEqual(mockUser);
-    //     expect(userRepository.create).toHaveBeenCalledWith(mockUser);
-    // });
+        const mockhistorico = {
+            hist_id:1,
+            hist_usuarios_id: mockParamentros.usua_id,
+            hist_inventarios_id: mockParamentros.inve_id,
+            hist_salas_id: mockParamentros.sala_id,
+            hist_bens_id: mockBens.bens_id
+        }
 
-    // test('should update a user', async () => {
-    //     // Arrange
-    //     const mockUser = { id: 1, name: 'Updated User', email: 'updated@test.com' };
-    //     const mockExistingUser = { id: 1, name: 'User 1', email: 'test@test.com' };
-    //     userRepository.findById.mockResolvedValue(mockExistingUser);
-    //     userRepository.update.mockResolvedValue(mockUser);
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.salaExist.mockReturnValue({sala_id: 1});
+        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
 
-    //     // Act
-    //     const updatedUser = await userService.atualizar(1, mockUser);
+        bensRepository.createBem.mockResolvedValue(mockBens);
+        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
 
-    //     // Assert
-    //     expect(updatedUser).toEqual(mockUser);
-    //     expect(userRepository.findById).toHaveBeenCalledWith(1);
-    //     expect(userRepository.update).toHaveBeenCalledWith(1, mockUser);
-    // });
+        const bemAdicionaHistorio = await bemService.adicionarBem(mockParamentros);
 
-    // test('should throw error if email is already taken by another user during update', async () => {
-    //     // Arrange
-    //     const mockUser = { id: 1, name: 'Updated User', email: 'updated@test.com' };
-    //     const mockExistingUser = { id: 1, name: 'User 1', email: 'test@test.com' };
-    //     const mockOtherUserWithEmail = { id: 2, name: 'Other User', email: 'updated@test.com' };
-    //     userRepository.findById.mockResolvedValue(mockExistingUser);
-    //     userRepository.findByEmailExceptId.mockResolvedValue(mockOtherUserWithEmail);
+        expect(bemAdicionaHistorio).toEqual({historico: mockhistorico, bem: mockBens});
+        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
 
-    //     // Act & Assert
-    //     await expect(userService.atualizar(1, mockUser)).rejects.toThrow('Email já cadastrado');
-    //     expect(userRepository.findById).toHaveBeenCalledWith(1);
-    //     expect(userRepository.findByEmailExceptId).toHaveBeenCalledWith('updated@test.com', 1);
-    // });
+    });
 
-    // test('should delete a user', async () => {
-    //     // Arrange
-    //     const mockUser = { id: 1, name: 'User 1' };
-    //     userRepository.findById.mockResolvedValue(mockUser);
-    //     userRepository.delete.mockResolvedValue(mockUser);
+    test('2-Deve retornar um erro quando o sala_id não existir.', async () => {
 
-    //     // Act
-    //     const deletedUser = await userService.excluir(1);
+        const mockParamentros = {
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
 
-    //     // Assert
-    //     expect(deletedUser).toEqual(mockUser);
-    //     expect(userRepository.findById).toHaveBeenCalledWith(1);
-    //     expect(userRepository.delete).toHaveBeenCalledWith(1);
-    // });
+        const mockBens = {
+            bens_id:1,
+            bens_sala_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
 
-    // test('should throw error if user to delete is not found', async () => {
-    //     // Arrange
-    //     userRepository.findById.mockResolvedValue(null);
+        const mockhistorico = {
+            hist_id:1,
+            hist_usuarios_id: mockParamentros.usua_id,
+            hist_inventarios_id: mockParamentros.inve_id,
+            hist_salas_id: mockParamentros.sala_id,
+            hist_bens_id: mockBens.bens_id
+        }
 
-    //     // Act & Assert
-    //     await expect(userService.excluir(1)).rejects.toThrow('Usuário não encontrado');
-    //     expect(userRepository.findById).toHaveBeenCalledWith(1);
-    // });
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.salaExist.mockReturnValue(null);
+        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
+
+        bensRepository.createBem.mockResolvedValue(mockBens);
+        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
+
+        await expect(bemService.adicionarBem(mockParamentros)).rejects.toThrow("usuario, sala ou inventário não existem");
+        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
+    });
+
+    test('3-Deve retonar um erro quando algum parametro não for do tipo correto.(nome, descrição)', async () => {
+
+        const mockParamentros = {
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_nome:false,
+            bens_decricao:true,
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockBens = {
+            bens_id:1,
+            bens_sala_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockhistorico = {
+            hist_id:1,
+            hist_usuarios_id: mockParamentros.usua_id,
+            hist_inventarios_id: mockParamentros.inve_id,
+            hist_salas_id: mockParamentros.sala_id,
+            hist_bens_id: mockBens.bens_id
+        }
+
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.salaExist.mockReturnValue({sala_id: 1});
+        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
+
+        bensRepository.createBem.mockResolvedValue(mockBens);
+        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
+
+        await expect(bemService.adicionarBem(mockBens)).rejects.toBeInstanceOf(z.ZodError);
+
+    });
+});
+
+describe('bens-auditar', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('1-Deve auditar bem e retornar o bem criado e o seu historico guardado.', async () => {
+
+        const mockParamentros = {
+            bens_id:1,
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+        }
+
+        const mockBens = {
+            bens_id:1,
+            bens_sala_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockhistorico = {
+            hist_id:1,
+            hist_usuarios_id: mockParamentros.usua_id,
+            hist_inventarios_id: mockParamentros.inve_id,
+            hist_salas_id: mockParamentros.sala_id,
+            hist_bens_id: mockBens.bens_id
+        }
+
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.bemJaFoiAuditado.mockReturnValue(null);
+        bensRepository.getIds.mockReturnValue({bens_sala_id: 1, sala:{sala_inve_id: 1}});
+
+        bensRepository.createBem.mockResolvedValue(mockBens);
+        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
+
+        const bemAdicionaHistorio = await bemService.adicionarBem(mockParamentros);
+
+        expect(bemAdicionaHistorio).toEqual({historico: mockhistorico, bem: mockBens});
+        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
+
+    });
+
+    test('2-Deve retornar um erro quando o sala_id não existir.', async () => {
+
+        const mockParamentros = {
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockBens = {
+            bens_id:1,
+            bens_sala_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockhistorico = {
+            hist_id:1,
+            hist_usuarios_id: mockParamentros.usua_id,
+            hist_inventarios_id: mockParamentros.inve_id,
+            hist_salas_id: mockParamentros.sala_id,
+            hist_bens_id: mockBens.bens_id
+        }
+
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.salaExist.mockReturnValue(null);
+        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
+
+        bensRepository.createBem.mockResolvedValue(mockBens);
+        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
+
+        await expect(bemService.adicionarBem(mockParamentros)).rejects.toThrow("usuario, sala ou inventário não existem");
+        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
+    });
+
+    test('3-Deve retonar um erro quando algum parametro não for do tipo correto.(nome, descrição)', async () => {
+
+        const mockParamentros = {
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_nome:false,
+            bens_decricao:true,
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockBens = {
+            bens_id:1,
+            bens_sala_id:1,
+            bens_nome:"test",
+            bens_decricao:"teste de insert",
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_tombo: "TB9898",
+            bens_responsavel: "",
+            bens_valor: 200 
+        }
+
+        const mockhistorico = {
+            hist_id:1,
+            hist_usuarios_id: mockParamentros.usua_id,
+            hist_inventarios_id: mockParamentros.inve_id,
+            hist_salas_id: mockParamentros.sala_id,
+            hist_bens_id: mockBens.bens_id
+        }
+
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.salaExist.mockReturnValue({sala_id: 1});
+        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
+
+        bensRepository.createBem.mockResolvedValue(mockBens);
+        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
+
+        await expect(bemService.adicionarBem(mockBens)).rejects.toBeInstanceOf(z.ZodError);
+
+    });
+});

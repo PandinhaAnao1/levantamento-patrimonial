@@ -76,17 +76,24 @@ class BemService{
             select: BemRepository.createFilter({}).select
         })
 
-        await BemRepository.createHistorico({
+        const historico = await BemRepository.createHistorico({
             data: {
                 hist_usuarios_id: usua_id,
                 hist_inventarios_id: inve_id,
                 hist_salas_id: sala_id,
                 hist_bens_id: bem.bens_id
+            },
+            select: {
+                hist_id: true,
+                hist_usuarios_id: true,
+                hist_inventarios_id: true,
+                hist_salas_id: true,
+                hist_bens_id: true
             }
 
         })
 
-        return bem
+        return {historico: historico, bem: bem}
     }
 
     async auditarBem(parametros){
@@ -111,7 +118,7 @@ class BemService{
             throw new Error("Usuario não existem");
         }
 
-        if(bens_sala_id != parametros.inve_id || sala_inve_id != parametros.sala_id){
+        if(bens_sala_id != parametros.sala_id || sala_inve_id != parametros.inve_id){
             throw new Error("O Bem não pertence a sala ou inventário informado");
         }
 

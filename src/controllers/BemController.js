@@ -98,7 +98,7 @@ class BemController {
                 bens_estado: req.body.bens_estado ,
                 bens_ocioso: req.body.bens_ocioso ,
                 bens_imagem: req.body.bens_imagem ?? null,
-                bens_responsavel: req.body.bens_responsavel ?? "",
+                bens_responsavel: req.body.bens_responsavel ?? null,
                 bens_encontrado: true,
             };
             const bemAdicionado = await bemService.adicionarBem(parametros)
@@ -106,6 +106,7 @@ class BemController {
             return sendResponse(res,201,{data: bemAdicionado})
 
         }catch(err){
+            console.error(err)
             if (err.message === "usuario, sala ou inventário não existem") {
                 return sendError(res, 404, ["usuario, sala ou inventário não existem"])
 
