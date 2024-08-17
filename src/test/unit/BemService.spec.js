@@ -2,6 +2,7 @@ import {describe, expect, test} from '@jest/globals';
 import bemService from '../../services/bemService.js'
 import bensRepository from '../../repositories/BemRepository.js';
 import { z } from 'zod';
+import faker from 'faker-br';
 
 jest.mock('../../repositories/BemRepository', () => ({
     findAll: jest.fn(),
@@ -17,17 +18,12 @@ jest.mock('../../repositories/BemRepository', () => ({
     createFilter: jest.fn()
 }));
 
-jest.mock('../../utils/mensages.js', () => ({
-    sendResponse: jest.fn(),
-    sendError: jest.fn()
-}));
-
 describe('bens-listar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    test('1-Deve chamar o banco e listar todos os bens', async () => {
+    test('1-Deve chamar o banco e listar todos os bens.', async () => {
 
         const mockBens = [
             { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true },
@@ -45,7 +41,7 @@ describe('bens-listar', () => {
         expect(bensRepository.findAll).toHaveBeenCalledWith(filter);
     });
 
-    test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
+    test('2-Deve retornar um erro quando nem um registro for encontado.', async () => {
 
         const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
 
@@ -76,7 +72,7 @@ describe('bens-listar', () => {
         jest.clearAllMocks();
     });
 
-    test('1-Deve chamar o banco e buscar um bem pelo id dele', async () => {
+    test('1-Deve chamar o banco e buscar um bem pelo id dele.', async () => {
 
         const mockBens = [
             { bens_id: 1, bens_sala_id: 1, bens_nome: 'Notebook', bens_estado: 'bom', bens_encontrado: true }
@@ -93,7 +89,7 @@ describe('bens-listar', () => {
         expect(bensRepository.findById).toHaveBeenCalledWith(filter);
     });
 
-    test('2-Deve retornar um erro quando nem um registro for encontado', async () => {
+    test('2-Deve retornar um erro quando nem um registro for encontado.', async () => {
 
         const filter = {where: {bens_id:1}, select:{ bens_nome:true}}
 
@@ -125,16 +121,16 @@ describe('bens-create', () => {
         jest.clearAllMocks();
     });
 
-    test('1-Deve criar um bem e retornar o bem criado', async () => {
+    test('1-Deve criar um bem e retornar o bem criado.', async () => {
 
         const mockBens = {
                 bens_id:1,
-                sala_id:parseInt(1),
-                bens_nome:"teste unitario",
-                bens_decricao:"teste feliz",
+                sala_id:1,
+                bens_nome:faker.commerce.productName(),
+                bens_decricao: faker.lorem.text(),
                 bens_tombo: "23535TB",
-                bens_responsavel: "lucas ferreira",
-                bens_valor: parseInt(200)
+                bens_responsavel: faker.name.findName(),
+                bens_valor: 200
             };
 
         bensRepository.salaExist.mockReturnValue({sala_nome: "teste unitario"});
@@ -150,12 +146,12 @@ describe('bens-create', () => {
 
         const mockBens = {
             bens_id:1,
-            sala_id:parseInt(1),
-            bens_nome:"test unitario",
-            bens_decricao:"teste feliz",
+            sala_id:1,
+            bens_nome:faker.commerce.productName(),
+            bens_decricao: faker.lorem.text(),
             bens_tombo: "23535TB",
-            bens_responsavel: "lucas ferreira",
-            bens_valor: parseInt(200)
+            bens_responsavel: faker.name.findName(),
+            bens_valor: 200
         };
 
         bensRepository.salaExist.mockReturnValue(null);
@@ -166,16 +162,16 @@ describe('bens-create', () => {
 
     });
 
-    test('3-Deve retonar um erro quando algum parametro não for do tipo correto.(nome, descrição)', async () => {
+    test('3-Deve retonar um erro quando algum parâmetro não for do tipo correto.(nome, descrição)', async () => {
 
         const mockBens = {
                 bens_id:1,
-                sala_id:parseInt(1),
+                sala_id:1,
                 bens_nome:null,
                 bens_decricao:true,
                 bens_tombo: "23535TB",
-                bens_responsavel: "lucas ferreira",
-                bens_valor: parseInt(200)
+                bens_responsavel: faker.name.findName(),
+                bens_valor: 200
             };
 
         bensRepository.salaExist.mockReturnValue({sala_nome: "teste unitario"});
@@ -192,32 +188,32 @@ describe('bens-adicionar', () => {
         jest.clearAllMocks();
     });
 
-    test('1-Deve criar um bem e auditar ele ao mesmo tempo, retornando o bem criado e o seu historico guardado', async () => {
+    test('1-Deve criar um bem e auditar ele ao mesmo tempo, retornando o bem criado e o seu histórico guardado.', async () => {
 
         const mockParamentros = {
             sala_id:1,
             inve_id:1,
             usua_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
+            bens_nome:faker.commerce.productName(),
+            bens_decricao:faker.lorem.text(),
             bens_estado:"bom",
             bens_ocioso:false,
             bens_imagem:null,
             bens_tombo: "TB9898",
-            bens_responsavel: "",
+            bens_responsavel: null,
             bens_valor: 200 
         }
 
         const mockBens = {
             bens_id:1,
             bens_sala_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
+            bens_nome:faker.commerce.productName(),
+            bens_decricao:faker.lorem.text(),
             bens_estado:"bom",
             bens_ocioso:false,
             bens_imagem:null,
             bens_tombo: "TB9898",
-            bens_responsavel: "",
+            bens_responsavel: null,
             bens_valor: 200 
         }
 
@@ -251,43 +247,19 @@ describe('bens-adicionar', () => {
             sala_id:1,
             inve_id:1,
             usua_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
+            bens_nome:faker.commerce.productName(),
+            bens_decricao:faker.lorem.text(),
             bens_estado:"bom",
             bens_ocioso:false,
             bens_imagem:null,
             bens_tombo: "TB9898",
-            bens_responsavel: "",
+            bens_responsavel: null,
             bens_valor: 200 
-        }
-
-        const mockBens = {
-            bens_id:1,
-            bens_sala_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
-            bens_estado:"bom",
-            bens_ocioso:false,
-            bens_imagem:null,
-            bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
-        }
-
-        const mockhistorico = {
-            hist_id:1,
-            hist_usuarios_id: mockParamentros.usua_id,
-            hist_inventarios_id: mockParamentros.inve_id,
-            hist_salas_id: mockParamentros.sala_id,
-            hist_bens_id: mockBens.bens_id
         }
 
         bensRepository.userExist.mockReturnValue({usua_id: 1});
         bensRepository.salaExist.mockReturnValue(null);
         bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
-
-        bensRepository.createBem.mockResolvedValue(mockBens);
-        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
 
         await expect(bemService.adicionarBem(mockParamentros)).rejects.toThrow("usuario, sala ou inventário não existem");
         expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
@@ -295,7 +267,7 @@ describe('bens-adicionar', () => {
         expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
     });
 
-    test('3-Deve retonar um erro quando algum parametro não for do tipo correto.(nome, descrição)', async () => {
+    test('3-Deve retonar um erro quando algum parâmetro não for do tipo correto.(nome, descrição)', async () => {
 
         const mockParamentros = {
             sala_id:1,
@@ -307,39 +279,11 @@ describe('bens-adicionar', () => {
             bens_ocioso:false,
             bens_imagem:null,
             bens_tombo: "TB9898",
-            bens_responsavel: "",
+            bens_responsavel: null,
             bens_valor: 200 
         }
 
-        const mockBens = {
-            bens_id:1,
-            bens_sala_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
-            bens_estado:"bom",
-            bens_ocioso:false,
-            bens_imagem:null,
-            bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
-        }
-
-        const mockhistorico = {
-            hist_id:1,
-            hist_usuarios_id: mockParamentros.usua_id,
-            hist_inventarios_id: mockParamentros.inve_id,
-            hist_salas_id: mockParamentros.sala_id,
-            hist_bens_id: mockBens.bens_id
-        }
-
-        bensRepository.userExist.mockReturnValue({usua_id: 1});
-        bensRepository.salaExist.mockReturnValue({sala_id: 1});
-        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
-
-        bensRepository.createBem.mockResolvedValue(mockBens);
-        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
-
-        await expect(bemService.adicionarBem(mockBens)).rejects.toBeInstanceOf(z.ZodError);
+        await expect(bemService.adicionarBem(mockParamentros)).rejects.toBeInstanceOf(z.ZodError);
 
     });
 });
@@ -349,7 +293,7 @@ describe('bens-auditar', () => {
         jest.clearAllMocks();
     });
 
-    test('1-Deve auditar bem e retornar o bem criado e o seu historico guardado.', async () => {
+    test('1-Deve auditar bem e retornar o bem criado e o seu histórico guardado.', async () => {
 
         const mockParamentros = {
             bens_id:1,
@@ -361,17 +305,25 @@ describe('bens-auditar', () => {
             bens_imagem:null,
         }
 
+        const mockInsert = {
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+            bens_encontrado: true
+        }
+
         const mockBens = {
             bens_id:1,
             bens_sala_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
+            bens_nome:faker.commerce.productName(),
+            bens_decricao:faker.lorem.text(),
             bens_estado:"bom",
             bens_ocioso:false,
             bens_imagem:null,
             bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
+            bens_responsavel: faker.name.findName(),
+            bens_valor: 200,
+            bens_encontrado: true
         }
 
         const mockhistorico = {
@@ -382,117 +334,138 @@ describe('bens-auditar', () => {
             hist_bens_id: mockBens.bens_id
         }
 
+        const filter = {where: {bens_sala_id:1}, select:{ bens_nome:true}}
+
+        
         bensRepository.userExist.mockReturnValue({usua_id: 1});
         bensRepository.bemJaFoiAuditado.mockReturnValue(null);
-        bensRepository.getIds.mockReturnValue({bens_sala_id: 1, sala:{sala_inve_id: 1}});
+        bensRepository.getIds.mockReturnValue({bens_sala_id: 1, salas:{sala_inve_id: 1}});
+        
+        bensRepository.createFilter.mockReturnValue(filter);
+        bensRepository.findById.mockResolvedValue(mockBens);
 
-        bensRepository.createBem.mockResolvedValue(mockBens);
         bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
 
-        const bemAdicionaHistorio = await bemService.adicionarBem(mockParamentros);
+        const bemAdicionaHistorio = await bemService.auditarBem(mockParamentros);
 
         expect(bemAdicionaHistorio).toEqual({historico: mockhistorico, bem: mockBens});
-        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
+
+        expect(bensRepository.updataBem).toHaveBeenCalledWith({
+            where: {bens_id: mockParamentros.bens_id},
+            data: mockInsert,
+        });
+
         expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
-        expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
+        expect(bensRepository.bemJaFoiAuditado).toHaveBeenCalledWith(mockParamentros.bens_id);
+        expect(bensRepository.getIds).toHaveBeenCalledWith(mockParamentros.bens_id);
 
     });
 
-    test('2-Deve retornar um erro quando o sala_id não existir.', async () => {
+    test('2-Deve retornar um erro quando os parâmetros informados estiverem no formato errado.(estado, ocioso)', async () => {
 
         const mockParamentros = {
+            bens_id:1,
             sala_id:1,
             inve_id:1,
             usua_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
-            bens_estado:"bom",
-            bens_ocioso:false,
+            bens_estado:false,
+            bens_ocioso:"bom",
             bens_imagem:null,
-            bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
         }
 
-        const mockBens = {
-            bens_id:1,
-            bens_sala_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
-            bens_estado:"bom",
-            bens_ocioso:false,
-            bens_imagem:null,
-            bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
-        }
+        await expect(bemService.auditarBem(mockParamentros)).rejects.toBeInstanceOf(z.ZodError);
 
-        const mockhistorico = {
-            hist_id:1,
-            hist_usuarios_id: mockParamentros.usua_id,
-            hist_inventarios_id: mockParamentros.inve_id,
-            hist_salas_id: mockParamentros.sala_id,
-            hist_bens_id: mockBens.bens_id
-        }
-
-        bensRepository.userExist.mockReturnValue({usua_id: 1});
-        bensRepository.salaExist.mockReturnValue(null);
-        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
-
-        bensRepository.createBem.mockResolvedValue(mockBens);
-        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
-
-        await expect(bemService.adicionarBem(mockParamentros)).rejects.toThrow("usuario, sala ou inventário não existem");
-        expect(bensRepository.salaExist).toHaveBeenCalledWith(mockParamentros.sala_id);
-        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
-        expect(bensRepository.inventarioExist).toHaveBeenCalledWith(mockParamentros.inve_id);
     });
 
-    test('3-Deve retonar um erro quando algum parametro não for do tipo correto.(nome, descrição)', async () => {
+    test('3-Deve retonar um erro quando o bens_id não existir no banco.', async () => {
 
         const mockParamentros = {
+            bens_id:1,
             sala_id:1,
             inve_id:1,
             usua_id:1,
-            bens_nome:false,
-            bens_decricao:true,
             bens_estado:"bom",
             bens_ocioso:false,
             bens_imagem:null,
-            bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
         }
-
-        const mockBens = {
-            bens_id:1,
-            bens_sala_id:1,
-            bens_nome:"test",
-            bens_decricao:"teste de insert",
-            bens_estado:"bom",
-            bens_ocioso:false,
-            bens_imagem:null,
-            bens_tombo: "TB9898",
-            bens_responsavel: "",
-            bens_valor: 200 
-        }
-
-        const mockhistorico = {
-            hist_id:1,
-            hist_usuarios_id: mockParamentros.usua_id,
-            hist_inventarios_id: mockParamentros.inve_id,
-            hist_salas_id: mockParamentros.sala_id,
-            hist_bens_id: mockBens.bens_id
-        }
-
+        
         bensRepository.userExist.mockReturnValue({usua_id: 1});
-        bensRepository.salaExist.mockReturnValue({sala_id: 1});
-        bensRepository.inventarioExist.mockReturnValue({inve_id: 1});
+        bensRepository.bemJaFoiAuditado.mockReturnValue(null);
+        bensRepository.getIds.mockReturnValue(null);
 
-        bensRepository.createBem.mockResolvedValue(mockBens);
-        bensRepository.createHistorico.mockResolvedValue(mockhistorico); 
+        await expect(bemService.auditarBem(mockParamentros)).rejects.toThrow("bem inforamdo não existe");
 
-        await expect(bemService.adicionarBem(mockBens)).rejects.toBeInstanceOf(z.ZodError);
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.bemJaFoiAuditado).toHaveBeenCalledWith(mockParamentros.bens_id);
+        expect(bensRepository.getIds).toHaveBeenCalledWith(mockParamentros.bens_id);
+    });
 
+    test('4-Deve retonar um erro quando o usua_id não existir no banco.', async () => {
+
+        const mockParamentros = {
+            bens_id:1,
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+        }
+        
+        bensRepository.userExist.mockReturnValue(null);
+        bensRepository.bemJaFoiAuditado.mockReturnValue(null);
+        bensRepository.getIds.mockReturnValue({bens_sala_id: 1, salas:{sala_inve_id: 1}});
+
+        await expect(bemService.auditarBem(mockParamentros)).rejects.toThrow("Usuario não existe");
+
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.bemJaFoiAuditado).toHaveBeenCalledWith(mockParamentros.bens_id);
+        expect(bensRepository.getIds).toHaveBeenCalledWith(mockParamentros.bens_id);
+    });
+
+    test('5-Deve retonar um erro quando o sala_id ou o inve_id passados não forem os mesmo do bens_id passado.', async () => {
+
+        const mockParamentros = {
+            bens_id:1,
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+        }
+        
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.bemJaFoiAuditado.mockReturnValue(null);
+        bensRepository.getIds.mockReturnValue({bens_sala_id: 100000, salas:{sala_inve_id: 100000}});
+
+        await expect(bemService.auditarBem(mockParamentros)).rejects.toThrow("O Bem não pertence a sala ou inventário informado");
+
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.bemJaFoiAuditado).toHaveBeenCalledWith(mockParamentros.bens_id);
+        expect(bensRepository.getIds).toHaveBeenCalledWith(mockParamentros.bens_id);
+    });
+
+    test('6-Deve retonar um erro quando o bem já tiver sido auditado.', async () => {
+
+        const mockParamentros = {
+            bens_id:1,
+            sala_id:1,
+            inve_id:1,
+            usua_id:1,
+            bens_estado:"bom",
+            bens_ocioso:false,
+            bens_imagem:null,
+        }
+        
+        bensRepository.userExist.mockReturnValue({usua_id: 1});
+        bensRepository.bemJaFoiAuditado.mockReturnValue({hist_id: 1});
+        bensRepository.getIds.mockReturnValue({bens_sala_id: 1, salas:{sala_inve_id: 1}});
+
+        await expect(bemService.auditarBem(mockParamentros)).rejects.toThrow("Bem já foi auditado.");
+
+        expect(bensRepository.userExist).toHaveBeenCalledWith(mockParamentros.usua_id);
+        expect(bensRepository.bemJaFoiAuditado).toHaveBeenCalledWith(mockParamentros.bens_id);
+        expect(bensRepository.getIds).toHaveBeenCalledWith(mockParamentros.bens_id);
     });
 });

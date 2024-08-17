@@ -115,7 +115,7 @@ class BemService{
         const sala_inve_id = salas.sala_inve_id;
 
         if(!usuarioExists){
-            throw new Error("Usuario não existem");
+            throw new Error("Usuario não existe");
         }
 
         if(bens_sala_id != parametros.sala_id || sala_inve_id != parametros.inve_id){
@@ -153,7 +153,6 @@ class BemService{
         const bens =  await BemRepository.findById(filtro)
 
         return {historico: historico, bem: bens}
-
 
     }
 
