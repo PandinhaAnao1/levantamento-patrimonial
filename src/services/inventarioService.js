@@ -1,5 +1,6 @@
 import { skip } from "node:test";
-import InventarioRepository from "../repositories/InventarioRepository.js"
+import InventarioRepository from "../repositories/InventarioRepository.js";
+import {z}  from "zod";
 
 class InventarioService{
     
@@ -10,7 +11,6 @@ class InventarioService{
         let filtro = {
             ...(pagina && { take: 10 ,skip: pagina * 10}),
             where: {
-                ...(id && { inve_id: id }),
                 ...(nome && { inve_nome: {contains: nome} }),
                 ...(data && { inve_data: data }),
                 ...(concluido && { inve_concluido: concluido }),
@@ -20,15 +20,17 @@ class InventarioService{
         };
         
         const iventario = await InventarioRepository.listarInventarios(filtro);
-        const totalDeItens = await InventarioRepository.contarInventarios(filtro);
     
 
-        if(!iventario && !totalDeItens || totalDeItens == 0) throw TypeError("Não foi possível encontrar nenhum inventario!");
+        if(!iventario) {
+            throw new z.ZodError([{
+                message: "Inventário não encontrado!",
+                path: ["inventario"], 
+                code: z.ZodIssueCode.custom,
+            }]);
+        }
 
-        return {
-            inventarios : iventario, 
-            total: totalDeItens
-        };
+        return iventario;
         
     }
 
