@@ -14,8 +14,6 @@ class BemController {
 
             return sendResponse(res,200,{data: bensExists})
 
-            // return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: bensExists});
-
         } catch (err) {
             
             if(err.message === "Nem um registro encontrado") {
@@ -90,15 +88,15 @@ class BemController {
         
         try {
             const parametros = {
-                sala_id: parseInt(req.body.sala_id) ,
-                inve_id: parseInt(req.body.inve_id) ,
-                usua_id: parseInt(req.body.usua_id) ,
-                bens_nome: req.body.bens_nome ,
-                bens_decricao: req.body.bens_decricao ,
-                bens_estado: req.body.bens_estado ,
-                bens_ocioso: req.body.bens_ocioso ,
+                sala_id: req.body.sala_id,
+                inve_id: req.body.inve_id,
+                usua_id: req.body.usua_id,
+                bens_nome: req.body.bens_nome,
+                bens_decricao: req.body.bens_decricao,
+                bens_estado: req.body.bens_estado,
+                bens_ocioso: req.body.bens_ocioso,
                 bens_imagem: req.body.bens_imagem ?? null,
-                bens_responsavel: req.body.bens_responsavel ?? "",
+                bens_responsavel: req.body.bens_responsavel ?? null,
                 bens_encontrado: true,
             };
             const bemAdicionado = await bemService.adicionarBem(parametros)
@@ -122,12 +120,12 @@ class BemController {
     static auditarBem = async (req, res) => {
         try{
             const parametros = {
-                bens_id: parseInt(req.body.bens_id) ?? null,
-                sala_id: parseInt(req.body.sala_id) ?? null,
-                inve_id: parseInt(req.body.inve_id) ?? null,
-                usua_id: parseInt(req.body.usua_id) ?? null,
-                bens_estado: req.body.bens_estado ?? null,
-                bens_ocioso: req.body.bens_ocioso ?? null,
+                bens_id: req.body.bens_id,
+                sala_id: req.body.sala_id,
+                inve_id: req.body.inve_id,
+                usua_id: req.body.usua_id,
+                bens_estado: req.body.bens_estado,
+                bens_ocioso: req.body.bens_ocioso,
                 bens_imagem: req.body.bens_imagem ?? null,
                 bens_encontrado: true,
             };
@@ -136,8 +134,8 @@ class BemController {
             return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
         }catch(err){
-            if (err.message === "Usuario não existem") {
-                return sendError(res, 404, ["Usuario não existem"])
+            if (err.message === "Usuario não existe") {
+                return sendError(res, 404, ["Usuario não existe"])
 
             }else if (err.message === "bem inforamdo não existe") {
                 return sendError(res, 404, ["bem inforamdo não existe"])

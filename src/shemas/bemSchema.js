@@ -78,7 +78,7 @@ class bemSchema{
             bens_estado: z.string({invalid_type_error: "bens_estado informado não é do tipo string"}).trim(),
             bens_ocioso: z.boolean({invalid_type_error: "bens_ocioso informado não é do tipo boolean"}),
             bens_imagem: z.string({invalid_type_error: "bens_imagem informado não é do tipo string"}).trim().nullable().optional(),
-            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}).default(""),
+            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}).nullable(),
             bens_encontrado: z.boolean().default(true),
         })
     }

@@ -7,7 +7,7 @@ let sala_id = 1
 let bens_id = null
 
 describe('get bens', () => {
-    it("1-Deve retornar um array com os dados dos bens", async () => {
+    it("1-Deve retornar um array com os dados dos bens.", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Accept", "aplication/json")
@@ -23,7 +23,7 @@ describe('get bens', () => {
         expect(req.body.data[0].bens_responsavel).toBeDefined()
     })
 
-    it("2-Deve retornar um array com os dados dos bens de uma sala", async () => {
+    it("2-Deve retornar um array com os dados dos bens de uma sala.", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Accept", "aplication/json")
@@ -43,7 +43,7 @@ describe('get bens', () => {
         expect(req.body.data[0].bens_responsavel).toBeDefined()
     })
 
-    it("3-Deve retornar um error se o id da sala não existir", async () => {
+    it("3-Deve retornar um error se o id da sala não existir.", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Accept", "aplication/json")
@@ -55,7 +55,7 @@ describe('get bens', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("4-Deve retornar um error se o id da sala não for um numero", async () => {
+    it("4-Deve retornar um error se o id da sala não for um number.", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Accept", "aplication/json")
@@ -67,7 +67,7 @@ describe('get bens', () => {
         expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
-    it("5-Deve retornar um objeto com os dados de apenas um bem", async () => {
+    it("5-Deve retornar um objeto com os dados de apenas um bem.", async () => {
         const req = await request(app)
         .get('/bens/1')
         .set("Accept", "aplication/json")
@@ -81,7 +81,7 @@ describe('get bens', () => {
         expect(req.body.data.bens_responsavel).toBeDefined()
     })
 
-    it("6-Deve retornar um error se o id do bem não existir", async () => {
+    it("6-Deve retornar um error se o id do bem não existir.", async () => {
         const req = await request(app)
         .get('/bens/1010101011010')
         .set("Accept", "aplication/json")
@@ -90,7 +90,7 @@ describe('get bens', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("7-Deve retornar um error se o id do bem for uma string", async () => {
+    it("7-Deve retornar um error se o id do bem for uma String.", async () => {
         const req = await request(app)
         .get('/bens/string')
         .set("Accept", "aplication/json")
@@ -101,7 +101,7 @@ describe('get bens', () => {
 })
 
 describe('post adicinar bem já auditando ele', () => {
-    it("1-deve adicionar um bem e retornar o bem criado", async () => {
+    it("1-deve adicionar um bem e retornar o bem criado.", async () => {
         const req = await request(app)
         .post('/bens/criar/auditar')
         .set("Accept", "aplication/json")
@@ -121,14 +121,14 @@ describe('post adicinar bem já auditando ele', () => {
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
         expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
-        expect(req.body.data).toBeInstanceOf(Object)
-        expect(req.body.data.bens_id).toBeDefined()
-        expect(req.body.data.bens_nome).toBeDefined()
-        expect(req.body.data.bens_tombo).toBeDefined()
-        expect(req.body.data.bens_responsavel).toBeDefined()
+        expect(req.body.data.bem).toBeInstanceOf(Object)
+        expect(req.body.data.bem.bens_id).toBeDefined()
+        expect(req.body.data.bem.bens_nome).toBeDefined()
+        expect(req.body.data.bem.bens_tombo).toBeDefined()
+        expect(req.body.data.bem.bens_responsavel).toBeDefined()
     })
 
-    it("2-deve retornar error ao tentar adicionar um bem sem um dos campos obrigatorios.", async () => {
+    it("2-deve retornar error ao tentar adicionar um bem sem um dos campos obrigatórios.", async () => {
         const req = await request(app)
         .post('/bens/criar/auditar')
         .set("Accept", "aplication/json")
@@ -148,7 +148,7 @@ describe('post adicinar bem já auditando ele', () => {
         expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
-    it("3-deve retornar error ao tentar adicionar um bem com uma sala_id que não existe", async () => {
+    it("3-deve retornar error ao tentar adicionar um bem com uma sala_id que não existe.", async () => {
         const req = await request(app)
         .post('/bens/criar/auditar')
         .set("Accept", "aplication/json")
@@ -172,7 +172,7 @@ describe('post adicinar bem já auditando ele', () => {
 })
 
 describe('post criar bem', () => {
-    it("1-deve criar um bem e retornar ele", async () => {
+    it("1-deve criar um bem e retornar ele.", async () => {
         const req = await request(app)
         .post('/bens')
         .set("Accept", "aplication/json")
@@ -198,7 +198,7 @@ describe('post criar bem', () => {
         expect(req.body.data.bens_responsavel).toBeDefined()
     })
 
-    it("2-deve retornar um erro ao informar uma sala que não existe", async () => {
+    it("2-deve retornar um erro ao informar uma sala que não existe.", async () => {
         const req = await request(app)
         .post('/bens')
         .set("Accept", "aplication/json")
@@ -216,7 +216,7 @@ describe('post criar bem', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("3-deve retornar um erro ao informar o bens_nome como um number", async () => {
+    it("3-deve retornar um erro ao informar o bens_nome como um number.", async () => {
         const req = await request(app)
         .post('/bens')
         .set("Accept", "aplication/json")
@@ -236,7 +236,7 @@ describe('post criar bem', () => {
 })
 
 describe('auditar bens', () => {
-    it("1-deve auditar um bem e retornar o bem motificado e o historico inserido", async () => {
+    it("1-deve auditar um bem e retornar o bem auditado e o histórico inserido.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
@@ -263,7 +263,7 @@ describe('auditar bens', () => {
         expect(req.body.data.historico.hist_usuarios_id).toBeDefined()
     })
 
-    it("2-deve retornar error ao tentar auditar um bem com uma sala_id que não existe", async () => {
+    it("2-deve retornar error ao tentar auditar um bem com uma sala_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
@@ -281,7 +281,7 @@ describe('auditar bens', () => {
         expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
-    it("2-deve retornar error ao tentar auditar um bem com um usua_id que não existe", async () => {
+    it("2-deve retornar error ao tentar auditar um bem com um usua_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
@@ -299,7 +299,7 @@ describe('auditar bens', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("2-deve retornar error ao tentar auditar um bem com um bens_id que não existe", async () => {
+    it("2-deve retornar error ao tentar auditar um bem com um bens_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
@@ -317,7 +317,7 @@ describe('auditar bens', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("3-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto", async () => {
+    it("3-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Accept", "aplication/json")
