@@ -5,11 +5,13 @@ class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
 
-            const data = await InventarioService.listarInventarios(req.query)
+            const invetario = await InventarioService.listarInventarios(req.query);
+            const totalDeItens = await InventarioRepository.contarInventarios(filtro);
 
+            
             return sendResponse(res,200, {
-                data:data.inventarios ?? [],
-                resultados:data.total ?? 1,
+                data: data,
+                resultados:totalDeItens,
                 totalPaginas: Math.ceil((data.total ?? 1)/10),
                 limite: 10,
                 pagina: req.query.pagina ?? 1,
@@ -19,29 +21,9 @@ class InventarioController {
         }catch (erro){
             console.log(erro)
             if(erro instanceof TypeError){
-                return sendError();
-                
-                res.status(400).json([{
-                    data:[],
-                    erro: false,
-                    code: 200,
-                    resultados:0,
-                    totalPaginas: 1,
-                    limite: 10,
-                    pagina: 1,
-                    message:"Não existe nehum inventario com essas caracteristicas!"
-                }])
+                return sendError(res,400,"Não existe nehum inventario com essas caracteristicas!");
             }
-        return res.status(500).json([{
-            data:[],
-            resultados:0,
-            totalPaginas: 1,
-            limite: 10,
-            pagina: 1,
-            error: true, 
-            code: 500, 
-            message: "Ocorreu um erro interno no servidor!"
-        }])
+        return sendError(res,500,"Ocorreu um erro interno no servidor!")
     }
   }
 

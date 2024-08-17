@@ -21,7 +21,6 @@ class UsuarioController {
             return sendResponse(res,200, {
 
             })
-            res.status(200).json({"token":data.token,"user":data.user})
         }catch(error){
             console.log(error);
             if(error instanceof TypeError) return sendError(res,401,error.message);
