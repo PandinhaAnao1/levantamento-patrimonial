@@ -2,11 +2,11 @@ import { prisma } from "../configs/prismaClient.js"
 
 class BemRepository{
 
-    static async findAll(filtro){
+    async findAll(filtro){
         return await prisma.bens.findMany(filtro);
     }
 
-    static async findById(filtro){
+    async findById(filtro){
         return await prisma.bens.findUnique(filtro);
     }
 
@@ -22,7 +22,7 @@ class BemRepository{
         return await prisma.bens.update(data)
     }
 
-    static createFilter(parametros){
+    createFilter(parametros){
         let filtro = {
             where: {
                 ...(parametros.sala_id && { bens_sala_id: parametros.sala_id }),
@@ -44,7 +44,7 @@ class BemRepository{
         return filtro;
     }
 
-    static async userExist(usua_id){
+    async userExist(usua_id){
         return await prisma.usuarios.findFirst({
             where:{
                 usua_id: usua_id
@@ -82,7 +82,7 @@ class BemRepository{
         })
     }
 
-    static async inventarioExist(inve_id){
+    async inventarioExist(inve_id){
         return await prisma.inventarios.findFirst({
             where:{
                 inve_id: inve_id
@@ -107,4 +107,4 @@ class BemRepository{
 
 
 
-export default BemRepository;
+export default new BemRepository();

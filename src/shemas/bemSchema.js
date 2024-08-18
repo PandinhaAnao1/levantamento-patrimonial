@@ -37,10 +37,10 @@ class bemSchema{
             }).positive({
                 message: "sala_id informado não é positivo"
             })),
-            bens_nome: z.string({invalid_type_error: "bens_nome informado não é do tipo string"}),
-            bens_tombo: z.string({invalid_type_error: "bens_tombo informado não é do tipo string"}),
-            bens_decricao: z.string({invalid_type_error: "bens_decricao informado não é do tipo string"}),
-            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}),
+            bens_nome: z.string({invalid_type_error: "bens_nome informado não é do tipo string"}).trim(),
+            bens_tombo: z.string({invalid_type_error: "bens_tombo informado não é do tipo string"}).trim(),
+            bens_decricao: z.string({invalid_type_error: "bens_decricao informado não é do tipo string"}).trim(),
+            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}).trim(),
             bens_encontrado: z.boolean().default(false),
             bens_valor: z.preprocess((val) => Number(val), z.number({
                 invalid_type_error: "bens_valor informado não é do tipo number",
@@ -73,12 +73,12 @@ class bemSchema{
             }).positive({
                 message: "usua_id informado não é positivo"
             })),
-            bens_nome: z.string({invalid_type_error: "bens_nome informado não é do tipo string"}),
-            bens_decricao: z.string({invalid_type_error: "bens_decricao informado não é do tipo string"}),
-            bens_estado: z.string({invalid_type_error: "bens_estado informado não é do tipo string"}),
+            bens_nome: z.string({invalid_type_error: "bens_nome informado não é do tipo string"}).trim(),
+            bens_decricao: z.string({invalid_type_error: "bens_decricao informado não é do tipo string"}).trim(),
+            bens_estado: z.string({invalid_type_error: "bens_estado informado não é do tipo string"}).trim(),
             bens_ocioso: z.boolean({invalid_type_error: "bens_ocioso informado não é do tipo boolean"}),
-            bens_imagem: z.string({invalid_type_error: "bens_imagem informado não é do tipo string"}).nullable().optional(),
-            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}).default(""),
+            bens_imagem: z.string({invalid_type_error: "bens_imagem informado não é do tipo string"}).trim().nullable().optional(),
+            bens_responsavel: z.string({invalid_type_error: "bens_responsavel informado não é do tipo string"}).nullable(),
             bens_encontrado: z.boolean().default(true),
         })
     }
@@ -113,9 +113,9 @@ class bemSchema{
             }).positive({
                 message: "usua_id informado não é positivo"
             })),
-            bens_estado: z.string({invalid_type_error: "bens_estado informado não é do tipo string"}),
+            bens_estado: z.string({invalid_type_error: "bens_estado informado não é do tipo string"}).trim(),
             bens_ocioso: z.boolean({invalid_type_error: "bens_ocioso informado não é do tipo boolean"}),
-            bens_imagem: z.string({invalid_type_error: "bens_imagem informado não é do tipo string"}).nullable().optional(),
+            bens_imagem: z.string({invalid_type_error: "bens_imagem informado não é do tipo string"}).trim().nullable().optional(),
             bens_encontrado: z.boolean().default(true),
         })
     }

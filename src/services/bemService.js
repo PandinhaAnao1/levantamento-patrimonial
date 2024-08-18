@@ -6,7 +6,7 @@ class BemService{
     async listar(parametros){
 
         const schema = new bemSchema().listarSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
 
         const filtro = BemRepository.createFilter(parametros)
         const bens =  await BemRepository.findAll(filtro)
@@ -17,10 +17,8 @@ class BemService{
     }
 
     async listarPorId(parametros){
-        if(isNaN(parametros.bens_id)){
-            throw new Error("id não informado, ou em formato incorreto");
-        }
         const schema = new bemSchema().listarPorIdSchema()
+        parametros = schema.parse(parametros)
 
         const filtro = BemRepository.createFilter(parametros)
         const bem = await BemRepository.findById(filtro)
@@ -31,15 +29,15 @@ class BemService{
         return bem
     }
 
-    async createBems(parametros){
+    async create(parametros){
 
         const schema = new bemSchema().createBensSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
         
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
 
         if(!salaExists){
-            throw new Error("o sala_id informado não existem");
+            throw new Error("O sala_id informado não existem");
         }
         
         const { sala_id, ...camposInsert } = parametros;
@@ -51,14 +49,13 @@ class BemService{
             select: BemRepository.createFilter({}).select
         })
 
-        console.log(bem)
         return bem
     }
 
-    static async adicionarBem(parametros){
+    async adicionarBem(parametros){
 
         const schema = new bemSchema().adicionarBemSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
 
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -67,7 +64,7 @@ class BemService{
         const inventarioExists = await BemRepository.inventarioExist(parametros.inve_id)
 
         if(!usuarioExists || !salaExists || !inventarioExists){
-            throw new Error("usuario, sala ou inventario não existem");
+            throw new Error("usuario, sala ou inventário não existem");
         }
         
         const { usua_id, inve_id, sala_id, ...camposInsert } = parametros;
@@ -79,23 +76,30 @@ class BemService{
             select: BemRepository.createFilter({}).select
         })
 
-        await BemRepository.createHistorico({
+        const historico = await BemRepository.createHistorico({
             data: {
                 hist_usuarios_id: usua_id,
                 hist_inventarios_id: inve_id,
                 hist_salas_id: sala_id,
                 hist_bens_id: bem.bens_id
+            },
+            select: {
+                hist_id: true,
+                hist_usuarios_id: true,
+                hist_inventarios_id: true,
+                hist_salas_id: true,
+                hist_bens_id: true
             }
 
         })
 
-        return bem
+        return {historico: historico, bem: bem}
     }
 
     async auditarBem(parametros){
 
         const schema = new bemSchema().auditarBemSchema()
-        schema.parse(parametros)
+        parametros = schema.parse(parametros)
                         
         const usuarioExists = await BemRepository.userExist(parametros.usua_id)
 
@@ -103,15 +107,19 @@ class BemService{
 
         const idsSalaInventario = await BemRepository.getIds(parametros.bens_id)
 
+        if(!idsSalaInventario){
+            throw new Error("bem inforamdo não existe");
+        }
+
         const { bens_sala_id, salas } = idsSalaInventario;
         const sala_inve_id = salas.sala_inve_id;
 
         if(!usuarioExists){
-            throw new Error("Usuario não existem");
+            throw new Error("Usuario não existe");
         }
 
-        if(bens_sala_id != parametros.inve_id || sala_inve_id != parametros.sala_id){
-            throw new Error("O Bem não pertence a sala ou inventario informado");
+        if(bens_sala_id != parametros.sala_id || sala_inve_id != parametros.inve_id){
+            throw new Error("O Bem não pertence a sala ou inventário informado");
         }
 
         if(auditadoExists){
@@ -146,9 +154,8 @@ class BemService{
 
         return {historico: historico, bem: bens}
 
-
     }
 
 }
 
-export default BemService;
+export default new BemService();
