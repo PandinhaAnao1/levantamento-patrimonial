@@ -14,6 +14,15 @@ class InventarioRepository {
   static async listarPorId(filtro) {
     return await prisma.inventarios.findUnique(filtro);
   }
+
+  static async criar(inventario) {
+    return await prisma.inventarios.create(inventario);
+  }
+
+  static async atualizar(inventario) {
+    return await prisma.inventarios.update(inventario);
+  }
+
 }
 
 export default InventarioRepository;

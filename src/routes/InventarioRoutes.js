@@ -5,8 +5,9 @@ const router = express.Router();
 
 router
     .get("/inventarios", AuthMiddleware, InventarioController.listarInventarios) 
-    .get("/inventarios/:id", AuthMiddleware, InventarioController.listarInventarioPorId )
-    //.post("/inventario", systemInventarioController.criarInventario)
+    .get("/inventarios/:id", AuthMiddleware, InventarioController.listarInventarioPorId)
+    .post("/inventario",AuthMiddleware, InventarioController.criarInventario)
+    .patch("/inventario/:id",AuthMiddleware,InventarioController.atualizarInventario)
 
 
 export default router;

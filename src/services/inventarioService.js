@@ -1,12 +1,13 @@
 import { skip } from "node:test";
-import InventarioRepository from "../repositories/InventarioRepository.js";
+import InvRepository from "../repositories/InventarioRepository.js";
+import IvSchema from "../shemas/InventarioSchema.js";
 import {z}  from "zod";
 
 class InventarioService{
     
-    static async listarInventarios(filtros){
-        
-        const {id, nome, data, concluido, campus, pagina} = filtros;
+    static async contarInventarios(filtros){
+
+        const {nome, data, concluido, campus, pagina} = IvSchema.listarSchema.parse(filtros);
         
         let filtro = {
             ...(pagina && { take: 10 ,skip: pagina * 10}),
@@ -18,15 +19,44 @@ class InventarioService{
                 
             }
         };
+
+        const totalInventarios = await InvRepository.contarInventarios(filtro);
+
+        if(!totalInventarios){
+            throw new z.ZodError([{
+                path: ["inventario"],
+                message:"Não foi contar inventarios com esse parâmetros!",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+
+        return totalInventarios;
         
-        const iventario = await InventarioRepository.listarInventarios(filtro);
+
+    }
+    static async listarInventarios(filtros){
+        
+        const {nome, data, concluido, campus, pagina} = IvSchema.listarSchema.parse(filtros);
+
+        let filtro = {
+            ...(pagina && { take: 10 ,skip: pagina * 10}),
+            where: {
+                ...(nome && { inve_nome: {contains: nome} }),
+                ...(data && { inve_data: data }),
+                ...(concluido && { inve_concluido: concluido }),
+                ...(campus && { inve_campus: {contains: campus} }),
+                
+            }
+        };
+        
+        const iventario = await InvRepository.listarInventarios(filtro);
     
 
         if(!iventario) {
             throw new z.ZodError([{
-                message: "Inventário não encontrado!",
-                path: ["inventario"], 
-                code: z.ZodIssueCode.custom,
+                path: ["inventario"],
+                message:"Não foi possivel encontrar inventarios com esse parametros",
+                code: z.ZodIssueCode.invalid_type,
             }]);
         }
 
@@ -36,23 +66,74 @@ class InventarioService{
 
     static async listarInventarioPorId(id){
 
-        if(!id) throw TypeError("O id enviado é invalido!");
+        let zodId = IvSchema.listarInventarioPorId.parse(parseInt(id));
 
         let filtro = {
             where:{
-                inve_id: id
+                inve_id: zodId
             }
         }
-        const inventario =  await InventarioRepository.listarPorId(filtro);
-        console.log(inventario);
+        const inventario = await InvRepository.listarPorId(filtro);
 
-        if(!inventario) throw TypeError(`Não foi possivel encontrar o inventario com o id: ${id}.`);
+        if(!inventario) {
+            throw new z.ZodError([{
+                path: ["inventario"],
+                message:"Não foi possivel encontrar um inventario com esse id",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        };
 
         return inventario;
+    }
+
+
+    static async criarInventario(inventario){
+
+        //Colar verificação se o inventario foi criado
+
+        const {nome,data,campus} = IvSchema.criar.parse(inventario);
+
+        let nvIventa = {
+            inve_nome:nome,
+            inve_data:data,
+            inve_concluido:0,
+            inve_campus:campus
+        };
+
+
+        const novoInventario = InvRepository.criar(nvIventa);
+
+
+        return novoInventario;
 
     }
 
 
+    static async atualizarInvetario(atualizacoes){
+
+        //Colar verificação se o inventario foi atualizado
+
+        const {nome, status} = IvSchema.atualizarSchema.parse(nome);
+        
+        let {idString} = atualizacoes.id;
+
+        const {id} = IvSchema.listarPorId.parse(parseInt(idString));
+
+        let inventarioAtulizado = {
+            where: {
+                inve_id: id,
+            },
+            data: {
+                ...(nome && { inve_nome: nome}),
+                ...(status && { inve_concluido: 1}),                
+            },
+        }
+
+        const inventario = InvRepository.atualizar(inventarioAtulizado);
+
+        return inventario;
+
+    }
 }
 
 export default InventarioService;
