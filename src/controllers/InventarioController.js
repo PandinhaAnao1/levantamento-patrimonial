@@ -7,22 +7,22 @@ class InventarioController {
         try {
 
             const invetarios = await InventarioService.listarInventarios(req.query);
-            const totalDeItens = await InventarioService.contarInventarios(filtro);
+            const totalDeItens = await InventarioService.contarInventarios(req.query);
             
             return sendResponse(res,200, {
                 data: invetarios,
                 resultados:totalDeItens,
-                totalPaginas: Math.ceil((data.total ?? 1)/10),
+                totalPaginas: Math.ceil((totalDeItens ?? 1)/10),
                 limite: 10,
                 pagina: req.query.pagina,
 
             }); 
             
         }catch (erro){
+            console.log(erro);
             if(erro instanceof ZodError){
                 return sendError(res,400,erro.message);
             }
-
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
     }
   }

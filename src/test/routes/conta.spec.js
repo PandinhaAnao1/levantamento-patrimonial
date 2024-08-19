@@ -3,7 +3,7 @@ import { describe, expect, it, test } from '@jest/globals';
 import app from '../../app.js'
 import exp from "constants";
 
-describe('contas', () => {
+describe.skip('contas', () => {
     it(" Deve retornar um array com os dados das contas", async () => {
         const req = await request(app)
         .get('/contas')

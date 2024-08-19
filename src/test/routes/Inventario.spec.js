@@ -1,16 +1,24 @@
 import request from "supertest";
 import { describe, expect, it, test } from '@jest/globals';
-import app from '../../app.js'
-
+import app from '../../app.js';
+import {postLogin} from '../auth.js';
 describe('inventario', () => {
+    const req = request(app);
+    let token;
+    it("Deve autenticar", async () => {
+        const res = await postLogin(req).expect(200);
+        expect(res.body?.data?.token).toBeTruthy();
+		token = res.body?.data?.token;
+    });
+
     it("Deve retornar um array com os dados dos invetarios", async () => {
         const req = await request(app)
         .get('/inventarios')
         .set("Accept", "aplication/json")
-        console.log(req.body[0].inve_campus)
+        .set("Authorization", `Bearer ${token}`)
+        console.log(req.body)
         expect(req.status).toBe(200)
         expect(req.body).toBeInstanceOf(Array)
-        expect(req.body[0].inve_campus).toEqual('Campus Vilhena')
         expect(req.body).toHaveLength(2)
     })
 

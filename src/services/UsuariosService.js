@@ -1,5 +1,6 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
+import UsuarioSchema from "../shemas/UsuarioSchema.js";
 import jwt from 'jsonwebtoken';
 
 class UsuarioService{
@@ -18,12 +19,8 @@ class UsuarioService{
         */
         const PRIVATE_KEY = '1010FFF'
 
-        const {email, senha} = login 
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        if(!emailRegex.test(email) || !senha || !email) throw new TypeError("E-mail inválido ou senha não fornecida.");
-        
+        const {email, senha} = UsuarioSchema.login.parse(login); 
+                
         const senhaHash = senha;
         const flitros = {
             where: {
@@ -38,10 +35,7 @@ class UsuarioService{
 
         const token = jwt.sign({ data: {'_id': usuario.usua_id} }, PRIVATE_KEY, jwtConfig);
         
-        return {
-            'user':usuario,
-            'token':token
-        }
+        return { usuario, token}
     }
 
     static async listarUsuarios(){
