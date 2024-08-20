@@ -101,7 +101,7 @@ class InventarioService{
         //Colar verificação se o inventario foi criado
 
         const {nome,data,campus} = IvSchema.criar.parse(inventario);
-
+        //trocar esse nome
         let nvIventa = {
             inve_nome:nome,
             inve_data:data,
