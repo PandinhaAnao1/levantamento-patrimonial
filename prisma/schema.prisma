@@ -43,7 +43,7 @@ model bens {
   bens_sala_id     Int
   bens_nome        String      @db.VarChar(200)
   bens_tombo       String?     @db.VarChar(15)
-  bens_responsavel String      @db.VarChar(80)
+  bens_responsavel String?     @db.VarChar(80)
   bens_decricao    String      @db.MediumText
   bens_estado      String?     @db.VarChar(30)
   bens_ocioso      Boolean?

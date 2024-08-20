@@ -1,10 +1,10 @@
 import { prisma } from "../configs/prismaClient.js"
 
-class salaRepository{
+class SalaRepository{
 
-    async findById(filtro){
-        return await prisma.itens.findMany(filtro)
+    static async listarSalas(filtro){
+        return await prisma.salas.findMany(filtro);
     }
 }
 
-export default new salaRepository()
+export default SalaRepository;
