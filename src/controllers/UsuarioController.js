@@ -19,9 +19,9 @@ class UsuarioController {
             const data =  await UsuarioService.login(req.body);
 
             return sendResponse(res,200, {
-
+              data:{"token":data.token,"user":data.user}
             })
-            res.status(200).json({"token":data.token,"user":data.user})
+
         }catch(error){
             console.log(error);
             if(error instanceof TypeError) return sendError(res,401,error.message);
