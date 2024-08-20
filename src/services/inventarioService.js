@@ -64,13 +64,22 @@ class InventarioService{
         
     }
 
-    static async listarInventarioPorId(id){
-
-        let zodId = IvSchema.listarInventarioPorId.parse(parseInt(id));
+    static async listarInventarioPorId(parametros){
+        //Futuramente vou trocar essa logica vou colocar o esque de validaçã e transformação 
+        //do zod
+        let id = parametros.id;
+        if(isNaN(id)){
+            throw new z.ZodError([{
+                path: ["inventario"],
+                message:"O id do inventario deve ser um numero!",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+        let zodId = IvSchema.listarPorIdSchema.parse({'id':parseInt(id)});
 
         let filtro = {
             where:{
-                inve_id: zodId
+                inve_id: zodId.id
             }
         }
         const inventario = await InvRepository.listarPorId(filtro);

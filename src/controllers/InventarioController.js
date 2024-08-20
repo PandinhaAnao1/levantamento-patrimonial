@@ -19,7 +19,6 @@ class InventarioController {
             }); 
             
         }catch (erro){
-            console.log(erro);
             if(erro instanceof ZodError){
                 return sendError(res,400,erro.message);
             }
@@ -29,16 +28,16 @@ class InventarioController {
 
     static listarInventarioPorId = async (req, res) => {
         try{
-
             const inventario = await InventarioService.listarInventarioPorId(req.params);
         
             return sendResponse(res,200, {data: inventario,});  
       
    
         }catch(erro){
+            
 
             if(erro instanceof ZodError){
-                return sendError(res,400,erro.message);
+                return sendError(res,400,erro.errors[0].message);
             }
             
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
