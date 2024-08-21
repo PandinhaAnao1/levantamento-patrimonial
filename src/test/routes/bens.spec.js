@@ -4,7 +4,7 @@ import app from '../../app.js'
 import faker from 'faker-br';
 
 let sala_id = 1
-let bens_id = null
+let bem_id = null
 let token = null
 
 describe('Autenticação', () => {
@@ -13,8 +13,8 @@ describe('Autenticação', () => {
         .post('/login')
         .set("Accept", "aplication/json")
         .send({
-            email:"usuario1@example.com",
-            senha:"senha123"
+            email:"test123@gmail.com",
+            senha:"senhatest"
         })
         token = req.body.data.token
     })
@@ -26,37 +26,50 @@ describe('get bens', () => {
         .get('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        expect(req.body.error).toEqual(false)
-        expect(req.status).toBe(200)
-        expect(req.body.message).toEqual("Requisição bem sucedida.")
-        expect(req.body.data).toBeInstanceOf(Array)
-        expect(req.body.data.length).toBeGreaterThan(0)
-        expect(req.body.data[0].bens_sala_id).toBeDefined()
-        expect(req.body.data[0].bens_id).toBeDefined()
-        expect(req.body.data[0].bens_nome).toBeDefined()
-        expect(req.body.data[0].bens_tombo).toBeDefined()
-        expect(req.body.data[0].bens_responsavel).toBeDefined()
-    })
-
-    it("2-Deve retornar um array com os dados dos bens de uma sala.", async () => {
-        const req = await request(app)
-        .get('/bens')
-        .set("Authorization", `Bearer ${token}`)
-        .set("Accept", "aplication/json")
         .send({
-            sala_id:sala_id
+            inventario_id:1
         })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
         expect(req.body.message).toEqual("Requisição bem sucedida.")
         expect(req.body.data).toBeInstanceOf(Array)
         expect(req.body.data.length).toBeGreaterThan(0)
-        expect(req.body.data[0].bens_sala_id).toBeDefined()
-        expect(req.body.data[0].bens_sala_id).toBe(sala_id)
-        expect(req.body.data[0].bens_id).toBeDefined()
-        expect(req.body.data[0].bens_nome).toBeDefined()
-        expect(req.body.data[0].bens_tombo).toBeDefined()
-        expect(req.body.data[0].bens_responsavel).toBeDefined()
+        expect(req.body.data[0].sala_id).toBeDefined()
+        expect(req.body.data[0].id).toBeDefined()
+        expect(req.body.data[0].nome).toBeDefined()
+        expect(req.body.data[0].tombo).toBeDefined()
+        expect(req.body.data[0].responsavel).toBeDefined()
+    })
+    // ...(parametros.nome && { nome: {contains: parametros.nome }}),
+    // ...(parametros.tombo && { tombo: parametros.tombo }),
+    // ...(parametros.responsavel && { responsavel: {contains: parametros.responsavel} }),
+    // ...(parametros.descricao && { descricao: {contains: parametros.descricao} }),
+    // ...(parametros.auditado && { auditado: parametros.auditado}),
+    it("2-Deve retornar um erro quando um pametro passado estiver no formato errado.", async () => {
+        const req = await request(app)
+        .get('/bens')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .send({
+            sala_id:sala_id,
+            inventario_id: 1,
+            nome:"a",
+            tombo:"TB2345",
+            responsavel:"a",
+            descricao:"a",
+            auditado: true
+        })
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(200)
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
+        expect(req.body.data).toBeInstanceOf(Array)
+        expect(req.body.data.length).toBeGreaterThan(0)
+        expect(req.body.data[0].sala_id).toBeDefined()
+        expect(req.body.data[0].sala_id).toBe(sala_id)
+        expect(req.body.data[0].id).toBeDefined()
+        expect(req.body.data[0].nome).toBeDefined()
+        expect(req.body.data[0].tombo).toBeDefined()
+        expect(req.body.data[0].responsavel).toBeDefined()
     })
 
     it("3-Deve retornar um error se o id da sala não existir.", async () => {
@@ -65,6 +78,7 @@ describe('get bens', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
+            inventario_id:1,
             sala_id:1000000
         })
         expect(req.status).toBe(404)
@@ -78,6 +92,7 @@ describe('get bens', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
+            inventario_id:1,
             sala_id:"n"
         })
         expect(req.status).toBe(400)
@@ -94,10 +109,10 @@ describe('get bens', () => {
         expect(req.status).toBe(200)
         expect(req.body.message).toEqual("Requisição bem sucedida.")
         expect(req.body.data).toBeInstanceOf(Object)
-        expect(req.body.data.bens_nome).toBeDefined()
-        expect(req.body.data.bens_id).toBeDefined()
-        expect(req.body.data.bens_tombo).toBeDefined()
-        expect(req.body.data.bens_responsavel).toBeDefined()
+        expect(req.body.data.nome).toBeDefined()
+        expect(req.body.data.id).toBeDefined()
+        expect(req.body.data.tombo).toBeDefined()
+        expect(req.body.data.responsavel).toBeDefined()
     })
 
     it("6-Deve retornar um error se o id do bem não existir.", async () => {
@@ -129,25 +144,23 @@ describe('post adicinar bem já auditando ele', () => {
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":1,
-                "inve_id":1,
-                "usua_id":1,
-                "bens_nome": faker.commerce.productName(),
-                "bens_decricao": faker.lorem.text(),
-                "bens_estado":"bom",
-                "bens_ocioso":false,
-                "bens_imagem":faker.image.imageUrl(),
-                "bens_tombo": null,
-                "bens_responsavel": faker.name.findName(),
-                "bens_valor": null 
+                "inventario_id":1,
+                "usuario_id":1,
+                "nome": faker.commerce.productName(),
+                "descricao": faker.lorem.text(),
+                "estado":"bom",
+                "ocioso":false,
+                "imagem":faker.image.imageUrl()
         })
+
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
         expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
         expect(req.body.data.bem).toBeInstanceOf(Object)
-        expect(req.body.data.bem.bens_id).toBeDefined()
-        expect(req.body.data.bem.bens_nome).toBeDefined()
-        expect(req.body.data.bem.bens_tombo).toBeDefined()
-        expect(req.body.data.bem.bens_responsavel).toBeDefined()
+        expect(req.body.data.bem.id).toBeDefined()
+        expect(req.body.data.bem.nome).toBeDefined()
+        expect(req.body.data.bem.tombo).toBeDefined()
+        expect(req.body.data.bem.responsavel).toBeDefined()
     })
 
     it("2-deve retornar error ao tentar adicionar um bem sem um dos campos obrigatórios.", async () => {
@@ -157,14 +170,13 @@ describe('post adicinar bem já auditando ele', () => {
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":1,
-                "inve_id":1,
-                "usua_id":null,
-                "bens_nome": faker.commerce.productName(),
-                "bens_decricao": faker.lorem.text(),
-                "bens_estado":"bom",
-                "bens_ocioso":false,
-                "bens_imagem":faker.image.imageUrl(),
-                "bens_responsavel": faker.name.findName(),
+                "inventario_id":1,
+                "usuario_id":null,
+                "nome": faker.commerce.productName(),
+                "descricao": faker.lorem.text(),
+                "estado":"bom",
+                "ocioso":false,
+                "imagem":faker.image.imageUrl()
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(400)
@@ -178,16 +190,13 @@ describe('post adicinar bem já auditando ele', () => {
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":100000,
-                "inve_id":1,
-                "usua_id":1,
-                "bens_nome": faker.commerce.productName(),
-                "bens_decricao": faker.lorem.text(),
-                "bens_estado":"bom",
-                "bens_ocioso":false,
-                "bens_imagem":faker.image.imageUrl(),
-                "bens_tombo": null,
-                "bens_responsavel": faker.name.findName(),
-                "bens_valor": null 
+                "inventario_id":1,
+                "usuario_id":1,
+                "nome": faker.commerce.productName(),
+                "descricao": faker.lorem.text(),
+                "estado":"bom",
+                "ocioso":false,
+                "imagem":faker.image.imageUrl()
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(404)
@@ -203,24 +212,24 @@ describe('post criar bem', () => {
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":sala_id,
-                "bens_nome": faker.commerce.productName(),
-                "bens_decricao": faker.lorem.text(),
-                "bens_imagem":faker.image.imageUrl(),
-                "bens_tombo": faker.random.uuid(),
-                "bens_responsavel": faker.name.findName(),
-                "bens_valor": faker.random.number(),
+                "inventario_id":1,
+                "nome": faker.commerce.productName(),
+                "descricao": faker.lorem.text(),
+                "tombo": "TB987",
+                "responsavel": faker.name.findName(),
+                "valor": faker.random.number()
         })
 
-        bens_id = req.body.data.bens_id
+        bem_id = req.body.data.id
 
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
         expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
         expect(req.body.data).toBeInstanceOf(Object)
-        expect(req.body.data.bens_id).toBeDefined()
-        expect(req.body.data.bens_nome).toBeDefined()
-        expect(req.body.data.bens_tombo).toBeDefined()
-        expect(req.body.data.bens_responsavel).toBeDefined()
+        expect(req.body.data.id).toBeDefined()
+        expect(req.body.data.nome).toBeDefined()
+        expect(req.body.data.tombo).toBeDefined()
+        expect(req.body.data.responsavel).toBeDefined()
     })
 
     it("2-deve retornar um erro ao informar uma sala que não existe.", async () => {
@@ -230,31 +239,33 @@ describe('post criar bem', () => {
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":10000000,
-                "bens_nome": faker.commerce.productName(),
-                "bens_decricao": faker.lorem.text(),
-                "bens_imagem":faker.image.imageUrl(),
-                "bens_tombo": faker.random.uuid(),
-                "bens_responsavel": faker.name.findName(),
-                "bens_valor": faker.random.number(),
+                "inventario_id":1,
+                "nome": faker.commerce.productName(),
+                "descricao": faker.lorem.text(),
+                "imagem":faker.image.imageUrl(),
+                "tombo": "TB987",
+                "responsavel": faker.name.findName(),
+                "valor": faker.random.number(),
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(404)
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("3-deve retornar um erro ao informar o bens_nome como um number.", async () => {
+    it("3-deve retornar um erro ao informar o nome como um number.", async () => {
         const req = await request(app)
         .post('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":sala_id,
-                "bens_nome": 1000,
-                "bens_decricao": faker.lorem.text(),
-                "bens_imagem":faker.image.imageUrl(),
-                "bens_tombo": faker.random.uuid(),
-                "bens_responsavel": faker.name.findName(),
-                "bens_valor": faker.random.number(),
+                "inventario_id":1,
+                "nome": 1000,
+                "descricao": faker.lorem.text(),
+                "imagem":faker.image.imageUrl(),
+                "tombo": "TB987",
+                "responsavel": faker.name.findName(),
+                "valor": faker.random.number(),
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(400)
@@ -269,26 +280,26 @@ describe('auditar bens', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":parseInt(bens_id),
+            "bem_id":parseInt(bem_id),
             "sala_id":sala_id,
-            "inve_id":1,
-            "usua_id":1,
-            "bens_estado":"ruim",
-            "bens_ocioso":true,
-            "bens_imagem":faker.image.imageUrl(),
+            "inventario_id":1,
+            "usuario_id":1,
+            "estado":"ruim",
+            "ocioso":true,
+            "imagem":faker.image.imageUrl(),
         })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
         expect(req.body.message).toEqual("Bem auditado")
         expect(req.body.data).toBeInstanceOf(Object)
-        expect(req.body.data.bem.bens_id).toBeDefined()
-        expect(req.body.data.bem.bens_nome).toBeDefined()
-        expect(req.body.data.bem.bens_tombo).toBeDefined()
-        expect(req.body.data.bem.bens_responsavel).toBeDefined()
-        expect(req.body.data.historico.hist_bens_id).toBeDefined()
-        expect(req.body.data.historico.hist_salas_id).toBeDefined()
-        expect(req.body.data.historico.hist_inventarios_id).toBeDefined()
-        expect(req.body.data.historico.hist_usuarios_id).toBeDefined()
+        expect(req.body.data.bem.id).toBeDefined()
+        expect(req.body.data.bem.nome).toBeDefined()
+        expect(req.body.data.bem.tombo).toBeDefined()
+        expect(req.body.data.bem.responsavel).toBeDefined()
+        expect(req.body.data.levantamento.bem_id).toBeDefined()
+        expect(req.body.data.levantamento.sala_id).toBeDefined()
+        expect(req.body.data.levantamento.inventario_id).toBeDefined()
+        expect(req.body.data.levantamento.usuario_id).toBeDefined()
     })
 
     it("2-deve retornar error ao tentar auditar um bem com uma sala_id que não existe.", async () => {
@@ -297,89 +308,89 @@ describe('auditar bens', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":2,
+            "bem_id":2,
             "sala_id":10000,
-            "inve_id":1,
-            "usua_id":1,
-            "bens_estado":"ruim",
-            "bens_ocioso":true,
-            "bens_imagem": faker.image.imageUrl()
+            "inventario_id":1,
+            "usuario_id":1,
+            "estado":"ruim",
+            "ocioso":true,
+            "imagem": faker.image.imageUrl()
         })
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
         expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
-    it("2-deve retornar error ao tentar auditar um bem com um usua_id que não existe.", async () => {
+    it("3-deve retornar error ao tentar auditar um bem com um usuario_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":1,
+            "bem_id":1,
             "sala_id":sala_id,
-            "inve_id":1,
-            "usua_id":1000000,
-            "bens_estado":"ruim",
-            "bens_ocioso":true,
-            "bens_imagem": faker.image.imageUrl()
+            "inventario_id":1,
+            "usuario_id":1000000,
+            "estado":"ruim",
+            "ocioso":true,
+            "imagem": faker.image.imageUrl()
         })
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("2-deve retornar error ao tentar auditar um bem com um bens_id que não existe.", async () => {
+    it("4-deve retornar error ao tentar auditar um bem com um bem_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":100000000000,
+            "bem_id":100000000000,
             "sala_id":sala_id,
-            "inve_id":1,
-            "usua_id":1,
-            "bens_estado":"ruim",
-            "bens_ocioso":true,
-            "bens_imagem": faker.image.imageUrl()
+            "inventario_id":1,
+            "usuario_id":1,
+            "estado":"ruim",
+            "ocioso":true,
+            "imagem": faker.image.imageUrl()
         })
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("3-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto.", async () => {
+    it("5-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":2,
+            "bem_id":2,
             "sala_id":"String",
-            "inve_id":1,
-            "usua_id":1,
-            "bens_estado":"ruim",
-            "bens_ocioso":true,
-            "bens_imagem": faker.image.imageUrl()
+            "inventario_id":1,
+            "usuario_id":1,
+            "estado":"ruim",
+            "ocioso":true,
+            "imagem": faker.image.imageUrl()
         })
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
         expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
     })
 
-    it("4-deve retornar error ao tentar auditar um bem que já foi auditado.", async () => {
+    it("6-deve retornar error ao tentar auditar um bem que já foi auditado.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "bens_id":1,
+            "bem_id":1,
             "sala_id":sala_id,
-            "inve_id":1,
-            "usua_id":1,
-            "bens_estado":"ruim",
-            "bens_ocioso":true,
-            "bens_imagem": faker.image.imageUrl()
+            "inventario_id":1,
+            "usuario_id":1,
+            "estado":"ruim",
+            "ocioso":true,
+            "imagem": faker.image.imageUrl()
         })
         expect(req.status).toBe(403)
         expect(req.body.error).toEqual(true)

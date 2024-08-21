@@ -21,7 +21,7 @@ async function seedDatabase() {
     // Inserindo dados na tabela `usuario`
     const usuarios = await prisma.usuario.createMany({
       data: [
-        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
+        { email: "test123@gmail.com", funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
         { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
         { email: faker.internet.email(), funcao: 'funcionario cpalm', nome: faker.name.findName(), senha: "senhatest", status: false },
       ],
@@ -60,9 +60,10 @@ async function seedDatabase() {
         sala_id: (index % 5) + 1,
         inventario_id: (index % 2) + 1,
         nome: faker.commerce.productName(),
-        tombo: String(faker.random.number()),
+        tombo: "TB2345",
         responsavel: faker.name.findName(),
-        decricao: faker.lorem.paragraph(),
+        descricao: faker.lorem.paragraph(),
+        auditado: faker.random.boolean(),
         valor: faker.commerce.price(100, 3000, 2),
       })),
     });
@@ -75,7 +76,6 @@ async function seedDatabase() {
         sala_id: (index % 5) + 1,
         usuario_id: (index % 3) + 1,
         imagem: faker.image.imageUrl(),
-        encontrado: faker.random.boolean(),
         ocioso: faker.random.boolean(),
         estado: faker.random.boolean() ? "em bom estado":  "danificado",
         data: new Date(),
