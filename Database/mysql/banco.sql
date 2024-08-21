@@ -1,133 +1,155 @@
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema levantamentopatrimonial
+-- Schema db_Levantamento_Patrimonial
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema levantamentopatrimonial
+-- Schema db_Levantamento_Patrimonial
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `db_Levantamento_Patrimonial` DEFAULT CHARACTER SET utf8mb4;
+CREATE SCHEMA IF NOT EXISTS `db_Levantamento_Patrimonial` DEFAULT CHARACTER SET utf8mb4 ;
 USE `db_Levantamento_Patrimonial` ;
 
 -- -----------------------------------------------------
--- Table `levantamentopatrimonial`.`usuarios`
+-- Table `db_Levantamento_Patrimonial`.`usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`usuarios` (
-  `usua_id` INT NOT NULL AUTO_INCREMENT,
-  `usua_nome` VARCHAR(80) NOT NULL,
-  `usua_email` VARCHAR(80) NOT NULL,
-  `usua_senha` VARCHAR(30) NOT NULL,
-  `usua_funcao` VARCHAR(20) NOT NULL,
-  `usua_status` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`usua_id`),
-  UNIQUE INDEX `audi_id_UNIQUE` (`usua_id` ASC),
-  UNIQUE INDEX `audi_email_UNIQUE` (`usua_email` ASC))
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`usuario` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(80) NOT NULL,
+  `email` VARCHAR(80) NOT NULL,
+  `senha` VARCHAR(200) NOT NULL,
+  `funcao` VARCHAR(20) NOT NULL,
+  `status` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `audi_id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `audi_email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
 
 -- -----------------------------------------------------
--- Table `levantamentopatrimonial`.`inventarios`
+-- Table `db_Levantamento_Patrimonial`.`campus`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`inventarios` (
-  `inve_id` INT NOT NULL AUTO_INCREMENT,
-  `inve_nome` VARCHAR(80) NOT NULL,
-  `inve_data` DATE NOT NULL,
-  `inve_concluido` TINYINT(1) NOT NULL,
-  `inve_campus` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`inve_id`))
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`campus` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(80) NULL,
+  `telefone` VARCHAR(13) NULL,
+  `cidade` VARCHAR(60) NULL,
+  `bairro` VARCHAR(60) NULL,
+  `rua` VARCHAR(60) NULL,
+  `numoro_residencia` INT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
--- Table `levantamentopatrimonial`.`salas`
+-- Table `db_Levantamento_Patrimonial`.`inventario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`salas` (
-  `sala_id` INT NOT NULL AUTO_INCREMENT,
-  `sala_inve_id` INT NOT NULL,
-  `sala_nome` VARCHAR(120) NOT NULL,
-  PRIMARY KEY (`sala_id`),
-  UNIQUE INDEX `Sala_id_UNIQUE` (`sala_id` ASC),
-  INDEX `fk_sala_inventarios1_idx` (`sala_inve_id` ASC),
-  CONSTRAINT `fk_sala_inventarios1`
-    FOREIGN KEY (`sala_inve_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`inventarios` (`inve_id`)
+CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`inventario` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(80) NOT NULL,
+  `data` DATE NOT NULL,
+  `concluido` TINYINT(1) NOT NULL,
+  `campus_id` INT NOT NULL,
+  PRIMARY KEY (`id`, `campus_id`),
+  UNIQUE INDEX `unique_id` (`id`),
+  INDEX `fk_inventarios_campus1_idx` (`campus_id` ASC),
+  CONSTRAINT `fk_inventarios_campus1`
+    FOREIGN KEY (`campus_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`campus` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
 
 -- -----------------------------------------------------
--- Table `levantamentopatrimonial`.`bens`
+-- Table `db_Levantamento_Patrimonial`.`sala`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`bens` (
-  `bens_id` INT NOT NULL AUTO_INCREMENT,
-  `bens_sala_id` INT NOT NULL,
-  `bens_nome` VARCHAR(200) NOT NULL,
-  `bens_tombo` VARCHAR(15) NULL,
-  `bens_responsavel` VARCHAR(80) NULL,
-  `bens_decricao` MEDIUMTEXT NOT NULL,
-  `bens_estado` VARCHAR(30) NULL,
-  `bens_ocioso` TINYINT(1) NULL,
-  `bens_imagem` VARCHAR(200) NULL,
-  `bens_encontrado` TINYINT(1) NULL,
-  `bens_valor` DECIMAL(10,2) NULL,
-  PRIMARY KEY (`bens_id`),
-  INDEX `fk_itens_sala1_idx` (`bens_sala_id` ASC),
-  UNIQUE INDEX `bens_id_UNIQUE` (`bens_id` ASC),
-  CONSTRAINT `fk_itens_sala1`
-    FOREIGN KEY (`bens_sala_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`salas` (`sala_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`sala` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(120) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `Sala_id_UNIQUE` (`id` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
 
 -- -----------------------------------------------------
--- Table `levantamentopatrimonial`.`historico`
+-- Table `db_Levantamento_Patrimonial`.`bem`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`historico` (
-  `hist_id` INT NOT NULL AUTO_INCREMENT,
-  `hist_bens_id` INT NOT NULL,
-  `hist_inventarios_id` INT NOT NULL,
-  `hist_usuarios_id` INT NOT NULL,
-  `hist_salas_id` INT NOT NULL,
-  PRIMARY KEY (`hist_id`),
-  UNIQUE INDEX `hist_id_UNIQUE` (`hist_id` ASC),
-  INDEX `fk_historico_itens1_idx` (`hist_bens_id` ASC),
-  INDEX `fk_historico_inventarios1_idx` (`hist_inventarios_id` ASC),
-  INDEX `fk_historico_Usuario1_idx` (`hist_usuarios_id` ASC),
-  INDEX `fk_historico_sala1_idx` (`hist_salas_id` ASC),
-  CONSTRAINT `fk_historico_itens1`
-    FOREIGN KEY (`hist_bens_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`bens` (`bens_id`)
+CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`bem` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `sala_id` INT NOT NULL,
+  `inventario_id` INT NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
+  `tombo` VARCHAR(15) NULL DEFAULT NULL,
+  `responsavel` VARCHAR(80) NULL DEFAULT NULL,
+  `descricao` MEDIUMTEXT NOT NULL,
+  `valor` DECIMAL(10,2) NULL DEFAULT NULL,
+  `auditado` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`id`, `sala_id`, `inventario_id`),
+  UNIQUE INDEX `bens_id_UNIQUE` (`id` ASC) ,
+  INDEX `fk_bens_inventarios1_idx` (`inventario_id` ASC) ,
+  INDEX `fk_bens_salas1_idx` (`sala_id` ASC) ,
+  CONSTRAINT `fk_bens_inventarios1`
+    FOREIGN KEY (`inventario_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`inventario` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_historico_inventarios1`
-    FOREIGN KEY (`hist_inventarios_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`inventarios` (`inve_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_historico_Usuario1`
-    FOREIGN KEY (`hist_usuarios_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`usuarios` (`usua_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_historico_sala1`
-    FOREIGN KEY (`hist_salas_id`)
-    REFERENCES `db_Levantamento_Patrimonial`.`salas` (`sala_id`)
+  CONSTRAINT `fk_bens_salas1`
+    FOREIGN KEY (`sala_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `db_Levantamento_Patrimonial`.`levantamento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`levantamento` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `inventario_id` INT NOT NULL,
+  `bem_id` INT NOT NULL,
+  `sala_id` INT NOT NULL,
+  `usuario_id` INT NOT NULL,
+  `imagem` VARCHAR(200) NULL,
+  `ocioso` TINYINT(1) NOT NULL,
+  `estado` VARCHAR(30) NOT NULL,
+  `data` DATETIME NOT NULL,
+  PRIMARY KEY (`id`, `inventario_id`, `bem_id`, `sala_id`, `usuario_id`),
+  UNIQUE INDEX `hist_id_UNIQUE` (`id` ASC) ,
+  INDEX `fk_levantamento_usuarios1_idx` (`usuario_id` ASC) ,
+  INDEX `fk_levantamento_salas1_idx` (`sala_id` ASC) ,
+  INDEX `fk_levantamento_bens1_idx` (`bem_id` ASC) ,
+  INDEX `fk_levantamento_inventarios1_idx` (`inventario_id` ASC) ,
+  CONSTRAINT `fk_levantamento_usuarios1`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`usuario` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_levantamento_salas1`
+    FOREIGN KEY (`sala_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`sala` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_levantamento_bens1`
+    FOREIGN KEY (`bem_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`bem` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_levantamento_inventarios1`
+    FOREIGN KEY (`inventario_id`)
+    REFERENCES `db_Levantamento_Patrimonial`.`inventario` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-

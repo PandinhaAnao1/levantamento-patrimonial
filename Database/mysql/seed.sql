@@ -1,171 +1,78 @@
-
--- Inserindo dados na tabela Usuario
-INSERT INTO db_Levantamento_Patrimonial.usuarios (usua_email, usua_funcao, usua_nome, usua_senha, usua_status)
+-- Inserindo dados na tabela `usuario`
+INSERT INTO db_Levantamento_Patrimonial.usuario (email, funcao, nome, senha, status)
 VALUES 
-    ('usuario1@example.com', 'auditor', 'João Silva', 'senha123',  1),
-    ('usuario2@example.com', 'auditor', 'Maria Santos', 'senha456',  1),
-    ('usuario3@example.com', 'funcionario cpalm', 'Carlos Oliveira', 'senha789',  1 ),
-    ('usuario1@email.com', 'funcionário cpalm', 'João Silva', 'senha1', 1),
-	('usuario2@email.com', 'funcionário cpalm', 'Maria Santos', 'senha2', 1),
-	('usuario3@email.com', 'auditor', 'Pedro Oliveira', 'senha3', 1),
-	('usuario4@email.com', 'funcionário cpalm', 'Ana Costa', 'senha4', 1),
-	('usuario5@email.com', 'funcionário cpalm', 'Lucas Pereira', 'senha5', 1),
-	('usuario6@email.com', 'auditor', 'Camila Martins', 'senha6', 1),
-	('usuario7@email.com', 'funcionário cpalm', 'Mateus Almeida', 'senha7', 0),
-	('usuario8@email.com', 'funcionário cpalm', 'Julia Ferreira', 'senha8', 1),
-	('usuario9@email.com', 'auditor', 'Felipe Lima', 'senha9', 0),
-	('usuario10@email.com', 'funcionário cpalm', 'Isabela Gomes', 'senha10', 1),
-	('usuario11@email.com', 'funcionário cpalm', 'Rafael Sousa', 'senha11', 1),
-	('usuario12@email.com', 'auditor', 'Carolina Oliveira', 'senha12', 1),
-	('usuario13@email.com', 'funcionário cpalm', 'Gustavo Martins', 'senha13', 1),
-	('usuario14@email.com', 'funcionário cpalm', 'Aline Ferreira', 'senha14', 1),
-	('usuario15@email.com', 'auditor', 'Gabriel Lima', 'senha15', 1),
-	('usuario16@email.com', 'funcionário cpalm', 'Larissa Gomes', 'senha16', 1),
-	('usuario17@email.com', 'funcionário cpalm', 'Vanessa Silva', 'senha17', 0),
-	('usuario18@email.com', 'auditor', 'Rodrigo Oliveira', 'senha18', 1),
-	('usuario19@email.com', 'funcionário cpalm', 'Fernanda Almeida', 'senha19', 1),
-	('usuario20@email.com', 'funcionário cpalm', 'Luciana Santos', 'senha20', 1);
+    ('usuario1@example.com', 'auditor', 'João Silva', 'senha123', 1),
+    ('usuario2@example.com', 'auditor', 'Maria Santos', 'senha456', 1),
+    ('usuario3@example.com', 'funcionario cpalm', 'Carlos Oliveira', 'senha789', 1);
 
--- Inserindo dados na tabela inventariosbens_decrição
-INSERT INTO db_Levantamento_Patrimonial.inventarios (inve_nome, inve_data, inve_concluido, inve_campus)
+-- Inserindo dados na tabela `campus`
+INSERT INTO db_Levantamento_Patrimonial.campus (nome)
 VALUES 
-    ('Inventário de Computadores', '2024-02-15', 0, 'Campus Vilhena'),
-    ('Inventário de Mobiliário', '2024-02-20', 0, 'Campus Colorado');
+    ('Campus Vilhena'),
+    ('Campus Colorado');
 
--- Inserindo dados na tabela sala
-INSERT INTO db_Levantamento_Patrimonial.salas (sala_nome, sala_inve_id)
+-- Inserindo dados na tabela `inventario`
+INSERT INTO db_Levantamento_Patrimonial.inventario (nome, data, concluido, campus_id)
 VALUES 
-    ('Laboratorio de infomartica do piso 3 sala 5',1),
-    ('Cantina de alimentação piso 1',1),
-    ('laboratorio de quimica do piso 2 sala 12',2),
-	('Sala de pesquisa a vançada em IA',2),
-    ('Sala de Reunião de grupos de Fabrica',2);
+    ('Inventário de Computadores', '2024-02-15', 0, (SELECT id FROM db_Levantamento_Patrimonial.campus WHERE nome = 'Campus Vilhena')),
+    ('Inventário de Mobiliário', '2024-02-20', 0, (SELECT id FROM db_Levantamento_Patrimonial.campus WHERE nome = 'Campus Colorado'));
 
--- Inserindo dados na tabela itens
-INSERT INTO db_Levantamento_Patrimonial.bens (
-    bens_nome, 
-    bens_tombo, 
-    bens_responsavel, 
-    bens_decricao, 
-    bens_sala_id, 
-    bens_valor, 
-    bens_encontrado, 
-    bens_estado, 
-    bens_imagem, 
-    bens_ocioso
+-- Inserindo dados na tabela `sala`
+INSERT INTO db_Levantamento_Patrimonial.sala (nome)
+VALUES 
+    ('Laboratório de informática do piso 3 sala 5'),
+    ('Cantina de alimentação piso 1'),
+    ('Laboratório de química do piso 2 sala 12'),
+    ('Sala de pesquisa avançada em IA'),
+    ('Sala de Reunião de grupos de Fábrica');
+
+-- Inserindo dados na tabela `bem`
+INSERT INTO db_Levantamento_Patrimonial.bem (
+    sala_id, 
+    inventario_id, 
+    nome, 
+    tombo, 
+    responsavel, 
+    descricao, 
+    valor
 ) VALUES 
-    ('Notebook Lenovo', 'TOMBO007', 'Ana Silva', 'Notebook leve e portátil, processador Intel i5', 1, 1249.99, 1, 'em bom estado', 'https://exemplo.com/imagem1.jpg', 0),
-    ('Cadeira de Jantar', 'TOMBO008', 'José Oliveira', 'Cadeira de jantar estofada, conjunto com 6 unidades', 2, 1750.00, 1, 'em bom estado', NULL, 0),
-    ('Projetor Epson', 'TOMBO009', 'Mariana Santos', 'Projetor de alta resolução, ideal para apresentações', 3, 2200.00, 1, 'danificado', 'https://exemplo.com/imagem3.jpg', 0),
-    ('Impressora HP', 'TOMBO010', 'Ricardo Lima', 'Impressora multifuncional, imprime, copia e digitaliza', 1, 1500.00, 1, 'em bom estado', NULL, 0),
-    ('Cama de Solteiro', 'TOMBO011', 'Ana Oliveira', 'Cama de solteiro com estrutura de madeira e colchão ortopédico', 2, 800.00, 1, 'em bom estado', 'https://exemplo.com/imagem5.jpg', 0),
-    ('Mesa de Centro', 'TOMBO012', 'José Santos', 'Mesa de centro para sala de estar, estilo moderno', 3, 1600.00, 0, ' ', NULL, 0),
-    ('Forno Micro-ondas', 'TOMBO013', 'Mariana Lima', 'Forno micro-ondas com capacidade de 30 litros', 1, 1300.00, 1, 'em bom estado', 'https://exemplo.com/imagem7.jpg', 1),
-    ('Sofá de Couro', 'TOMBO014', 'Ricardo Oliveira', 'Sofá de couro reclinável, 3 lugares', 2, 2400.00, 1, 'danificado', NULL, 0),
-    ('Mesa de Escritório', 'TOMBO015', 'Ana Santos', 'Mesa de escritório com tampo de vidro e gavetas', 3, 1800.00, 1, 'em bom estado', 'https://exemplo.com/imagem9.jpg', 0),
-    ('Ventilador de Teto', 'TOMBO016', 'José Lima', 'Ventilador de teto com 3 pás e controle remoto', 1, 950.00, 1, 'em bom estado', NULL, 0),
-    ('Tapete Decorativo', 'TOMBO017', 'Mariana Oliveira', 'Tapete decorativo para sala de estar, 2m x 3m', 2, 700.00, 0, '', NULL, 0),
-    ('Mesa de Jantar', 'TOMBO018', 'Ricardo Santos', 'Mesa de jantar de madeira maciça, 8 lugares', 3, 2100.00, 1, 'danificado', NULL, 0),
-    ('Aparelho de Som', 'TOMBO019', 'Ana Lima', 'Aparelho de som com CD, rádio e entrada USB', 1, 1050.00, 1, 'em bom estado', 'https://exemplo.com/imagem13.jpg', 1),
-    ('Poltrona de Leitura', 'TOMBO020', 'José Oliveira', 'Poltrona confortável para leitura, com apoio para os pés', 2, 1350.00, 1, 'inservivel', NULL, 0),
-    ('Mesa Lateral', 'TOMBO021', 'Mariana Silva', 'Mesa lateral para sala de estar, com prateleira', 3, 1250.00, 1, 'em bom estado', 'https://exemplo.com/imagem15.jpg', 0),
-    ('Mesa de Reunião', 'TOMBO022', 'Ana Silva', 'Mesa de reunião retangular, 10 lugares', 4, 1950.00, 1, 'em bom estado', NULL, 0),
-    ('Cadeira de Escritório', 'TOMBO023', 'José Oliveira', 'Cadeira de escritório ergonômica, com suporte lombar', 5, 1700.00, 1, 'danificado', 'https://exemplo.com/imagem17.jpg', 1),
-    ('Geladeira Electrolux', 'TOMBO024', 'Mariana Lima', 'Geladeira Frost Free, 450 litros', 3, 2650.00, 0, ' ', NULL, 0),
-    ('Televisor Samsung 55"', 'TOMBO025', 'Ricardo Santos', 'Televisor Smart TV 4K, com tecnologia HDR', 4, 2900.00, 1, 'em bom estado', 'https://exemplo.com/imagem19.jpg', 0),
-    ('Mesa de Centro', 'TOMBO026', 'Ana Oliveira', 'Mesa de centro de madeira, estilo rústico', 5, 1500.00, 1, 'inservivel', NULL, 0),
-    ('Cama de Casal', 'TOMBO027', 'José Silva', 'Cama de casal com estrutura de metal e colchão ortopédico', 2, 1850.00, 1, 'em bom estado', 'https://exemplo.com/imagem21.jpg', 0),
-    ('Fogão Consul', 'TOMBO028', 'Mariana Santos', 'Fogão 5 bocas, com acendimento automático', 4, 1750.00, 1, 'danificado', NULL, 0),
-    ('Sofá de Canto', 'TOMBO029', 'Ricardo Oliveira', 'Sofá de canto em L, com chaise retrátil', 5, 2250.00, 1, 'em bom estado', 'https://exemplo.com/imagem23.jpg', 0),
-    ('Máquina de Lavar Brastemp', 'TOMBO030', 'Ana Lima', 'Máquina de lavar 12kg, com ciclo rápido', 5, 2300.00, 1, 'em bom estado', NULL, 0),
-    ('Mesa de Jantar', 'TOMBO031', 'José Oliveira', 'Mesa de jantar redonda, 6 lugares', 4, 2000.00, 1, 'inservivel', 'https://exemplo.com/imagem1.jpg', 0),
-    ('Cadeira de Balanço', 'TOMBO032', 'Mariana Silva', 'Cadeira de balanço de madeira, confortável e resistente', 5, 1450.00, 1, 'em bom estado', NULL, 0),
-    ('Ar Condicionado LG 12000 BTUs', 'TOMBO033', 'Ricardo Santos', 'Ar condicionado split, com controle remoto', 3, 3150.00, 1, 'danificado', 'https://exemplo.com/imagem2.jpg', 0),
-    ('Mesa de Escritório', 'TOMBO034', 'Ana Oliveira', 'Mesa de escritório com tampo de vidro temperado', 4, 2500.00, 1, 'em bom estado', 'https://exemplo.com/imagem4.jpg', 0),
-    ('Cadeira Giratória', 'TOMBO035', 'José Silva', 'Cadeira giratória com rodinhas, estofada', 5, 1100.00, 1, 'inservivel', 'https://exemplo.com/imagem6.jpg', 0),
-    ('Liquidificador Philips Walita', 'TOMBO036', 'Mariana Santos', 'Liquidificador com potência de 800W, 10 velocidades', 1, 850.00, 1, 'em bom estado', 'https://exemplo.com/imagem7.jpg', 1),
-    ('Mesa de Cabeceira', 'TOMBO037', 'Ricardo Oliveira', 'Mesa de cabeceira com gaveta e prateleira', 4, 950.00, 1, 'danificado', NULL, 0),
-    ('Armário de Cozinha', 'TOMBO038', 'Ana Lima', 'Armário de cozinha compacto, com portas e prateleiras', 5, 2800.00, 1, 'em bom estado', NULL, 0),
-    ('Ferro de Passar', 'TOMBO039', 'José Oliveira', 'Ferro de passar a vapor, 2000W', 2, 700.00, 1, 'inservivel', NULL, 0),
-    ('Cadeira de Praia', 'TOMBO040', 'Mariana Silva', 'Cadeira de praia dobrável, com encosto reclinável', 4, 1200.00, 1, 'em bom estado', 'https://exemplo.com/imagem10.jpg', 0),
-    ('Ventilador de Mesa', 'TOMBO041', 'Ana Silva', 'Ventilador de mesa, 3 velocidades', 1, 500.00, 1, 'em bom estado', 'https://exemplo.com/imagem11.jpg', 0),
-    ('Armário de Escritório', 'TOMBO042', 'José Oliveira', 'Armário de escritório com portas de correr', 2, 2200.00, 1, 'danificado', 'https://exemplo.com/imagem12.jpg', 0),
-    ('Poltrona Decorativa', 'TOMBO043', 'Mariana Lima', 'Poltrona decorativa com estampa floral', 3, 1900.00, 1, 'em bom estado', NULL, 0),
-    ('Mesa de Centro', 'TOMBO044', 'Ricardo Santos', 'Mesa de centro de madeira maciça, com tampo de vidro', 4, 1700.00, 1, 'danificado', 'https://exemplo.com/imagem14.jpg', 0),
-    ('Forno Elétrico', 'TOMBO045', 'Ana Oliveira', 'Forno elétrico com capacidade de 30 litros', 5, 1550.00, 1, 'em bom estado', NULL, 0),
-    ('Aspirador de Pó', 'TOMBO046', 'José Silva', 'Aspirador de pó vertical, sem fio', 1, 1450.00, 1, 'em bom estado', 'https://exemplo.com/imagem15.jpg', 0),
-    ('Mesa de Escritório', 'TOMBO047', 'Mariana Santos', 'Mesa de escritório com gavetas e prateleiras', 2, 2000.00, 1, 'em bom estado', 'https://exemplo.com/imagem16.jpg', 0),
-    ('Tapete Felpudo', 'TOMBO048', 'Ricardo Oliveira', 'Tapete felpudo para sala de estar, 2m x 2m', 3, 800.00, 1, 'inservivel', 'https://exemplo.com/imagem17.jpg', 0),
-    ('Micro-ondas Electrolux', 'TOMBO049', 'Ana Lima', 'Forno micro-ondas com grill, 20 litros', 4, 1100.00, 1, 'em bom estado', 'https://exemplo.com/imagem18.jpg', 0),
-    ('Sofá de 2 Lugares', 'TOMBO050', 'José Oliveira', 'Sofá de 2 lugares, retrátil e reclinável', 5, 2250.00, 1, 'danificado', 'https://exemplo.com/imagem19.jpg', 0),
-    ('Cadeira Giratória', 'TOMBO051', 'Mariana Silva', 'Cadeira giratória com ajuste de altura', 1, 1350.00, 1, 'em bom estado', NULL, 0),
-    ('Aparador de Madeira', 'TOMBO052', 'Ricardo Santos', 'Aparador de madeira com duas gavetas', 2, 1450.00, 1, 'inservivel', NULL, 0),
-    ('Mesa de Jantar', 'TOMBO053', 'Ana Oliveira', 'Mesa de jantar oval, 4 lugares', 3, 1800.00, 1, 'em bom estado', NULL, 0),
-    ('Liquidificador Oster', 'TOMBO054', 'José Silva', 'Liquidificador com jarra de vidro, 12 velocidades', 4, 950.00, 1, 'danificado', NULL, 0),
-    ('Cama Box', 'TOMBO055', 'Mariana Santos', 'Cama box de casal com colchão de molas', 5, 2100.00, 1, 'em bom estado', NULL, 0),
-    ('Mesa de Cabeceira', 'TOMBO056', 'Ricardo Oliveira', 'Mesa de cabeceira com gaveta e nicho', 1, 850.00, 1, 'danificado', NULL, 0),
-    ('Mesa de Estudo', 'TOMBO057', 'Ana Lima', 'Mesa de estudo compacta, com prateleiras', 2, 1600.00, 1, 'em bom estado', NULL, 0),
-    ('Cadeira de Praia', 'TOMBO058', 'José Oliveira', 'Cadeira de praia dobrável, com apoio para os braços', 3, 1200.00, 1, 'inservivel', NULL, 0),
-    ('Ferro de Passar a Vapor', 'TOMBO059', 'Mariana Silva', 'Ferro de passar a vapor com base de cerâmica', 4, 700.00, 1, 'em bom estado', NULL, 0),
-    ('Mesa de Apoio', 'TOMBO060', 'Ricardo Santos', 'Mesa de apoio redonda, com base de metal', 5, 800.00, 1, 'em bom estado', NULL, 0);
+    (1, 1, 'Notebook Lenovo', 'TOMBO007', 'Ana Silva', 'Notebook leve e portátil, processador Intel i5', 1249.99),
+    (2, 1, 'Cadeira de Jantar', 'TOMBO008', 'José Oliveira', 'Cadeira de jantar estofada, conjunto com 6 unidades', 1750.00),
+    (3, 1, 'Projetor Epson', 'TOMBO009', 'Mariana Santos', 'Projetor de alta resolução, ideal para apresentações', 2200.00),
+    (1, 1, 'Impressora HP', 'TOMBO010', 'Ricardo Lima', 'Impressora multifuncional, imprime, copia e digitaliza', 1500.00),
+    (2, 1, 'Cama de Solteiro', 'TOMBO011', 'Ana Oliveira', 'Cama de solteiro com estrutura de madeira e colchão ortopédico', 800.00),
+    (3, 1, 'Mesa de Centro', 'TOMBO012', 'José Santos', 'Mesa de centro para sala de estar, estilo moderno', 1600.00),
+    (1, 2, 'Forno Micro-ondas', 'TOMBO013', 'Mariana Lima', 'Forno micro-ondas com capacidade de 30 litros', 1300.00),
+    (2, 2, 'Sofá de Couro', 'TOMBO014', 'Ricardo Oliveira', 'Sofá de couro reclinável, 3 lugares', 2400.00),
+    (3, 2, 'Mesa de Escritório', 'TOMBO015', 'Ana Santos', 'Mesa de escritório com tampo de vidro e gavetas', 1800.00),
+    (1, 2, 'Ventilador de Teto', 'TOMBO016', 'José Lima', 'Ventilador de teto com 3 pás e controle remoto', 950.00),
+    (2, 2, 'Tapete Decorativo', 'TOMBO017', 'Mariana Oliveira', 'Tapete decorativo para sala de estar, 2m x 3m', 700.00),
+    (3, 2, 'Mesa de Jantar', 'TOMBO018', 'Ricardo Santos', 'Mesa de jantar de madeira maciça, 8 lugares', 2100.00),
+    (1, 2, 'Aparelho de Som', 'TOMBO019', 'Ana Lima', 'Aparelho de som com CD, rádio e entrada USB', 1050.00),
+    (2, 2, 'Poltrona de Leitura', 'TOMBO020', 'José Oliveira', 'Poltrona confortável para leitura, com apoio para os pés', 1350.00),
+    (3, 2, 'Mesa Lateral', 'TOMBO021', 'Mariana Silva', 'Mesa lateral para sala de estar, com prateleira', 1250.00);
 
-
-    INSERT INTO db_Levantamento_Patrimonial.historico (
-    hist_usuarios_id, 
-    hist_bens_id, 
-    hist_salas_id, 
-    hist_inventarios_id
+-- Inserindo dados na tabela `levantamento`
+INSERT INTO db_Levantamento_Patrimonial.levantamento (
+    inventario_id, 
+    bem_id, 
+    sala_id, 
+    usuario_id, 
+    imagem, 
+    encontrado, 
+    ocioso, 
+    estado, 
+    data
 ) VALUES 
-    (1, 1, 1, 1),
-    (2, 2, 2, 1),
-    (3, 3, 3, 2),
-    (4, 4, 1, 1),
-    (5, 5, 2, 1),
-    (6, 6, 3, 2),
-    (7, 7, 3, 2),
-    (8, 8, 2, 1),
-    (9, 9, 3, 2),
-    (10, 10, 1, 1),
-    (11, 11, 2, 1),
-    (12, 12, 3, 2),
-    (13, 13, 4, 2),
-    (14, 14, 5, 2),
-    (15, 15, 4, 2),
-    (16, 16, 1, 1),
-    (17, 17, 2, 1),
-    (18, 18, 3, 2),
-    (19, 19, 4, 2),
-    (20, 20, 5, 2),
-    (21, 21, 1, 1),
-    (22, 22, 2, 1),
-    (23, 23, 2, 1),
-    (1, 24, 1, 1),
-    (2, 25, 2, 1),
-    (3, 26, 3, 1),
-    (4, 27, 1, 1),
-    (5, 28, 2, 1),
-    (6, 29, 3, 2),
-    (7, 30, 1, 1),
-    (8, 31, 2, 1),
-    (9, 32, 3, 2),
-    (10, 33, 4, 2),
-    (11, 34, 5, 2),
-    (12, 35, 4, 2),
-    (13, 36, 1, 1),
-    (14, 37, 2, 1),
-    (15, 38, 3, 2),
-    (16, 39, 4, 2),
-    (17, 40, 5, 2),
-    (18, 41, 1, 1),
-    (19, 42, 2, 1),
-    (20, 43, 3, 2),
-    (21, 44, 1, 1),
-    (22, 45, 2, 1),
-    (23, 46, 3, 2),
-    (1, 47, 4, 2),
-    (2, 48, 5, 2),
-    (3, 49, 3, 2),
-    (4, 50, 1, 1),
-    (5, 51, 2, 1),
-    (6, 52, 3, 2),
-    (7, 53, 1, 1);
+    (1, 1, 1, 1, 'https://exemplo.com/imagem1.jpg', 1, 0, 'em bom estado', NOW()),
+    (1, 2, 2, 2, NULL, 1, 0, 'em bom estado', NOW()),
+    (2, 3, 3, 3, 'https://exemplo.com/imagem3.jpg', 1, 0, 'danificado', NOW()),
+    (1, 4, 1, 1, NULL, 1, 0, 'em bom estado', NOW()),
+    (1, 5, 2, 2, NULL, 1, 0, 'em bom estado', NOW()),
+    (2, 6, 3, 3, NULL, 1, 0, 'danificado', NOW()),
+    (2, 7, 3, 1, NULL, 1, 0, 'em bom estado', NOW()),
+    (1, 8, 2, 2, NULL, 0, 0, '', NOW()),
+    (2, 9, 3, 3, NULL, 1, 0, 'danificado', NOW()),
+    (1, 10, 1, 1, 'https://exemplo.com/imagem13.jpg', 1, 1, 'em bom estado', NOW()),
+    (1, 11, 2, 2, NULL, 1, 0, 'inservível', NOW()),
+    (2, 12, 3, 3, 'https://exemplo.com/imagem15.jpg', 1, 0, 'em bom estado', NOW());

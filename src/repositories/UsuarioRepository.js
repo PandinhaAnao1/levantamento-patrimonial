@@ -11,7 +11,7 @@ class UsuarioRepository{
          *
          * @return {Object} O retorno é um objeto do tipo prisma.
          */
-        return await prisma.usuarios.findUnique(filtro)
+        return await prisma.usuario.findUnique(filtro)
     }
 
     static async listarUsuarios(filtros){

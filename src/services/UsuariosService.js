@@ -24,16 +24,16 @@ class UsuarioService{
         const senhaHash = senha;
         const flitros = {
             where: {
-                usua_email: email,
-                usua_senha: senhaHash,
+                email: email,
+                senha: senhaHash,
             },
             select:{
-                usua_id: true,
-                usua_nome: true,
-                usua_email: true,
-                usua_senha: false,
-                usua_funcao: true,
-                usua_status: true,
+                id: true,
+                nome: true,
+                email: true,
+                senha: false,
+                funcao: true,
+                status: true,
             }
         }
         //await bcrypt.hash(senha, 10);
