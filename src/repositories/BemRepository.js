@@ -14,7 +14,7 @@ class BemRepository{
         return await prisma.bem.create(data);
     }
 
-    async createHistorico(data){
+    async createLevantamento(data){
         return await prisma.levantamento.create(data)
     }
 

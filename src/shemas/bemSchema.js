@@ -94,8 +94,7 @@ class bemSchema{
             descricao: z.string({invalid_type_error: "descricao informado não é do tipo string"}).trim(),
             estado: z.string({invalid_type_error: "estado informado não é do tipo string"}).trim(),
             ocioso: z.boolean({invalid_type_error: "ocioso informado não é do tipo boolean"}),
-            imagem: z.string({invalid_type_error: "imagem informado não é do tipo string"}).trim().nullable().optional(),
-            auditado: z.boolean().default(true),
+            imagem: z.string({invalid_type_error: "imagem informado não é do tipo string"}).trim().nullable().optional()
         })
     }
 

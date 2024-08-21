@@ -21,7 +21,6 @@ class BemController {
             return sendResponse(res,200,{data: bensExists})
 
         } catch (err) {
-            console.error(err)
             if(err.message === "Nem um registro encontrado") {
                 return sendError(res, 404, ["Nem um registro encontrado"])
 
@@ -46,7 +45,6 @@ class BemController {
             return sendResponse(res,200,{data: bensExist})
 
         } catch (err) {
-            console.error(err)
             if(err.message === "Nem um registro encontrado") {
                 return sendError(res, 404, ["Nem um registro encontrado"])
 
@@ -71,13 +69,12 @@ class BemController {
                 descricao: req.body.descricao ,
                 responsavel: req.body.responsavel,
                 valor: req.body.valor ?? null,
-                auditado: req.body.auditado ?? false,
+                auditado: false,
             };
             const bemCreate = await bemService.create(parametros)
             return sendResponse(res,201,{data: bemCreate})
 
         }catch(err){
-            console.error(err)
             if (err.message === "O sala_id informado não existem") {
                 return sendError(res, 404, ["O sala_id informado não existem"])
 
@@ -102,15 +99,13 @@ class BemController {
                 descricao: req.body.descricao,
                 estado: req.body.estado,
                 ocioso: req.body.ocioso,
-                imagem: req.body.imagem ?? null,
-                auditado: true,
+                imagem: req.body.imagem ?? null
             };
             const bemAdicionado = await bemService.adicionarBem(parametros)
 
             return sendResponse(res,201,{data: bemAdicionado})
 
         }catch(err){
-            console.error(err)
             if (err.message === "usuario, sala ou inventário não existem") {
                 return sendError(res, 404, ["usuario, sala ou inventário não existem"])
 
@@ -140,7 +135,6 @@ class BemController {
             return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
         }catch(err){
-            console.error(err)
             if (err.message === "Usuario inforamdo não existe.") {
                 return sendError(res, 404, ["Usuario inforamdo não existe."])
 

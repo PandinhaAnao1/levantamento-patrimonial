@@ -70,12 +70,13 @@ class BemService{
             throw new Error("usuario, sala ou inventário não existem");
         }
 
-        const { usuario_id, inventario_id, sala_id, nome, descricao, ...camposInsert } = parametros;
+        const { usuario_id, inventario_id, sala_id, nome, descricao,  ...camposInsert } = parametros;
         const insertbem = {
             sala: { connect: { id: sala_id } },
             inventario: { connect: { id: inventario_id } },
             nome: nome,
-            descricao: descricao
+            descricao: descricao,
+            auditado: true
         };
 
         const bem =  await BemRepository.createBem({
@@ -83,7 +84,7 @@ class BemService{
             select: BemRepository.createFilter({}).select
         })
 
-        const historico = await BemRepository.createHistorico({
+        const levantamento = await BemRepository.createLevantamento({
             data: {
                 usuario_id: usuario_id,
                 inventario_id: inventario_id,
@@ -105,7 +106,7 @@ class BemService{
             }
         })
 
-        return {historico: historico, bem: bem}
+        return {levantamento: levantamento, bem: bem}
     }
 
     async auditarBem(parametros){
@@ -119,10 +120,6 @@ class BemService{
 
         const idsBemInventario = await BemRepository.getIds(parametros.bem_id)
 
-        if(auditadoExists){
-            throw new Error("Bem já foi auditado.");
-        }
-
         if(!idsBemInventario){
             throw new Error("Bem inforamdo não existe.");
         }
@@ -135,7 +132,11 @@ class BemService{
             throw new Error("O Bem não pertence ao inventário informado.");
         }
 
-        const historico = await BemRepository.createHistorico({
+        if(auditadoExists){
+            throw new Error("Bem já foi auditado.");
+        }
+
+        const levantamento = await BemRepository.createLevantamento({
             data: {
                 ...parametros,
                 data: new Date()
@@ -155,7 +156,7 @@ class BemService{
         const filtro = BemRepository.createFilter({bem_id: parametros.bem_id})
         const bens =  await BemRepository.findById(filtro)
 
-        return {historico: historico, bem: bens}
+        return {levantamento: levantamento, bem: bens}
 
     }
 
