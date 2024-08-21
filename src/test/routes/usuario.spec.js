@@ -3,10 +3,12 @@ import { describe, expect, it, test } from '@jest/globals';
 import app from '../../app.js'
 import exp from "constants";
 
-describe('contas', () => {
+console.log(req.body)
+
+describe('usuario', () => {
     it(" Deve retornar um array com os dados das contas", async () => {
         const req = await request(app)
-        .get('/contas')
+        .get('/usuario')
         .set("Accept", "aplication/json")
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
@@ -24,11 +26,9 @@ describe('contas', () => {
 
 
 
-
-
     it("Deve retornar um objeto com os dados de apenas uma conta", async () => {
         const req = await request(app)
-        .get('/contas/1')
+        .get('/usuario/1')
         .set("Accept", "aplication/json")
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
@@ -45,7 +45,7 @@ describe('contas', () => {
     it("Deve retornar um error se algum id da conta não existir", async () => {
 
         const req = await request(app)
-        .get('/bens/10101010010101010')
+        .get('/usuario/10101010010101010')
         .set("Accept", "aplication/json")
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)

@@ -1,6 +1,7 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import UsuarioSchema from "../shemas/UsuarioSchema.js";
 
 class UsuarioService{
     
@@ -52,19 +53,58 @@ class UsuarioService{
         }
     }
 
-    static async listarUsuarios(){
-        return await ContaRepository.listarTodos()
+    static async listarUsuarios(parametros){
+
+        const {nome,funcao,status} = UsuarioSchema.listarUsuarios.parse(parametros);
+
+        let filtro = {
+            where: {
+                ...(nome && { usua_nome: {contains: nome} }),
+                ...(funcao && { usua_funcao: funcao }),
+                ...(status && { usua_status: status })
+            }
+        };
+
+        const usuarios = await UsuarioRepository.listarUsuarios(filtro);
+
+        if(!usuarios){
+            throw new z.ZodError([{
+                path: ["usuarios"],
+                message:"Não exite usario com esse parametro",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+        return usuarios;
+
+
     }
 
-    static async listarUsuarioPorId(id){
-        const usuariosExists = await ContaRepository.listar(id)
+    static async listarUsuarioPorId(parametros){
         
-        if(!usuariosExists){
+        const {id} = UsuarioSchema.listarUsuarioPorId.parse({id:parametros});
+        
+        
+        let filtro = {
+            where: {
+                ...(id && { usua_id: id }),
+            }
+        };
+        
+        const usuario = await UsuarioRepository.listarUsuarioPorId(filtro);
+
+        
+        if(!usuario){
             throw new Error ("usuario não existe");
         }
 
-        return usuariosExists
+        return usuario
     }
+
+    static async criarUsuario(nome,email,senha){
+        const user = await UsuarioRepository.criarUsuario(nome,email,senha)
+        return user
+    }
+
 }
 
 export default UsuarioService;

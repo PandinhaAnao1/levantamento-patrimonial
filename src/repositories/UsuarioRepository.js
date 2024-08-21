@@ -14,34 +14,21 @@ class UsuarioRepository{
         return await prisma.usuarios.findUnique(filtro)
     }
 
-    static async listarUsuarios(){
-        return await prisma.usuarios.findMany({
-          select: {
-            usua_id: true,
-            usua_email: true,
-            usua_senha: true,
-            usua_funcao: true,
-            usua_status: true,
-            usua_nome: true,
-          },
-        });
+    static async listarUsuarios(filtros){
+        return await prisma.usuarios.findMany(filtros);
       }
     
-    static async listarUsuarioPorId(id) {
-        return await prisma.usuarios.findFirst({
-          select: {
-            usua_id: true,
-            usua_email: true,
-            usua_senha: true,
-            usua_funcao: true,
-            usua_status: true,
-            usua_nome: true,
-          },
-          where: {
-                usua_id: id,
-                },
-            }
-        );
+    static async listarUsuarioPorId(filtros) {
+        return await prisma.usuarios.findFirst(filtros);
+    }
+
+
+    static async criarUsuario(nome,email,senha){
+      return await prisma.usuarios.create({
+        usua_nome,
+        usua_senha,
+        usua_senha
+      })
     }
 
 }
