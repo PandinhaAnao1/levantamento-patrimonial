@@ -7,68 +7,85 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model bens {
-  bens_id          Int         @id @unique(map: "bens_id_UNIQUE") @default(autoincrement())
-  bens_sala_id     Int
-  bens_nome        String      @db.VarChar(200)
-  bens_tombo       String?     @db.VarChar(15)
-  bens_responsavel String?     @db.VarChar(80)
-  bens_decricao    String      @db.MediumText
-  bens_estado      String?     @db.VarChar(30)
-  bens_ocioso      Boolean?
-  bens_imagem      String?     @db.VarChar(200)
-  bens_encontrado  Boolean?
-  bens_valor       Decimal?    @db.Decimal(10, 2)
-  salas            salas       @relation(fields: [bens_sala_id], references: [sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_itens_sala1")
-  historico        historico[]
+model bem {
+  id            Int            @unique(map: "bens_id_UNIQUE") @default(autoincrement())
+  sala_id       Int
+  inventario_id Int
+  nome          String         @db.VarChar(200)
+  tombo         String?        @db.VarChar(15)
+  responsavel   String?        @db.VarChar(80)
+  decricao      String         @db.MediumText
+  valor         Decimal?       @db.Decimal(10, 2)
+  inventario    inventario     @relation(fields: [inventario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_bens_inventarios1")
+  sala          sala           @relation(fields: [sala_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_bens_salas1")
+  levantamento  levantamento[]
 
-  @@index([bens_sala_id], map: "fk_itens_sala1_idx")
+  @@id([id, sala_id, inventario_id])
+  @@index([inventario_id], map: "fk_bens_inventarios1_idx")
+  @@index([sala_id], map: "fk_bens_salas1_idx")
 }
 
-model historico {
-  hist_id             Int         @id @unique(map: "hist_id_UNIQUE") @default(autoincrement())
-  hist_bens_id        Int
-  hist_inventarios_id Int
-  hist_usuarios_id    Int
-  hist_salas_id       Int
-  usuarios            usuarios    @relation(fields: [hist_usuarios_id], references: [usua_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_Usuario1")
-  inventarios         inventarios @relation(fields: [hist_inventarios_id], references: [inve_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_inventarios1")
-  bens                bens        @relation(fields: [hist_bens_id], references: [bens_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_itens1")
-  salas               salas       @relation(fields: [hist_salas_id], references: [sala_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_historico_sala1")
-
-  @@index([hist_usuarios_id], map: "fk_historico_Usuario1_idx")
-  @@index([hist_inventarios_id], map: "fk_historico_inventarios1_idx")
-  @@index([hist_bens_id], map: "fk_historico_itens1_idx")
-  @@index([hist_salas_id], map: "fk_historico_sala1_idx")
+model campus {
+  id                Int          @id @default(autoincrement())
+  nome              String?      @db.VarChar(80)
+  telefone          String?      @db.VarChar(13)
+  cidade            String?      @db.VarChar(60)
+  bairro            String?      @db.VarChar(60)
+  rua               String?      @db.VarChar(60)
+  numoro_residencia Int?
+  inventario        inventario[]
 }
 
-model inventarios {
-  inve_id        Int         @id @default(autoincrement())
-  inve_nome      String      @db.VarChar(80)
-  inve_data      DateTime    @db.Date
-  inve_concluido Boolean
-  inve_campus    String      @db.VarChar(100)
-  historico      historico[]
-  salas          salas[]
+model inventario {
+  id           Int            @default(autoincrement())
+  nome         String         @db.VarChar(80)
+  data         DateTime       @db.Date
+  concluido    Boolean
+  campus_id    Int
+  bem          bem[]
+  campus       campus         @relation(fields: [campus_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inventarios_campus1")
+  levantamento levantamento[]
+
+  @@id([id, campus_id])
+  @@index([campus_id], map: "fk_inventarios_campus1_idx")
 }
 
-model salas {
-  sala_id      Int         @id @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
-  sala_inve_id Int
-  sala_nome    String      @db.VarChar(120)
-  bens         bens[]
-  historico    historico[]
-  inventarios  inventarios @relation(fields: [sala_inve_id], references: [inve_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sala_inventarios1")
+model levantamento {
+  levantamento_id Int        @unique(map: "hist_id_UNIQUE") @default(autoincrement())
+  inventario_id   Int
+  bem_id          Int
+  sala_id         Int
+  usuario_id      Int
+  imagem          String?    @db.VarChar(200)
+  encontrado      Boolean
+  ocioso          Boolean
+  estado          String     @db.VarChar(30)
+  data            DateTime   @db.DateTime(0)
+  bem             bem        @relation(fields: [bem_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_levantamento_bens1")
+  inventario      inventario @relation(fields: [inventario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_levantamento_inventarios1")
+  sala            sala       @relation(fields: [sala_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_levantamento_salas1")
+  usuario         usuario    @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_levantamento_usuarios1")
 
-  @@index([sala_inve_id], map: "fk_sala_inventarios1_idx")
+  @@id([levantamento_id, inventario_id, bem_id, sala_id, usuario_id])
+  @@index([bem_id], map: "fk_levantamento_bens1_idx")
+  @@index([inventario_id], map: "fk_levantamento_inventarios1_idx")
+  @@index([sala_id], map: "fk_levantamento_salas1_idx")
+  @@index([usuario_id], map: "fk_levantamento_usuarios1_idx")
 }
 
-model usuarios {
-  usua_id     Int         @id @unique(map: "audi_id_UNIQUE") @default(autoincrement())
-  usua_nome   String      @db.VarChar(80)
-  usua_email  String      @unique(map: "audi_email_UNIQUE") @db.VarChar(80)
-  usua_senha  String      @db.VarChar(30)
-  usua_funcao String      @db.VarChar(20)
-  usua_status Boolean
-  historico   historico[]
+model sala {
+  id           Int            @id @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
+  nome         String         @db.VarChar(120)
+  bem          bem[]
+  levantamento levantamento[]
+}
+
+model usuario {
+  id           Int            @id @unique(map: "audi_id_UNIQUE") @default(autoincrement())
+  nome         String         @db.VarChar(80)
+  email        String         @unique(map: "audi_email_UNIQUE") @db.VarChar(80)
+  senha        String         @db.VarChar(200)
+  funcao       String         @db.VarChar(20)
+  status       Boolean
+  levantamento levantamento[]
 }
