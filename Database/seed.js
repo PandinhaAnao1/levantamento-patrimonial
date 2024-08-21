@@ -60,7 +60,7 @@ async function seedDatabase() {
         sala_id: (index % 5) + 1,
         inventario_id: (index % 2) + 1,
         nome: faker.commerce.productName(),
-        tombo: String(faker.random.number()),
+        tombo: "TB2345",
         responsavel: faker.name.findName(),
         descricao: faker.lorem.paragraph(),
         auditado: faker.random.boolean(),

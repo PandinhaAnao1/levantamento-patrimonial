@@ -40,19 +40,36 @@ describe('get bens', () => {
         expect(req.body.data[0].tombo).toBeDefined()
         expect(req.body.data[0].responsavel).toBeDefined()
     })
-
-    it("2-Deve retornar um erro quando um pametro passado estiver no tipo errado.(inventario)", async () => {
+    // ...(parametros.nome && { nome: {contains: parametros.nome }}),
+    // ...(parametros.tombo && { tombo: parametros.tombo }),
+    // ...(parametros.responsavel && { responsavel: {contains: parametros.responsavel} }),
+    // ...(parametros.descricao && { descricao: {contains: parametros.descricao} }),
+    // ...(parametros.auditado && { auditado: parametros.auditado}),
+    it("2-Deve retornar um erro quando um pametro passado estiver no formato errado.", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             sala_id:sala_id,
-            inventario_id: "n",
+            inventario_id: 1,
+            nome:"a",
+            tombo:"TB2345",
+            responsavel:"a",
+            descricao:"a",
+            auditado: true
         })
-        expect(req.status).toBe(400)
-        expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(200)
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
+        expect(req.body.data).toBeInstanceOf(Array)
+        expect(req.body.data.length).toBeGreaterThan(0)
+        expect(req.body.data[0].sala_id).toBeDefined()
+        expect(req.body.data[0].sala_id).toBe(sala_id)
+        expect(req.body.data[0].id).toBeDefined()
+        expect(req.body.data[0].nome).toBeDefined()
+        expect(req.body.data[0].tombo).toBeDefined()
+        expect(req.body.data[0].responsavel).toBeDefined()
     })
 
     it("3-Deve retornar um error se o id da sala não existir.", async () => {
