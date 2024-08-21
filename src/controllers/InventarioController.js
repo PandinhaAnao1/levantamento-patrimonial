@@ -19,8 +19,9 @@ class InventarioController {
             }); 
             
         }catch (erro){
+            //Colcar logica de erro por code
             if(erro instanceof ZodError){
-                return sendError(res,400,erro.message);
+                return sendError(res,400,erro.errors[0].message);
             }
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
     }
@@ -56,7 +57,7 @@ class InventarioController {
         }catch(erro){
 
             if(erro instanceof ZodError){
-                return sendError(res,400,erro.message);
+                return sendError(res,400,erro.errors[0].message);
             }
             
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
@@ -78,7 +79,7 @@ class InventarioController {
         }catch(erro){
 
             if(erro instanceof ZodError){
-                return sendError(res,400,erro.message);
+                return sendError(res,400,erro.errors[0].message);
             }
             
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
