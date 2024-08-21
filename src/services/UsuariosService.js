@@ -93,7 +93,7 @@ class UsuarioService{
         return usuario
     }
 
-    static async criarUsuario(nome,email,senha){
+    static async criarUsuario(parametros){
         const user = await UsuarioRepository.criarUsuario(nome,email,senha)
         return user
     }

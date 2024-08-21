@@ -19,6 +19,13 @@ class  UsuarioSchema{
 
     static listarUsuarioPorId = z.object({id:z.number().int().min(1).positive()});
 
+
+    static criarUsuario = z.object({
+        nome: z.string().min(1).max(80),
+        email: z.string().min(1).max(80), 
+        senha: z.string().min(6).max(200)
+    }) 
+
 }
 
 export default UsuarioSchema;
