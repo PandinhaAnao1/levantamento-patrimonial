@@ -35,6 +35,7 @@ class BemRepository{
                 bens_tombo:true,
                 bens_responsavel:true,
                 bens_decricao:true,
+                bens_imagem:true,
                 bens_valor:true,
                 bens_estado:true,
                 bens_ocioso:true,

@@ -27,6 +27,14 @@ class UsuarioService{
                 usua_email: email,
                 usua_senha: senhaHash,
             },
+            select:{
+                usua_id: true,
+                usua_nome: true,
+                usua_email: true,
+                usua_senha: false,
+                usua_funcao: true,
+                usua_status: true,
+            }
         }
         //await bcrypt.hash(senha, 10);
         const usuario = await UsuarioRepository.login(flitros);
