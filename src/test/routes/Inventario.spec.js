@@ -5,10 +5,9 @@ import {postLogin} from '../auth.js';
 
 
 describe.only('Inventario GET', () => {
-    const req = request(app);
     let token;
     it("00 - Deve autenticar", async () => {
-        const res = await postLogin(req).expect(200);
+        const res = await postLogin(request(app)).expect(200);
         expect(res.body?.data?.token).toBeTruthy();
 		token = res.body?.data?.token;
     });
@@ -100,9 +99,24 @@ describe.only('Inventario GET', () => {
         expect(req.body.data.inve_nome).toBeDefined();
         expect(req.body.data.inve_data).toBeDefined();
         expect(req.body.data.inve_concluido).toBeDefined(); 
+    });
+
+    it("07 - Deve testar se a query de nome não funciona", async () => {
+        
+        const req = await request(app)
+        .get('/inventarios?nome=Inventário+de+Mobiliário')
+        .set("Accept", "aplication/json")
+        .set("Authorization", `Bearer ${token}`);
+        expect(req.status).toBe(400);
+        expect(req.body.data).toBeInstanceOf(Object);
+        expect(req.body.data.inve_id).toBeUndefined();
+        expect(req.body.data.inve_nome).toBeUndefined();
+        expect(req.body.data.inve_data).toBeUndefined();
+        expect(req.body.data.inve_concluido).toBeUndefined();
+        expect(req.body.data.inve_campus).toBeUndefined();
     }); 
 
-    it("07 - Deve testar se a query de concluido funcionario funciona", async () => {
+    it("08 - Deve testar se a query de concluido funcionario funciona", async () => {
         const req = await request(app)
         .get('/inventarios?nome=Inventário+de+Mobiliário')
         .set("Accept", "aplication/json")
@@ -115,6 +129,19 @@ describe.only('Inventario GET', () => {
         expect(req.body.data.inve_concluido).toBeDefined(); 
     });
 
+    it("09 - Deve testar se a query de campus funcionario funciona", async () => {
+        const req = await request(app)
+        .get('/inventarios?nome=Inventário+de+Mobiliário')
+        .set("Accept", "aplication/json")
+        .set("Authorization", `Bearer ${token}`);
+        expect(req.status).toBe(200);
+        expect(req.body.data).toBeInstanceOf(Object);
+        expect(req.body.data.inve_id).toBeUndefined();
+        expect(req.body.data.inve_nome).toBeUndefined();
+        expect(req.body.data.inve_data).toBeUndefined();
+        expect(req.body.data.inve_concluido).toBeUndefined();
+        expect(req.body.data.inve_campus).toBeUndefined();
+    }); 
     it("08 - Deve testar se a query de campus funcionario funciona", async () => {
         const req = await request(app)
         .get('/inventarios?nome=Inventário+de+Mobiliário')
@@ -126,7 +153,22 @@ describe.only('Inventario GET', () => {
         expect(req.body.data.inve_nome).toBeDefined();
         expect(req.body.data.inve_data).toBeDefined();
         expect(req.body.data.inve_concluido).toBeDefined(); 
-    }); 
+    });
+
+    it("07 - Deve testar se a query de concluido funcionario funciona", async () => {
+        const req = await request(app)
+        .get('/inventarios?nome=Inventário+de+Mobiliário')
+        .set("Accept", "aplication/json")
+        .set("Authorization", `Bearer ${token}`);
+        expect(req.status).toBe(400);
+        expect(req.body.data).toBeInstanceOf(Object);
+        expect(req.body.data.inve_id).toBeUndefined();
+        expect(req.body.data.inve_nome).toBeUndefined();
+        expect(req.body.data.inve_data).toBeUndefined();
+        expect(req.body.data.inve_concluido).toBeUndefined();
+        expect(req.body.data.inve_campus).toBeUndefined();
+    });
+
     //colocar teste para query
 
 
