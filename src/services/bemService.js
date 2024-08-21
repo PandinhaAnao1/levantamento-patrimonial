@@ -11,7 +11,7 @@ class BemService{
         const filtro = BemRepository.createFilter(parametros)
         const bens =  await BemRepository.findAll(filtro)
         if(bens.length == 0){
-            throw new Error("Nem um registro encontrado");
+            throw new Error("Nem um registro encontrado.");
         }
         return bens
     }
@@ -24,7 +24,7 @@ class BemService{
         const bem = await BemRepository.findById(filtro)
 
         if(!bem){
-            throw new Error("Nem um registro encontrado");
+            throw new Error("Nem um registro encontrado.");
         }
         return bem
     }
@@ -37,7 +37,7 @@ class BemService{
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
 
         if(!salaExists){
-            throw new Error("O sala_id informado não existem");
+            throw new Error("O sala_id informado não existe.");
         }
         
         const { sala_id, inventario_id, ...camposInsert } = parametros;

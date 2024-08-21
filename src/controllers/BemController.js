@@ -21,10 +21,11 @@ class BemController {
             return sendResponse(res,200,{data: bensExists})
 
         } catch (err) {
-            if(err.message === "Nem um registro encontrado") {
-                return sendError(res, 404, ["Nem um registro encontrado"])
+            if(err.message === "Nem um registro encontrado.") {
+                return sendError(res, 404, ["Nem um registro encontrado."])
 
             }else if (err instanceof z.ZodError) {
+                console.error(err)
                 const errorMessages = err.issues.map((issue) => issue.message);
                 return sendError(res, 400, errorMessages)
 
@@ -45,8 +46,8 @@ class BemController {
             return sendResponse(res,200,{data: bensExist})
 
         } catch (err) {
-            if(err.message === "Nem um registro encontrado") {
-                return sendError(res, 404, ["Nem um registro encontrado"])
+            if(err.message === "Nem um registro encontrado.") {
+                return sendError(res, 404, ["Nem um registro encontrado."])
 
             }else if (err instanceof z.ZodError) {
 
@@ -75,8 +76,8 @@ class BemController {
             return sendResponse(res,201,{data: bemCreate})
 
         }catch(err){
-            if (err.message === "O sala_id informado não existem") {
-                return sendError(res, 404, ["O sala_id informado não existem"])
+            if (err.message === "O sala_id informado não existe.") {
+                return sendError(res, 404, ["O sala_id informado não existe."])
 
             }else if (err instanceof z.ZodError) {
                 const errorMessages = err.issues.map((issue) => issue.message);
