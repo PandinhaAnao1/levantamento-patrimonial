@@ -21,7 +21,7 @@ async function seedDatabase() {
     // Inserindo dados na tabela `usuario`
     const usuarios = await prisma.usuario.createMany({
       data: [
-        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
+        { email: "test123@gmail.com", funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
         { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
         { email: faker.internet.email(), funcao: 'funcionario cpalm', nome: faker.name.findName(), senha: "senhatest", status: false },
       ],
