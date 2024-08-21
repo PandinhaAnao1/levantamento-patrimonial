@@ -3,13 +3,14 @@ import { describe, expect, it, test } from '@jest/globals';
 import app from '../../app.js'
 import exp from "constants";
 
-console.log(req.body)
-
 describe('usuario', () => {
     it(" Deve retornar um array com os dados das contas", async () => {
         const req = await request(app)
         .get('/usuario')
         .set("Accept", "aplication/json")
+        
+        console.log(req.body)
+
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
         expect(req.body.data).toBeInstanceOf(Array)
