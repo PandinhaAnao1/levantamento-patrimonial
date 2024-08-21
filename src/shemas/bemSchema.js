@@ -46,7 +46,7 @@ class bemSchema{
                 invalid_type_error: "bens_valor informado não é do tipo number",
             }).positive({
                 message: "bens_valor informado não é positivo"
-            })),
+            })).optional(),
         })
     }
 

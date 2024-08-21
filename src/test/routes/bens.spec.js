@@ -5,11 +5,26 @@ import faker from 'faker-br';
 
 let sala_id = 1
 let bens_id = null
+let token = null
+
+describe('Autenticação', () => {
+    it("1-Deve chamar a rota de autenticação e pegar o token", async () => {
+        const req = await request(app)
+        .post('/login')
+        .set("Accept", "aplication/json")
+        .send({
+            email:"usuario1@example.com",
+            senha:"senha123"
+        })
+        token = req.body.data.token
+    })
+});
 
 describe('get bens', () => {
     it("1-Deve retornar um array com os dados dos bens.", async () => {
         const req = await request(app)
         .get('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
@@ -26,6 +41,7 @@ describe('get bens', () => {
     it("2-Deve retornar um array com os dados dos bens de uma sala.", async () => {
         const req = await request(app)
         .get('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             sala_id:sala_id
@@ -46,6 +62,7 @@ describe('get bens', () => {
     it("3-Deve retornar um error se o id da sala não existir.", async () => {
         const req = await request(app)
         .get('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             sala_id:1000000
@@ -58,6 +75,7 @@ describe('get bens', () => {
     it("4-Deve retornar um error se o id da sala não for um number.", async () => {
         const req = await request(app)
         .get('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             sala_id:"n"
@@ -70,6 +88,7 @@ describe('get bens', () => {
     it("5-Deve retornar um objeto com os dados de apenas um bem.", async () => {
         const req = await request(app)
         .get('/bens/1')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
@@ -84,6 +103,7 @@ describe('get bens', () => {
     it("6-Deve retornar um error se o id do bem não existir.", async () => {
         const req = await request(app)
         .get('/bens/1010101011010')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
@@ -93,6 +113,7 @@ describe('get bens', () => {
     it("7-Deve retornar um error se o id do bem for uma String.", async () => {
         const req = await request(app)
         .get('/bens/string')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
@@ -104,6 +125,7 @@ describe('post adicinar bem já auditando ele', () => {
     it("1-deve adicionar um bem e retornar o bem criado.", async () => {
         const req = await request(app)
         .post('/bens/criar/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":1,
@@ -131,6 +153,7 @@ describe('post adicinar bem já auditando ele', () => {
     it("2-deve retornar error ao tentar adicionar um bem sem um dos campos obrigatórios.", async () => {
         const req = await request(app)
         .post('/bens/criar/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":1,
@@ -151,6 +174,7 @@ describe('post adicinar bem já auditando ele', () => {
     it("3-deve retornar error ao tentar adicionar um bem com uma sala_id que não existe.", async () => {
         const req = await request(app)
         .post('/bens/criar/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":100000,
@@ -175,6 +199,7 @@ describe('post criar bem', () => {
     it("1-deve criar um bem e retornar ele.", async () => {
         const req = await request(app)
         .post('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":sala_id,
@@ -201,6 +226,7 @@ describe('post criar bem', () => {
     it("2-deve retornar um erro ao informar uma sala que não existe.", async () => {
         const req = await request(app)
         .post('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":10000000,
@@ -219,6 +245,7 @@ describe('post criar bem', () => {
     it("3-deve retornar um erro ao informar o bens_nome como um number.", async () => {
         const req = await request(app)
         .post('/bens')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
                 "sala_id":sala_id,
@@ -239,6 +266,7 @@ describe('auditar bens', () => {
     it("1-deve auditar um bem e retornar o bem auditado e o histórico inserido.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             "bens_id":parseInt(bens_id),
@@ -266,6 +294,7 @@ describe('auditar bens', () => {
     it("2-deve retornar error ao tentar auditar um bem com uma sala_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             "bens_id":2,
@@ -284,6 +313,7 @@ describe('auditar bens', () => {
     it("2-deve retornar error ao tentar auditar um bem com um usua_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             "bens_id":1,
@@ -302,6 +332,7 @@ describe('auditar bens', () => {
     it("2-deve retornar error ao tentar auditar um bem com um bens_id que não existe.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             "bens_id":100000000000,
@@ -320,6 +351,7 @@ describe('auditar bens', () => {
     it("3-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             "bens_id":2,
@@ -338,6 +370,7 @@ describe('auditar bens', () => {
     it("4-deve retornar error ao tentar auditar um bem que já foi auditado.", async () => {
         const req = await request(app)
         .patch('/bens/auditar')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
             "bens_id":1,
