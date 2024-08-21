@@ -8,14 +8,14 @@ class InventarioService{
     static async contarInventarios(filtros){
 
         const {nome, data, concluido, campus, pagina} = IvSchema.listarSchema.parse(filtros);
-        
+
         let filtro = {
             ...(pagina && { take: 10 ,skip: pagina * 10}),
             where: {
-                ...(nome && { inve_nome: {contains: nome} }),
-                ...(data && { inve_data: data }),
-                ...(concluido && { inve_concluido: concluido }),
-                ...(campus && { inve_campus: {contains: campus} }),
+                ...(nome && { nome: {contains: nome} }),
+                ...(data && { data: data }),
+                ...(concluido && { concluido: concluido }),
+                ...(campus && { campus_id: campus }),
                 
             }
         };

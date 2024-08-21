@@ -1,5 +1,5 @@
 import { error } from "node:console";
-import InventarioService from "../services/inventarioService.js";
+import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
 import { ZodError } from "zod";
 class InventarioController {
