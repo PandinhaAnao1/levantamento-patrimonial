@@ -1,3 +1,4 @@
+import { ZodError } from "zod";
 import { prisma } from "../configs/prismaClient.js"
 import UsuarioService from '../services/UsuariosService.js'
 import {sendResponse, sendError} from '../utils/mensages.js';
@@ -19,15 +20,16 @@ class UsuarioController {
             const data =  await UsuarioService.login(req.body);
 
             return sendResponse(res,200, {
-              data:{"token":data.token,"user":data.user}
-            })
-
+              data:
+              {
+                  user: data.usuario,
+                  token: data.token
+              }});
         }catch(error){
             console.log(error);
-            if(error instanceof TypeError) return sendError(res,401,error.message);
-            
-            if(error instanceof ReferenceError) return sendError(res,401,error.message);
-            
+            //colocar a verificacao se o usuario esta ativo
+            if(error instanceof ZodError) return sendError(res,401,error.message);
+                        
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
         }  
     }

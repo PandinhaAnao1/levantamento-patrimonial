@@ -1,4 +1,3 @@
-import { NOMEM } from 'dns';
 import {z} from 'zod';
 
 class  UsuarioSchema{
