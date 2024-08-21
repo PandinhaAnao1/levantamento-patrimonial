@@ -15,7 +15,7 @@ class InventarioSchema{
     static criar = z.object({
         nome: z.string().min(1).max(80),
         data: z.date(),
-        campus: z.string().min(1).max(100)
+        campus: z.number().int().min(1).positive()
     });
 
     static atualizarSchema = z.object({

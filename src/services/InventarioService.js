@@ -20,12 +20,12 @@ class InventarioService{
             }
         };
 
-        const totalInventarios = await InvRepository.contarInventarios(filtro);
+        const totalInventarios = await InvRepository.contarInventario(filtro);
 
         if(!totalInventarios){
             throw new z.ZodError([{
                 path: ["inventario"],
-                message:"Não foi contar inventarios com esse parâmetros!",
+                message:"Não foi contar inventários com esse parâmetros!",
                 code: z.ZodIssueCode.invalid_type,
             }]);
         }
@@ -41,10 +41,10 @@ class InventarioService{
         let filtro = {
             ...(pagina && { take: 10 ,skip: pagina * 10}),
             where: {
-                ...(nome && { inve_nome: {contains: nome} }),
-                ...(data && { inve_data: data }),
-                ...(concluido && { inve_concluido: concluido }),
-                ...(campus && { inve_campus: {contains: campus} }),
+                ...(nome && { nome: {contains: nome} }),
+                ...(data && { data: data }),
+                ...(concluido && { concluido: concluido }),
+                ...(campus && { campus: campus }),
                 
             }
         };
@@ -55,7 +55,7 @@ class InventarioService{
         if(!iventario) {
             throw new z.ZodError([{
                 path: ["inventario"],
-                message:"Não foi possivel encontrar inventarios com esse parametros",
+                message:"Não foi possível encontrar inventários com esse parâmetros",
                 code: z.ZodIssueCode.invalid_type,
             }]);
         }
@@ -65,21 +65,21 @@ class InventarioService{
     }
 
     static async listarInventarioPorId(parametros){
-        //Futuramente vou trocar essa logica vou colocar o esque de validaçã e transformação 
+        //Futuramente vou trocar essa logica vou colocar o esquema de validação e transformação 
         //do zod
-        let id = parametros.id;
-        if(isNaN(id)){
+        let idString = parametros.id;
+        if(!regex.test(idString)){
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"O id do inventario deve ser um numero!",
                 code: z.ZodIssueCode.invalid_type,
             }]);
         }
-        let zodId = IvSchema.listarPorIdSchema.parse({'id':parseInt(id)});
+        const {id} = IvSchema.listarPorIdSchema.parse({'id':parseInt(id)});
 
         let filtro = {
             where:{
-                inve_id: zodId.id
+                id: id
             }
         }
         const inventario = await InvRepository.listarPorId(filtro);
@@ -98,19 +98,19 @@ class InventarioService{
 
     static async criarInventario(inventario){
 
-        //Colar verificação se o inventario foi criado
 
         const {nome,data,campus} = IvSchema.criar.parse(inventario);
-        //trocar esse nome
-        let nvIventa = {
-            inve_nome:nome,
-            inve_data:data,
-            inve_concluido:0,
-            inve_campus:campus
+        //Vou ter que espeara alguem criar a rota de listar campus por id para
+        //concluir essa funcao pois vou precisar o listar campus por id
+        let body = {
+            nome:nome,
+            data:data,
+            concluido:0,
+            campus:campus
         };
 
 
-        const novoInventario = InvRepository.criar(nvIventa);
+        const novoInventario = InvRepository.criar(body);
 
 
         return novoInventario;
@@ -120,21 +120,30 @@ class InventarioService{
 
     static async atualizarInvetario(atualizacoes){
 
+        let regex = /^[0-9]+$/;
+
         //Colar verificação se o inventario foi atualizado
 
         const {nome, status} = IvSchema.atualizarSchema.parse(nome);
-        
-        let {idString} = atualizacoes.id;
 
-        const {id} = IvSchema.listarPorId.parse(parseInt(idString));
+        let idString = atualizacoes.id;
+
+        if(!regex.test(idString)){
+            throw new z.ZodError([{
+                path: ["inventario"],
+                message:"O id do inventario deve ser um numero!",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+        const {id} = IvSchema.listarPorIdSchema.parse({'id':parseInt(idString)});        
 
         let inventarioAtulizado = {
             where: {
-                inve_id: id,
+                id: id,
             },
             data: {
-                ...(nome && { inve_nome: nome}),
-                ...(status && { inve_concluido: 1}),                
+                ...(nome && { nome: nome}),
+                ...(status && { concluido: 1}),                
             },
         }
 
