@@ -1,6 +1,6 @@
 const bensSchemas = {
 
-    listarBem: {
+    bensDescription: {
         type: "object",
         properties: {
             bens_id: {
@@ -27,6 +27,10 @@ const bensSchemas = {
                 type: "string",
                 description: "Descrição do bem"
             },
+            bens_imagem: {
+                type: "string",
+                description: "Foto do bem"
+            },
             bens_valor: {
                 type: "Decimal",
                 description: "Valor do bem"
@@ -43,203 +47,273 @@ const bensSchemas = {
                 type: "boolean",
                 description: "Indica se o bem foi encontrado"
             }
-        },
+        }
+    },
+
+    BemListarRes: {
+        type: "object",
         example: {
-            "error": false,
-            "code": 200,
-            "message": "Requisição bem sucedida.",
-            "errors": [],
-            "data": [{
-            bens_id: 1,
-            bens_sala_id: 1,
-            bens_nome: "Notebook Lenovo",
-            bens_tombo: "TOMBO007",
-            bens_responsavel: "Ana Silva",
-            bens_decricao: "Notebook leve e portátil, processador Intel i5",
-            bens_valor: "1249.99",
-            bens_estado: "em bom estado",
-            bens_ocioso: false,
-            bens_encontrado: true
+            error: false,
+            code: 200,
+            message: "Requisição bem sucedida.",
+            errors: [],
+            data: [{
+                bens_id: 1,
+                bens_sala_id:1,
+                bens_nome: "Notebook Lenovo",
+                bens_tombo: "TOMBO007",
+                bens_responsavel: "Ana Silva",
+                bens_decricao: "Notebook leve e portátil, processador Intel i5",
+                bens_imagem:"http://lorempixel.com/640/480",
+                bens_valor: "1249.99",
+                bens_estado: null,
+                bens_ocioso: null,
+                bens_encontrado: false
+            },
+            {
+                bens_id: 2,
+                bens_sala_id:1,
+                bens_nome: "Mesa de centro",
+                bens_tombo: "TOMBO020",
+                bens_responsavel: "Ana Silva",
+                bens_decricao: "Mesa de centro com pés de madeira.",
+                bens_imagem:"http://lorempixel.com/640/480",
+                bens_valor: "149.99",
+                bens_estado: null,
+                bens_ocioso: null,
+                bens_encontrado: false
             }]
         }
     },
 
-    
-    bensFiltro: {
+    BemListarPorIdRes: {
         type: "object",
-        properties: {
-            name: {
-                type: "string",
-                description: "Nome do usuário"
-            },
-            email: {
-                type: "string",
-                description: "Email do usuário"
-            },
-            grupo: {
-                type: "string",
-                description: "Nome de um grupo que o usuário faça parte"
-            },
-        },
         example: {
-            name: "Computador",
-            category: "Eletrônico",
-            status: "Disponível"
+            error: false,
+            code: 200,
+            message: "Requisição bem sucedida.",
+            errors: [],
+            data: {
+                bens_id: 1,
+                bens_sala_id:1,
+                bens_nome: "Notebook Lenovo",
+                bens_tombo: "TOMBO007",
+                bens_responsavel: "Ana Silva",
+                bens_decricao: "Notebook leve e portátil, processador Intel i5",
+                bens_imagem:"http://lorempixel.com/640/480",
+                bens_valor: "1249.99",
+                bens_estado: null,
+                bens_ocioso: null,
+                bens_encontrado: false
+            }
+            
         }
     },
 
-    BemCriado: {
+    BemCriadoBody: {
         type: "object",
-        properties: {
-            bens_id: {
-                type: "integer",
-                description: "ID do bem recém-criado"
-            },
-            bens_nome: {
-                type: "string",
-                description: "Nome do bem",
-                example: "Notebook Lenovo"
-            },
-            bens_tombo: {
-                type: "string",
-                description: "Número de tombamento do bem",
-                example: "TOMBO007"
-            },
-            bens_responsavel: {
-                type: "string",
-                description: "Responsável pelo bem",
-                example: "Ana Silva"
-            },
-            bens_decricao: {
-                type: "string",
-                description: "Descrição do bem",
-                example: "Notebook leve e portátil, processador Intel i5"
-            },
-            bens_valor: {
-                type: "string",
-                description: "Valor do bem",
-                example: "1249.99"
-            },
-            bens_estado: {
-                type: "string",
-                description: "Estado de conservação do bem",
-                example: "em bom estado"
-            },
-            bens_ocioso: {
-                type: "boolean",
-                description: "Indica se o bem está ocioso",
-                example: false
-            },
-            bens_encontrado: {
-                type: "boolean",
-                description: "Indica se o bem foi encontrado",
-                example: true
-            }
-        },
         example: {
-            bens_id: 1,
+            sala_id:1,
             bens_nome: "Notebook Lenovo",
             bens_tombo: "TOMBO007",
             bens_responsavel: "Ana Silva",
             bens_decricao: "Notebook leve e portátil, processador Intel i5",
             bens_valor: "1249.99",
-            bens_estado: "em bom estado",
-            bens_ocioso: false,
-            bens_encontrado: true
+
         }
     },
 
-    UsuarioListagem: {
+    BemCriadoRes: {
         type: "object",
-        properties: {
-            id: { type: "integer", description: "ID do usuário" },
-            name: { type: "string", description: "Nome do usuário" },
-            email: { type: "string", description: "Email do usuário" },
-            site: { type: "string", description: "Site do usuário" },
-            login: { type: "string", description: "Login do usuário" },
-            password: { type: "string", description: "Senha do usuário" },
-            system_unit_id: { type: "integer", description: "ID da unidade do usuário" },
-            frontpage_id: { type: "integer", description: "ID da página inicial do usuário" },
-            photo_path: { type: "string", description: "Caminho da foto do usuário" },
-            active: { type: "string", description: "Status de atividade do usuário" },
-            accepted_term_policy: { type: "string", description: "Aceitação dos termos de política" },
-            accepted_term_policy_at: { type: "string", description: "Data de aceitação dos termos de política" },
-            accepted_term_policy_data: { type: "string", description: "Dados de aceitação dos termos de política" },
-            phone: { type: "string", description: "Telefone do usuário" },
-            address: { type: "string", description: "Endereço do usuário" },
-            about: { type: "string", description: "Sobre o usuário" },
-            function_name: { type: "string", description: "Nome da função do usuário" },
-            custom_code: { type: "string", description: "Código customizado do usuário" },
-            otp_secret: { type: "string", description: "Segredo OTP do usuário" }
-        },
         example: {
-            id: 1,
-            name: "João da Silva",
-            email: "joao.silva@example.com",
-            site: "http://exemplo.com",
-            login: "joaosilva",
-            password: "123456",
-            system_unit_id: 1,
-            frontpage_id: 10,
-            photo_path: "/fotos/joaosilva.jpg",
-            active: "Y",
-            accepted_term_policy: "Y",
-            accepted_term_policy_at: "2023-01-01",
-            accepted_term_policy_data: "Termos aceitos em 2023-01-01",
-            phone: "123456789",
-            address: "Rua Exemplo, 123",
-            about: "Usuário exemplo",
-            function_name: "Administrador",
-            custom_code: "12345",
-            otp_secret: "abcdef123456"
+            error: false,
+            code: 201,
+            message: "Requisição bem sucedida, recurso foi criado",
+            errors: [],
+            data: [{
+                bens_id: 1,
+                bens_sala_id:1,
+                bens_nome: "Notebook Lenovo",
+                bens_tombo: "TOMBO007",
+                bens_responsavel: "Ana Silva",
+                bens_decricao: "Notebook leve e portátil, processador Intel i5",
+                bens_imagem: null,
+                bens_valor: "1249.99",
+                bens_estado: null,
+                bens_ocioso: null,
+                bens_encontrado: false
+            }]
         }
     },
-    UsuarioDetalhes: {
-        type: "object",
-        properties: {
-            id: { type: "integer", description: "ID do usuário" },
-            name: { type: "string", description: "Nome do usuário" },
-            email: { type: "string", description: "Email do usuário" },
-            site: { type: "string", description: "Site do usuário" },
-            login: { type: "string", description: "Login do usuário" },
-            password: { type: "string", description: "Senha do usuário" },
-            system_unit_id: { type: "integer", description: "ID da unidade do usuário" },
-            frontpage_id: { type: "integer", description: "ID da página inicial do usuário" },
-            photo_path: { type: "string", description: "Caminho da foto do usuário" },
-            active: { type: "string", description: "Status de atividade do usuário" },
-            accepted_term_policy: { type: "string", description: "Aceitação dos termos de política" },
-            accepted_term_policy_at: { type: "string", description: "Data de aceitação dos termos de política" },
-            accepted_term_policy_data: { type: "string", description: "Dados de aceitação dos termos de política" },
-            phone: { type: "string", description: "Telefone do usuário" },
-            address: { type: "string", description: "Endereço do usuário" },
-            about: { type: "string", description: "Sobre o usuário" },
-            function_name: { type: "string", description: "Nome da função do usuário" },
-            custom_code: { type: "string", description: "Código customizado do usuário" },
-            otp_secret: { type: "string", description: "Segredo OTP do usuário" }
-        },
-        example: {
-            id: 1,
-            name: "João da Silva",
-            email: "joao.silva@example.com",
-            site: "http://exemplo.com",
-            login: "joaosilva",
-            password: "123456",
-            system_unit_id: 1,
-            frontpage_id: 10,
-            photo_path: "/fotos/joaosilva.jpg",
-            active: "Y",
-            accepted_term_policy: "Y",
-            accepted_term_policy_at: "2023-01-01",
-            accepted_term_policy_data: "Termos aceitos em 2023-01-01",
-            phone: "123456789",
-            address: "Rua Exemplo, 123",
-            about: "Usuário exemplo",
-            function_name: "Administrador",
-            custom_code: "12345",
-            otp_secret: "abcdef123456"
-        }
-    }
 
+    BemAdicionarBody: {
+        type: "object",
+        example: {
+            bens_id:1,
+            sala_id:1,
+            usua_id:1,
+            inve_id:1,
+            bens_nome: "Notebook Lenovo",
+            bens_decricao: "Notebook leve e portátil, processador Intel i5",
+            bens_imagem:"http://lorempixel.com/640/480",
+            bens_estado:"bom",
+            bens_ocioso:false,
+        }
+        
+    },
+
+    BemAdicionar_AduditarRes: {
+        type: "object",
+        example: {
+            error: false,
+            code: 201,
+            message: "Requisição bem sucedida, recurso foi criado",
+            errors: [],
+            data: {
+                historico:{ 
+                    hist_id: 1,
+                    hist_usuarios_id: 1,
+                    hist_inventarios_id: 1,
+                    hist_salas_id: 1,
+                    hist_bens_id: 1
+                },
+                bem:{
+                    bens_id: 1,
+                    bens_sala_id:1,
+                    bens_nome: "Notebook Lenovo",
+                    bens_tombo: null,
+                    bens_responsavel: null,
+                    bens_decricao: "Notebook leve e portátil, processador Intel i5",
+                    bens_imagem: "http://lorempixel.com/640/480",
+                    bens_valor: null,
+                    bens_estado: "bom",
+                    bens_ocioso: false,
+                    bens_encontrado: true
+                }
+            }
+        }
+    },
+
+    BemAuditarBody: {
+        type: "object",
+        example: {
+            bens_id:1,
+            sala_id:1,
+            usua_id:1,
+            inve_id:1,
+            bens_imagem:"http://lorempixel.com/640/480",
+            bens_estado:"bom",
+            bens_ocioso:false,
+        }
+        
+    },
+
+
+    // erros
+    erro400: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 400,
+                    message: "Requisição com sintaxe incorreta ou outros problemas.",
+                    errors: ["O Zod encrontrou algum erro na requisição."],
+                    data: []
+                }
+            }
+        }
+    },
+
+    erro403: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 403,
+                    message: "Sem permissão para atender a requisição.",
+                    errors: ["Bem já foi auditado."],
+                    data: []
+                }
+            }
+        }
+    },
+
+    erro404Get: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 404,
+                    message: "O recurso solicitado não foi encontrado no servidor.",
+                    errors: ["Nem um registro encontrado"],
+                    data: []
+                }
+            }
+        }
+    },
+
+    erro404Create: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 404,
+                    message: "O recurso solicitado não foi encontrado no servidor.",
+                    errors: ["O sala_id informado não existem"],
+                    data: []
+                }
+            }
+        }
+    },
+
+    erro404Adicionar: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 404,
+                    message: "O recurso solicitado não foi encontrado no servidor.",
+                    errors: ["usuario, sala ou inventário não existem"],
+                    data: []
+                }
+            }
+        }
+    },
+
+    erro404Auditar: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 404,
+                    message: "O recurso solicitado não foi encontrado no servidor.",
+                    errors: ["Usuario não existe", "Bem inforamdo não existe"],
+                    data: []
+                }
+            }
+        }
+    },
+
+    erro500: {
+        "application/json": {
+            schema: {
+                type: "object",
+                example: {
+                    error: true,
+                    code: 500,
+                    message: "Servidor encontrou um erro interno.",
+                    errors: ["OCORREU UM ERRO INTERNO"],
+                    data: []
+                }
+            }
+        }
+    },
 };
 
 export default bensSchemas;
