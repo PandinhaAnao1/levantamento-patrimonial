@@ -37,7 +37,7 @@ model campus {
 }
 
 model inventario {
-  id           Int            @default(autoincrement())
+  id           Int            @unique(map: "unique_id") @default(autoincrement())
   nome         String         @db.VarChar(80)
   data         DateTime       @db.Date
   concluido    Boolean

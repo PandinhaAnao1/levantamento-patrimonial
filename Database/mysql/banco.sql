@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`inventario` (
   `concluido` TINYINT(1) NOT NULL,
   `campus_id` INT NOT NULL,
   PRIMARY KEY (`id`, `campus_id`),
+  UNIQUE INDEX `unique_id` (`id`),
   INDEX `fk_inventarios_campus1_idx` (`campus_id` ASC),
   CONSTRAINT `fk_inventarios_campus1`
     FOREIGN KEY (`campus_id`)
@@ -62,7 +63,6 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`inventario` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
-
 
 -- -----------------------------------------------------
 -- Table `db_Levantamento_Patrimonial`.`sala`

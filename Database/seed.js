@@ -21,36 +21,36 @@ async function seedDatabase() {
     // Inserindo dados na tabela `usuario`
     const usuarios = await prisma.usuario.createMany({
       data: [
-        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: faker.internet.password(), status: 1 },
-        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: faker.internet.password(), status: 1 },
-        { email: faker.internet.email(), funcao: 'funcionario cpalm', nome: faker.name.findName(), senha: faker.internet.password(), status: 1 },
+        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
+        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
+        { email: faker.internet.email(), funcao: 'funcionario cpalm', nome: faker.name.findName(), senha: "senhatest", status: false },
       ],
     });
 
     // Inserindo dados na tabela `campus`
     const campuses = await prisma.campus.createMany({
       data: [
-        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.neighborhood(), rua: faker.address.streetAddress(), numoro_residencia: faker.datatype.number() },
-        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.neighborhood(), rua: faker.address.streetAddress(), numoro_residencia: faker.datatype.number() },
+        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numoro_residencia: 7741 },
+        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numoro_residencia: 5534 },
       ],
     });
 
     // Inserindo dados na tabela `inventario`
     const inventarios = await prisma.inventario.createMany({
       data: [
-        { nome: faker.commerce.productName(), data: faker.date.past(), concluido: faker.datatype.boolean() ? 1 : 0, campus_id: 1 },
-        { nome: faker.commerce.productName(), data: faker.date.past(), concluido: faker.datatype.boolean() ? 1 : 0, campus_id: 2 },
+        { nome: faker.commerce.productName(), data: faker.date.past(), concluido: faker.random.boolean(), campus_id: 1 },
+        { nome: faker.commerce.productName(), data: faker.date.past(), concluido: faker.random.boolean(), campus_id: 2 },
       ],
     });
 
     // Inserindo dados na tabela `sala`
     const salas = await prisma.sala.createMany({
       data: [
-        { nome: faker.address.streetAddress() },
-        { nome: faker.address.streetAddress() },
-        { nome: faker.address.streetAddress() },
-        { nome: faker.address.streetAddress() },
-        { nome: faker.address.streetAddress() },
+        { nome: 'Laboratório de informática do piso 3 sala 5' },
+        { nome: 'Cantina de alimentação piso 1' },
+        { nome: 'Laboratório de química do piso 2 sala 12' },
+        { nome: 'Sala de pesquisa avançada em IA' },
+        { nome: 'Sala de Reunião de grupos de Fábrica' },
       ],
     });
 
@@ -60,7 +60,7 @@ async function seedDatabase() {
         sala_id: (index % 5) + 1,
         inventario_id: (index % 2) + 1,
         nome: faker.commerce.productName(),
-        tombo: faker.datatype.uuid().substring(0, 15),
+        tombo: String(faker.random.number()),
         responsavel: faker.name.findName(),
         decricao: faker.lorem.paragraph(),
         valor: faker.commerce.price(100, 3000, 2),
@@ -75,9 +75,9 @@ async function seedDatabase() {
         sala_id: (index % 5) + 1,
         usuario_id: (index % 3) + 1,
         imagem: faker.image.imageUrl(),
-        encontrado: faker.datatype.boolean() ? 1 : 0,
-        ocioso: faker.datatype.boolean() ? 1 : 0,
-        estado: faker.lorem.word(),
+        encontrado: faker.random.boolean(),
+        ocioso: faker.random.boolean(),
+        estado: faker.random.boolean() ? "em bom estado":  "danificado",
         data: new Date(),
       })),
     });
