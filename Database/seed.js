@@ -62,7 +62,7 @@ async function seedDatabase() {
         nome: faker.commerce.productName(),
         tombo: String(faker.random.number()),
         responsavel: faker.name.findName(),
-        decricao: faker.lorem.paragraph(),
+        descricao: faker.lorem.paragraph(),
         valor: faker.commerce.price(100, 3000, 2),
       })),
     });

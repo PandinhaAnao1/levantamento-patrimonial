@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`bem` (
   `nome` VARCHAR(200) NOT NULL,
   `tombo` VARCHAR(15) NULL DEFAULT NULL,
   `responsavel` VARCHAR(80) NULL DEFAULT NULL,
-  `decricao` MEDIUMTEXT NOT NULL,
+  `descricao` MEDIUMTEXT NOT NULL,
   `valor` DECIMAL(10,2) NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `sala_id`, `inventario_id`),
   UNIQUE INDEX `bens_id_UNIQUE` (`id` ASC) ,
@@ -110,7 +110,7 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- Table `db_Levantamento_Patrimonial`.`levantamento`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`levantamento` (
-  `levantamento_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `inventario_id` INT NOT NULL,
   `bem_id` INT NOT NULL,
   `sala_id` INT NOT NULL,
@@ -120,8 +120,8 @@ CREATE TABLE IF NOT EXISTS `db_Levantamento_Patrimonial`.`levantamento` (
   `ocioso` TINYINT(1) NOT NULL,
   `estado` VARCHAR(30) NOT NULL,
   `data` DATETIME NOT NULL,
-  PRIMARY KEY (`levantamento_id`, `inventario_id`, `bem_id`, `sala_id`, `usuario_id`),
-  UNIQUE INDEX `hist_id_UNIQUE` (`levantamento_id` ASC) ,
+  PRIMARY KEY (`id`, `inventario_id`, `bem_id`, `sala_id`, `usuario_id`),
+  UNIQUE INDEX `hist_id_UNIQUE` (`id` ASC) ,
   INDEX `fk_levantamento_usuarios1_idx` (`usuario_id` ASC) ,
   INDEX `fk_levantamento_salas1_idx` (`sala_id` ASC) ,
   INDEX `fk_levantamento_bens1_idx` (`bem_id` ASC) ,

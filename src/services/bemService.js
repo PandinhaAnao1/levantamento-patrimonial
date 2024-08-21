@@ -40,9 +40,12 @@ class BemService{
             throw new Error("O sala_id informado não existem");
         }
         
-        const { sala_id, ...camposInsert } = parametros;
-        const insertbem = {salas:{connect: { sala_id: sala_id }}, ...camposInsert };
-
+        const { sala_id, inventario_id, ...camposInsert } = parametros;
+        const insertbem = {
+            sala: { connect: { id: sala_id } },
+            inventario: { connect: { id: inventario_id } },
+            ...camposInsert
+        };
 
         const bem =  await BemRepository.createBem({
             data: insertbem, 
@@ -57,19 +60,23 @@ class BemService{
         const schema = new bemSchema().adicionarBemSchema()
         parametros = schema.parse(parametros)
 
-        const usuarioExists = await BemRepository.userExist(parametros.usua_id)
+        const usuarioExists = await BemRepository.userExist(parametros.usuario_id)
 
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
 
-        const inventarioExists = await BemRepository.inventarioExist(parametros.inve_id)
+        const inventarioExists = await BemRepository.inventarioExist(parametros.inventario_id)
 
         if(!usuarioExists || !salaExists || !inventarioExists){
             throw new Error("usuario, sala ou inventário não existem");
         }
-        
-        const { usua_id, inve_id, sala_id, ...camposInsert } = parametros;
-        const insertbem = {salas:{connect: { sala_id: sala_id }}, ...camposInsert };
 
+        const { usuario_id, inventario_id, sala_id, nome, descricao, ...camposInsert } = parametros;
+        const insertbem = {
+            sala: { connect: { id: sala_id } },
+            inventario: { connect: { id: inventario_id } },
+            nome: nome,
+            descricao: descricao
+        };
 
         const bem =  await BemRepository.createBem({
             data: insertbem, 
@@ -78,19 +85,25 @@ class BemService{
 
         const historico = await BemRepository.createHistorico({
             data: {
-                hist_usuarios_id: usua_id,
-                hist_inventarios_id: inve_id,
-                hist_salas_id: sala_id,
-                hist_bens_id: bem.bens_id
+                usuario_id: usuario_id,
+                inventario_id: inventario_id,
+                sala_id: sala_id,
+                bem_id: bem.id,
+                data: new Date(),
+                ...camposInsert
             },
             select: {
-                hist_id: true,
-                hist_usuarios_id: true,
-                hist_inventarios_id: true,
-                hist_salas_id: true,
-                hist_bens_id: true
+                id: true,
+                usuario_id: true,
+                inventario_id: true,
+                sala_id: true,
+                bem_id: true,
+                estado: true,
+                ocioso: true,
+                imagem: true,
+                encontrado: true,
+                data: true
             }
-
         })
 
         return {historico: historico, bem: bem}
