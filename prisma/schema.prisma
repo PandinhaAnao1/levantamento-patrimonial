@@ -16,6 +16,7 @@ model bem {
   responsavel   String?        @db.VarChar(80)
   descricao     String         @db.MediumText
   valor         Decimal?       @db.Decimal(10, 2)
+  auditado      Boolean
   inventario    inventario     @relation(fields: [inventario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_bens_inventarios1")
   sala          sala           @relation(fields: [sala_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_bens_salas1")
   levantamento  levantamento[]
@@ -57,7 +58,6 @@ model levantamento {
   sala_id       Int
   usuario_id    Int
   imagem        String?    @db.VarChar(200)
-  encontrado    Boolean
   ocioso        Boolean
   estado        String     @db.VarChar(30)
   data          DateTime   @db.DateTime(0)

@@ -6,14 +6,15 @@ class BemController {
 
     static listarbens = async (req, res) => {
         try {
-            const {sala_id, inventario_id, nome, tombo, responsavel, descricao} = req.body;
+            const {sala_id, inventario_id, nome, tombo, responsavel, descricao, auditado} = req.body;
             const parametros = {
                 sala_id: sala_id,
                 inventario_id: inventario_id,
                 nome: nome,
                 tombo: tombo,
                 responsavel: responsavel,
-                descricao: descricao
+                descricao: descricao,
+                auditado: auditado
             }
             const bensExists = await bemService.listar(parametros)
 
@@ -70,6 +71,7 @@ class BemController {
                 descricao: req.body.descricao ,
                 responsavel: req.body.responsavel,
                 valor: req.body.valor ?? null,
+                auditado: req.body.auditado ?? false,
             };
             const bemCreate = await bemService.create(parametros)
             return sendResponse(res,201,{data: bemCreate})
@@ -101,7 +103,7 @@ class BemController {
                 estado: req.body.estado,
                 ocioso: req.body.ocioso,
                 imagem: req.body.imagem ?? null,
-                encontrado: true,
+                auditado: true,
             };
             const bemAdicionado = await bemService.adicionarBem(parametros)
 
@@ -125,28 +127,28 @@ class BemController {
     static auditarBem = async (req, res) => {
         try{
             const parametros = {
-                bens_id: req.body.bens_id,
+                bem_id: req.body.bem_id,
                 sala_id: req.body.sala_id,
-                inve_id: req.body.inve_id,
-                usua_id: req.body.usua_id,
-                bens_estado: req.body.bens_estado,
-                bens_ocioso: req.body.bens_ocioso,
-                bens_imagem: req.body.bens_imagem ?? null,
-                bens_encontrado: true,
+                inventario_id: req.body.inventario_id,
+                usuario_id: req.body.usuario_id,
+                estado: req.body.estado,
+                ocioso: req.body.ocioso,
+                imagem: req.body.imagem ?? null
             };
 
             const bemAuditado = await bemService.auditarBem(parametros)
             return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
         }catch(err){
-            if (err.message === "Usuario não existe") {
-                return sendError(res, 404, ["Usuario não existe"])
+            console.error(err)
+            if (err.message === "Usuario inforamdo não existe.") {
+                return sendError(res, 404, ["Usuario inforamdo não existe."])
 
-            }else if (err.message === "bem inforamdo não existe") {
-                return sendError(res, 404, ["bem inforamdo não existe"])
+            }else if (err.message === "Bem inforamdo não existe.") {
+                return sendError(res, 404, ["Bem inforamdo não existe."])
 
-            }else if (err.message === "O Bem não pertence a sala ou inventário informado") {
-                return sendError(res, 400, ["O Bem não pertence a sala ou inventário informado"])
+            }else if (err.message === "O Bem não pertence ao inventário informado.") {
+                return sendError(res, 400, ["O Bem não pertence ao inventário informado."])
 
             }else if(err.message === 'Bem já foi auditado.') {
                 return sendError(res, 403, ['Bem já foi auditado.'])

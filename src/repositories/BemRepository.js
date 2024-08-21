@@ -18,10 +18,6 @@ class BemRepository{
         return await prisma.levantamento.create(data)
     }
 
-    async updataBem(data){
-        return await prisma.bem.update(data)
-    }
-
     createFilter(parametros){
         let filtro = {
             where: {
@@ -32,6 +28,7 @@ class BemRepository{
                 ...(parametros.tombo && { tombo: parametros.tombo }),
                 ...(parametros.responsavel && { responsavel: {contains: parametros.responsavel} }),
                 ...(parametros.descricao && { descricao: {contains: parametros.descricao} }),
+                ...(parametros.auditado && { auditado: parametros.auditado}),
             },
             select: {
                 id:true,
@@ -41,6 +38,7 @@ class BemRepository{
                 tombo:true,
                 responsavel:true,
                 descricao:true,
+                auditado:true,
                 valor:true,
             }
         }
@@ -64,8 +62,7 @@ class BemRepository{
                 id: bem_id
             },
             select: {
-                sala_id: true,
-                inve_id: true,
+                inventario_id: true,
             }
         });
     }

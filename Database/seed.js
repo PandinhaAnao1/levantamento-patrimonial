@@ -63,6 +63,7 @@ async function seedDatabase() {
         tombo: String(faker.random.number()),
         responsavel: faker.name.findName(),
         descricao: faker.lorem.paragraph(),
+        auditado: faker.random.boolean(),
         valor: faker.commerce.price(100, 3000, 2),
       })),
     });
@@ -75,7 +76,6 @@ async function seedDatabase() {
         sala_id: (index % 5) + 1,
         usuario_id: (index % 3) + 1,
         imagem: faker.image.imageUrl(),
-        encontrado: faker.random.boolean(),
         ocioso: faker.random.boolean(),
         estado: faker.random.boolean() ? "em bom estado":  "danificado",
         data: new Date(),

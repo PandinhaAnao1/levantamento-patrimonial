@@ -101,7 +101,6 @@ class BemService{
                 estado: true,
                 ocioso: true,
                 imagem: true,
-                encontrado: true,
                 data: true
             }
         })
@@ -114,55 +113,46 @@ class BemService{
         const schema = new bemSchema().auditarBemSchema()
         parametros = schema.parse(parametros)
                         
-        const usuarioExists = await BemRepository.userExist(parametros.usua_id)
+        const usuarioExists = await BemRepository.userExist(parametros.usuario_id)
 
-        const auditadoExists = await BemRepository.bemJaFoiAuditado(parametros.bens_id)
+        const auditadoExists = await BemRepository.bemJaFoiAuditado(parametros.bem_id)
 
-        const idsSalaInventario = await BemRepository.getIds(parametros.bens_id)
-
-        if(!idsSalaInventario){
-            throw new Error("bem inforamdo não existe");
-        }
-
-        const { bens_sala_id, salas } = idsSalaInventario;
-        const sala_inve_id = salas.sala_inve_id;
-
-        if(!usuarioExists){
-            throw new Error("Usuario não existe");
-        }
-
-        if(bens_sala_id != parametros.sala_id || sala_inve_id != parametros.inve_id){
-            throw new Error("O Bem não pertence a sala ou inventário informado");
-        }
+        const idsBemInventario = await BemRepository.getIds(parametros.bem_id)
 
         if(auditadoExists){
             throw new Error("Bem já foi auditado.");
         }
 
-        const { usua_id, inve_id, sala_id, bens_id, ...camposInsert } = parametros;
+        if(!idsBemInventario){
+            throw new Error("Bem inforamdo não existe.");
+        }
+        
+        if(!usuarioExists){
+            throw new Error("Usuario inforamdo não existe.");
+        }
 
-        await BemRepository.updataBem({
-            where: {bens_id: bens_id},
-            data: camposInsert,
-        })
+        if(idsBemInventario.inventario_id != parametros.inventario_id){
+            throw new Error("O Bem não pertence ao inventário informado.");
+        }
 
         const historico = await BemRepository.createHistorico({
             data: {
-                hist_usuarios_id: usua_id,
-                hist_inventarios_id: inve_id,
-                hist_salas_id: sala_id,
-                hist_bens_id: bens_id
+                ...parametros,
+                data: new Date()
             },
             select: {
-                hist_id: true,
-                hist_usuarios_id: true,
-                hist_inventarios_id: true,
-                hist_salas_id: true,
-                hist_bens_id: true
+                id: true,
+                usuario_id: true,
+                inventario_id: true,
+                sala_id: true,
+                bem_id: true,
+                estado: true,
+                ocioso: true,
+                imagem: true
             }
         })
 
-        const filtro = BemRepository.createFilter({bens_id: bens_id})
+        const filtro = BemRepository.createFilter({bem_id: parametros.bem_id})
         const bens =  await BemRepository.findById(filtro)
 
         return {historico: historico, bem: bens}
