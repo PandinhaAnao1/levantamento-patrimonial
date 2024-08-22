@@ -1,9 +1,8 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
 import UsuarioSchema from "../shemas/UsuarioSchema.js";
-import {z} from "zod";
+import {z, ZodError} from "zod";
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 
 class UsuarioService{
     
@@ -23,33 +22,40 @@ class UsuarioService{
 
         const {email, senha} = UsuarioSchema.login.parse(login);
 
-        const SALT = process.env.SALT;
         const JWT = process.env.PRIVATE_KEY;
-        
-        const senhaHash = bcrypt.hash(senha, bcrypt.genSalt(SALT));
 
         const flitros = {
             where: {
                 email: email,
-                senha: senhaHash,
             },
         }
         const usuario = await UsuarioRepository.login(flitros);
 
-        if(usuario){ 
+        if(!usuario){ 
             throw new z.ZodError([{
                 path: ["usuario"],
-                message:"Usuario não exite na base de dados!",
+                message:"Usuario não exite na base de dados verifique se o email esta correto!",
                 code: z.ZodIssueCode.custom,
                 params: {
-                    status: 400, // Adicionando um detalhe personalizado
+                    status: 401, // Adicionando um detalhe personalizado
                   },
             }]);  
-        }; 
+        };
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        if(!senhaValida){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Senha informada esta incorreta!",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
+            }]);  
+        }
 
         const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 
-        const token = jwt.sign({ data: {'_id': usuario.usua_id} }, JWT, jwtConfig);
+        const token = jwt.sign({ data: {'_id': usuario.id} }, JWT, jwtConfig);
         
         return { 
             data:{

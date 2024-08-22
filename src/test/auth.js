@@ -5,8 +5,8 @@ export const postLogin = (req) => {
 	return req
 	.post("/login")
     .send({
-        email: 'usuario1@example.com', 
-        senha: 'senha123'
+        email: 'emailExample@gmail.com', 
+        senha: 'senhatest'
     })
 	.set("Accept", "aplication/json");
 };

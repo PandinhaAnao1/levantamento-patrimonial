@@ -6,7 +6,7 @@ import {postLogin} from '../auth.js';
 
 describe.only('Inventario GET', () => {
     let token;
-    it("00 - Deve autenticar", async () => {
+    it.only("00 - Deve autenticar", async () => {
         const res = await postLogin(request(app)).expect(200);
         expect(res.body?.data?.token).toBeTruthy();
 		token = res.body?.data?.token;
