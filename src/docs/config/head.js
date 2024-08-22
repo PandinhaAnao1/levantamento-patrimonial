@@ -1,7 +1,15 @@
 import bensRoutes from "../routes/bensRoutesDoc.js";
 import bensSchemas from "../shemas/bensShemaDoc.js";
+import loginRoutes from "../routes/loginRoutesDoc.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
+const getServersInCorrectOrder = () => {
+    const devUrl = { url: process.env.SWAGGER_DEV_URL || "http://localhost:3000" };
+    const prodUrl = { url: process.env.SWAGGER_PROD_URL || "http://localhost:3000" };
+
+    if (process.env.NODE_ENV === "production") return [prodUrl, devUrl];
+    else return [devUrl, prodUrl];
+};
 
 // Função para obter as opções do Swagger
 const getSwaggerOptions = () => {
@@ -13,9 +21,10 @@ const getSwaggerOptions = () => {
                 version: "1.0-alpha",
                 description: "API AUTH Levantamento Patrimonial\n\nÉ necessário autenticar com token JWT antes de utilizar a maioria das rotas, faça isso na rota /login com um email e senha válido.",
             },
+            servers: getServersInCorrectOrder(),
             tags: [
                 {
-                    name: "login",
+                    name: "Login",
                     description: "Rotas para autenticação"
                 },
                 {
@@ -37,6 +46,7 @@ const getSwaggerOptions = () => {
             ],
             paths: {
                 ...bensRoutes,
+                ...loginRoutes
             },
             components: {
                 securitySchemes: {
