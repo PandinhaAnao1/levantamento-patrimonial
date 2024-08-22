@@ -1,7 +1,9 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
 import UsuarioSchema from "../shemas/UsuarioSchema.js";
+import {z} from "zod";
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 class UsuarioService{
     
@@ -17,33 +19,44 @@ class UsuarioService{
         *
         * @return {Object} O retorno é um objeto do javascript com os dados de usuario e token.
         */
-        const PRIVATE_KEY = '1010FFF'
+        
 
-        const {email, senha} = UsuarioSchema.login.parse(login); 
-                
-        const senhaHash = senha;
+        const {email, senha} = UsuarioSchema.login.parse(login);
+
+        const SALT = process.env.SALT;
+        const JWT = process.env.PRIVATE_KEY;
+        
+        const senhaHash = bcrypt.hash(senha, bcrypt.genSalt(SALT));
+
         const flitros = {
             where: {
-                usua_email: email,
-                usua_senha: senhaHash,
+                email: email,
+                senha: senhaHash,
             },
-            select:{
-                usua_id: true,
-                usua_nome: true,
-                usua_email: true,
-                usua_senha: false,
-                usua_funcao: true,
-                usua_status: true,
-            }
         }
-        //await bcrypt.hash(senha, 10);
         const usuario = await UsuarioRepository.login(flitros);
-        if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
+
+        if(usuario){ 
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Usuario não exite na base de dados!",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 400, // Adicionando um detalhe personalizado
+                  },
+            }]);  
+        }; 
+
         const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 
-        const token = jwt.sign({ data: {'_id': usuario.usua_id} }, PRIVATE_KEY, jwtConfig);
+        const token = jwt.sign({ data: {'_id': usuario.usua_id} }, JWT, jwtConfig);
         
-        return { usuario, token}
+        return { 
+            data:{
+                token: token,
+                usuario: usuario, 
+            }
+        }
     }
 
     static async listarUsuarios(){

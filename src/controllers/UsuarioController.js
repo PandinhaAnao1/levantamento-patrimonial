@@ -28,7 +28,7 @@ class UsuarioController {
         }catch(error){
             console.log(error);
             //colocar a verificacao se o usuario esta ativo
-            if(error instanceof ZodError) return sendError(res,401,error.message);
+            if(error instanceof ZodError && error.code != z) return sendError(res,401,error.message);
                         
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
         }  

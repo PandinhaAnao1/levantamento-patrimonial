@@ -26,7 +26,10 @@ class InventarioService{
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"Não foi contar inventários com esse parâmetros!",
-                code: z.ZodIssueCode.invalid_type,
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 400, // Adicionando um detalhe personalizado
+                  },
             }]);
         }
 
@@ -44,7 +47,7 @@ class InventarioService{
                 ...(nome && { nome: {contains: nome} }),
                 ...(data && { data: data }),
                 ...(concluido && { concluido: concluido }),
-                ...(campus && { campus: campus }),
+                ...(campus && { campus_id: campus }),
                 
             }
         };
@@ -67,6 +70,9 @@ class InventarioService{
     static async listarInventarioPorId(parametros){
         //Futuramente vou trocar essa logica vou colocar o esquema de validação e transformação 
         //do zod
+
+        let regex = /^[0-9]+$/;
+        
         let idString = parametros.id;
         if(!regex.test(idString)){
             throw new z.ZodError([{
