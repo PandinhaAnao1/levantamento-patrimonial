@@ -93,21 +93,29 @@ class UsuarioService{
         return usuario
     }
 
-    static async criarUsuario(criarConta){
-        const {nome,email,senha} = UsuarioSchema.criarUsuario.parse(criarConta);
+    static async criarUsuario(criarConta) {
+        const { nome, email, senha, funcao, status } = UsuarioSchema.criarUsuario.parse(criarConta);
         
+    
+        const saltRounds = 10;
+ 
+        const senhaHashed = await bcrypt.hash(senha, saltRounds);
+    
+      
         let criacao = {
-            nome:nome,
-            email:email,
-            senha:senha
-
+            data: {
+                nome: nome,
+                email: email,
+                senha: senhaHashed,  
+                funcao: funcao,
+                status: true
+            }
         };
-
-        const novaConta = UsuarioRepository.criarUsuario(criacao);
-
+    
+        // Salvando o novo usuário no repositório
+        const novaConta = await UsuarioRepository.criarUsuario(criacao);
+    
         return novaConta;
-
-
     }
 
 }

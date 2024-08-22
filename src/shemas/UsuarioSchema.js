@@ -23,7 +23,9 @@ class  UsuarioSchema{
     static criarUsuario = z.object({
         nome: z.string().min(1).max(80),
         email: z.string().min(1).max(80), 
-        senha: z.string().min(6).max(200)
+        senha: z.string().min(6).max(200),
+        status: z.boolean(),
+        funcao: z.string().min(1).max(80)
     });
 
 }

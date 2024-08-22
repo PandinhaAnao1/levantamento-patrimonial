@@ -15,16 +15,16 @@ class UsuarioRepository{
     }
 
     static async listarUsuarios(filtros){
-        return await prisma.usuarios.findMany(filtros);
+        return await prisma.usuario.findMany(filtros);
       }
     
     static async listarUsuarioPorId(filtros) {
-        return await prisma.usuarios.findFirst(filtros);
+        return await prisma.usuario.findFirst(filtros);
     }
 
 
     static async criarUsuario(criarConta){
-      return await prisma.usuarios.create(criarConta);
+      return await prisma.usuario.create(criarConta);
     }
 
 }
