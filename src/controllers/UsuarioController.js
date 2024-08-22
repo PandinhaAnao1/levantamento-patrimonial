@@ -26,7 +26,8 @@ class UsuarioController {
             if(error instanceof ZodError) {
               const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
               if (customError) {
-                return sendError(res,401,error.errors[0].message);
+                let errors = error.errors[0];
+                return sendError(res,parseInt(errors.params?.staus),errors.message);
               } else {
                 return sendError(res,401,"Erro ao realizar autenticação");
               }              

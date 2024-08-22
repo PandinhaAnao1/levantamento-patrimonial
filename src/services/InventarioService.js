@@ -20,7 +20,7 @@ class InventarioService{
             }
         };
 
-        const totalInventarios = await InvRepository.contarInventario(filtro);
+        const totalInventarios = await InvRepository.contar(filtro);
 
         if(!totalInventarios){
             throw new z.ZodError([{
@@ -52,14 +52,16 @@ class InventarioService{
             }
         };
         
-        const iventario = await InvRepository.listarInventarios(filtro);
+        const iventario = await InvRepository.listar(filtro);
     
-
         if(!iventario) {
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"Não foi possível encontrar inventários com esse parâmetros",
-                code: z.ZodIssueCode.invalid_type,
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
             }]);
         }
 
@@ -78,10 +80,14 @@ class InventarioService{
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"O id do inventario deve ser um numero!",
-                code: z.ZodIssueCode.invalid_type,
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
+
             }]);
         }
-        const {id} = IvSchema.listarPorIdSchema.parse({'id':parseInt(id)});
+        const {id} = IvSchema.listarPorIdSchema.parse({'id':parseInt(idString)});
 
         let filtro = {
             where:{

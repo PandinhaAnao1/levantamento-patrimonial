@@ -17,6 +17,7 @@ describe.only('Inventario GET', () => {
         .get('/inventarios')
         .set("Accept", "aplication/json")
         .set("Authorization", `Bearer ${token}`);
+        console.log(req.body)
 
         expect(req.status).toBe(200);
         expect(req.body).toBeInstanceOf(Object);
@@ -37,25 +38,26 @@ describe.only('Inventario GET', () => {
         expect(req.body.data.length).toBeGreaterThan(1);
         expect(req.body.data).toBeInstanceOf(Array);
         expect(req.body.data[0]).toBeInstanceOf(Object);
-        expect(req.body.data[0].inve_id).toBeDefined();
-        expect(req.body.data[0].inve_nome).toBeDefined();
-        expect(req.body.data[0].inve_data).toBeDefined();
-        expect(req.body.data[0].inve_concluido).toBeDefined();
-        expect(req.body.data[0].inve_campus).toBeDefined();
+        expect(req.body.data[0].id).toBeDefined();
+        expect(req.body.data[0].nome).toBeDefined();
+        expect(req.body.data[0].data).toBeDefined();
+        expect(req.body.data[0].concluido).toBeDefined();
+        expect(req.body.data[0].campus_id).toBeDefined();
     });
 
-    it("03 - Deve testar a listagem por id dos inventarios", async () => {
+    it.only("03 - Deve testar a listagem por id dos inventarios", async () => {
         const req = await request(app)
         .get('/inventarios/1')
         .set("Accept", "aplication/json")
         .set("Authorization", `Bearer ${token}`);
+        console.log(req.body)
         expect(req.status).toBe(200);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeDefined();
-        expect(req.body.data.inve_nome).toBeDefined();
-        expect(req.body.data.inve_data).toBeDefined();
-        expect(req.body.data.inve_concluido).toBeDefined();
-        expect(req.body.data.inve_campus).toBeDefined();
+        expect(req.body.data.id).toBeDefined();
+        expect(req.body.data.nome).toBeDefined();
+        expect(req.body.data.data).toBeDefined();
+        expect(req.body.data.concluido).toBeDefined();
+        expect(req.body.data.campus).toBeDefined();
     });
 
     it("04 - Deve testar a listagem por id dos inventarios com o id errado", async () => {

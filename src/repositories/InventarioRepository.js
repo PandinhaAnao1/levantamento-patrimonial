@@ -3,11 +3,11 @@ import { prisma } from "../configs/prismaClient.js";
 class InventarioRepository {
 
 
-  static async listarInventario(filtro) {
+  static async listar(filtro) {
     return await prisma.inventario.findMany(filtro);
   }
 
-  static async contarInventario(filtro) {
+  static async contar(filtro) {
     return await prisma.inventario.count(filtro);
   }
 

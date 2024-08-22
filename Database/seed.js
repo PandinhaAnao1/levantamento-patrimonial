@@ -20,14 +20,11 @@ async function clearDatabase() {
 
 async function seedDatabase() {
   try {
-    const SALT = parseInt(process.env.SALT);
-    console.log(SALT)
+    let SALT = parseInt(process.env.SALT);
 
     let salt = await bcrypt.genSalt(SALT);
-    console.log(salt)
     
     const senhaHash = await bcrypt.hash("senhatest", salt);
-    console.log(senhaHash)
 
     // Inserindo dados na tabela `usuario`
     const usuarios = await prisma.usuario.createMany({
