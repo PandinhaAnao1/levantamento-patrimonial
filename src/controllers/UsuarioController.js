@@ -74,17 +74,24 @@ class UsuarioController {
     }
   };
 
-  static criarUsuario = (req, res) => {
-     const {nome,senha,email} = req.body;
+  static criarUsuario = async(req, res) => {
      try {
-      const user = UsuarioService.criarUsuario(nome,email,senha)
-      return req.status(200).json({
-        user
-      })
-     } catch (error) {
-      console.error(error)
+
+      const novoUsuario = await UsuarioService.criarUsuario(req.body);
+
+      return sendResponse(res,201, {data:novoUsuario});
+      
+     } catch (erro) {
+      console.log(erro)
+      
+      if(erro instanceof ZodError){
+        
+      }
+
+      return sendError(res,500,"Ocorreu um erro interno no servidor!");
+
      }
-  };
+  }
 
   static atualizarUsuario = (req, res) => {
     return null; // atualiza todos os campos

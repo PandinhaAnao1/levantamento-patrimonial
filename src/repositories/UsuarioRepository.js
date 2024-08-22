@@ -23,12 +23,8 @@ class UsuarioRepository{
     }
 
 
-    static async criarUsuario(nome,email,senha){
-      return await prisma.usuarios.create({
-        usua_nome,
-        usua_senha,
-        usua_senha
-      })
+    static async criarUsuario(criarConta){
+      return await prisma.usuarios.create(criarConta);
     }
 
 }

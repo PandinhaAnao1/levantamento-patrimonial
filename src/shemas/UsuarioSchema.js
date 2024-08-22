@@ -24,7 +24,7 @@ class  UsuarioSchema{
         nome: z.string().min(1).max(80),
         email: z.string().min(1).max(80), 
         senha: z.string().min(6).max(200)
-    }) 
+    });
 
 }
 

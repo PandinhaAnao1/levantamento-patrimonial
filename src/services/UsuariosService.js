@@ -41,7 +41,7 @@ class UsuarioService{
         if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
         const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 
-        const token = jwt.sign({ data: {'_id': usuario.usua_id} }, PRIVATE_KEY, jwtConfig);
+        const token = jwt.sign({ data: {'_id': usuario.id} }, PRIVATE_KEY, jwtConfig);
         
         return { usuario, token}
     }
@@ -52,9 +52,9 @@ class UsuarioService{
 
         let filtro = {
             where: {
-                ...(nome && { usua_nome: {contains: nome} }),
-                ...(funcao && { usua_funcao: funcao }),
-                ...(status && { usua_status: status })
+                ...(nome && { nome: {contains: nome} }),
+                ...(funcao && { funcao: funcao }),
+                ...(status && { status: status })
             }
         };
 
@@ -79,7 +79,7 @@ class UsuarioService{
         
         let filtro = {
             where: {
-                ...(id && { usua_id: id }),
+                ...(id && { id: id }),
             }
         };
         
@@ -93,9 +93,21 @@ class UsuarioService{
         return usuario
     }
 
-    static async criarUsuario(parametros){
-        const user = await UsuarioRepository.criarUsuario(nome,email,senha)
-        return user
+    static async criarUsuario(criarConta){
+        const {nome,email,senha} = UsuarioSchema.criarUsuario.parse(criarConta);
+        
+        let criacao = {
+            nome:nome,
+            email:email,
+            senha:senha
+
+        };
+
+        const novaConta = UsuarioRepository.criarUsuario(criacao);
+
+        return novaConta;
+
+
     }
 
 }

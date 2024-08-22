@@ -26,12 +26,12 @@ describe('usuario', () => {
         expect(req.body.data).toBeInstanceOf(Array)
         expect(req.body.data.length).toBeGreaterThan(0)
         expect(req.body.message).toEqual("Registros encontrados");
-        expect(req.body.data[0].usua_id).toBeDefined()
-        expect(req.body.data[0].usua_email).toBeDefined()
-        expect(req.body.data[0].usua_senha).toBeDefined()
-        expect(req.body.data[0].usua_funcao).toBeDefined()
-        expect(req.body.data[0].usua_status).toBeDefined()
-        expect(req.body.data[0].usua_nome).toBeDefined()
+        expect(req.body.data[0].id).toBeDefined()
+        expect(req.body.data[0].email).toBeDefined()
+        expect(req.body.data[0].senha).toBeDefined()
+        expect(req.body.data[0].funcao).toBeDefined()
+        expect(req.body.data[0].status).toBeDefined()
+        expect(req.body.data[0].nome).toBeDefined()
         
     })
 
@@ -45,12 +45,12 @@ describe('usuario', () => {
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
         expect(req.body.data).toBeInstanceOf(Object)
-        expect(req.body.data.usua_id).toBeDefined();
-        expect(req.body.data.usua_email).toBeDefined();
-        expect(req.body.data.usua_senha).toBeDefined();
-        expect(req.body.data.usua_funcao).toBeDefined();
-        expect(req.body.data.usua_status).toBeDefined();
-        expect(req.body.data.usua_nome).toBeDefined();
+        expect(req.body.data.id).toBeDefined();
+        expect(req.body.data.email).toBeDefined();
+        expect(req.body.data.senha).toBeDefined();
+        expect(req.body.data.funcao).toBeDefined();
+        expect(req.body.data.status).toBeDefined();
+        expect(req.body.data.nome).toBeDefined();
 
     })
 
