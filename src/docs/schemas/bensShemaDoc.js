@@ -1,55 +1,5 @@
 const bensSchemas = {
 
-    bensDescription: {
-        type: "object",
-        properties: {
-            bens_id: {
-                type: "integer",
-                description: "ID do bem"
-            },
-            bens_sala_id: {
-                type: "integer",
-                description: "ID da sala onde o bem está localizado"
-            },
-            bens_nome: {
-                type: "string",
-                description: "Nome do bem"
-            },
-            bens_tombo: {
-                type: "string",
-                description: "Número de tombamento do bem"
-            },
-            bens_responsavel: {
-                type: "string",
-                description: "Responsável pelo bem"
-            },
-            bens_decricao: {
-                type: "string",
-                description: "Descrição do bem"
-            },
-            bens_imagem: {
-                type: "string",
-                description: "Foto do bem"
-            },
-            bens_valor: {
-                type: "Decimal",
-                description: "Valor do bem"
-            },
-            bens_estado: {
-                type: "string",
-                description: "Estado de conservação do bem"
-            },
-            bens_ocioso: {
-                type: "boolean",
-                description: "Indica se o bem está ocioso"
-            },
-            bens_encontrado: {
-                type: "boolean",
-                description: "Indica se o bem foi encontrado"
-            }
-        }
-    },
-
     BemListarRes: {
         type: "object",
         example: {
