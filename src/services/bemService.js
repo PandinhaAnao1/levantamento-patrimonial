@@ -35,9 +35,10 @@ class BemService{
         parametros = schema.parse(parametros)
         
         const salaExists = await BemRepository.salaExist(parametros.sala_id)
+        const inventarioExist = await BemRepository.inventarioExist(parametros.inventario_id)
 
-        if(!salaExists){
-            throw new Error("O sala_id informado não existe.");
+        if(!salaExists || !inventarioExist){
+            throw new Error("Sala ou inventário informado não existe.");
         }
         
         const { sala_id, inventario_id, ...camposInsert } = parametros;

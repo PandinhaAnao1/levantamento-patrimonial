@@ -156,7 +156,7 @@ const bensSchemas = {
         
     },
 
-    BemAdicionar_AduditarRes: {
+    BemAdicionar_AuditarRes: {
         type: "object",
         example: {
             error: false,
@@ -191,13 +191,13 @@ const bensSchemas = {
     BemAuditarBody: {
         type: "object",
         example: {
-            bens_id:1,
+            bem_id:1,
             sala_id:1,
-            usua_id:1,
-            inve_id:1,
-            bens_imagem:"http://lorempixel.com/640/480",
-            bens_estado:"bom",
-            bens_ocioso:false,
+            inventario_id:2,
+            usuario_id:1,
+            estado:"ruim",
+            ocioso:true,
+            imagem:null
         }
         
     },
@@ -256,7 +256,7 @@ const bensSchemas = {
                     error: true,
                     code: 404,
                     message: "O recurso solicitado não foi encontrado no servidor.",
-                    errors: ["O sala_id informado não existem"],
+                    errors: ["Sala ou inventário informado não existe."],
                     data: []
                 }
             }

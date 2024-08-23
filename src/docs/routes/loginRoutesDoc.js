@@ -2,7 +2,7 @@ const loginRoutes = {
     "/login": {
         post: {
             tags: ["Login"],
-            summary: "Realiza o login do usuario e informa o token de acesso.",
+            summary: "Realiza o login do usuário e fornece o token de acesso.",
             requestBody: {
                 content: {
                     "application/json": {
@@ -11,23 +11,24 @@ const loginRoutes = {
                             properties: {
                                 email: {
                                     type: "string",
-                                    description: "Email do usuario.",
+                                    description: "Email do usuário.",
                                     example: "test123@gmail.com"
                                 },
                                 senha: {
                                     type: "string",
-                                    description: "Senha do usuario",
+                                    description: "Senha do usuário",
                                     example: "senhatest"
                                 }
-                            }, required: ["email", "senha"]
+                            },
+                            required: ["email", "senha"]
                         }
                     }
                 }
             },
             responses: {
                 "200": {
-                    description: "Requisição bem sucedida.",
-                    content:{
+                    description: "Requisição bem-sucedida.",
+                    content: {
                         $ref: "#/components/schemas/retornoLogin"
                     }
                 },
@@ -38,7 +39,7 @@ const loginRoutes = {
                     }                
                 },
                 "404": {
-                    description: "Usuario não exite na base de dados!.",
+                    description: "Usuário não existe na base de dados.",
                     content: {
                         $ref: "#/components/schemas/ReferenceErrorLogin"
                     }                

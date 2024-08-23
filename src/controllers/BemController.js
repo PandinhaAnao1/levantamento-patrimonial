@@ -76,8 +76,8 @@ class BemController {
             return sendResponse(res,201,{data: bemCreate})
 
         }catch(err){
-            if (err.message === "O sala_id informado não existe.") {
-                return sendError(res, 404, ["O sala_id informado não existe."])
+            if (err.message === "Sala ou inventário informado não existe.") {
+                return sendError(res, 404, ["Sala ou inventário informado não existe."])
 
             }else if (err instanceof z.ZodError) {
                 const errorMessages = err.issues.map((issue) => issue.message);

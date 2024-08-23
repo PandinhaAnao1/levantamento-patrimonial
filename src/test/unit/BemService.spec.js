@@ -159,7 +159,7 @@ describe('bens-create', () => {
         bensRepository.salaExist.mockReturnValue(null);
         bensRepository.createBem.mockResolvedValue(mockBens);
 
-        await expect(bemService.create(mockBens)).rejects.toThrow("O sala_id informado não existe.");
+        await expect(bemService.create(mockBens)).rejects.toThrow("Sala ou inventário informado não existe.");
         expect(bensRepository.salaExist).toHaveBeenCalledWith(mockBens.sala_id);
 
     });
