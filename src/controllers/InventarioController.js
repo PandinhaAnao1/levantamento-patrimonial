@@ -41,6 +41,7 @@ class InventarioController {
       
    
         }catch(erro){
+            console.log(erro);
             if(error instanceof ZodError) {
                 const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
                 if (customError) {

@@ -6,7 +6,7 @@ import {postLogin} from '../auth.js';
 
 describe.only('Inventario GET', () => {
     let token;
-    it.only("00 - Deve autenticar", async () => {
+    it("00 - Deve autenticar", async () => {
         const res = await postLogin(request(app)).expect(200);
         expect(res.body?.data?.token).toBeTruthy();
 		token = res.body?.data?.token;
@@ -17,7 +17,6 @@ describe.only('Inventario GET', () => {
         .get('/inventarios')
         .set("Accept", "aplication/json")
         .set("Authorization", `Bearer ${token}`);
-        console.log(req.body)
 
         expect(req.status).toBe(200);
         expect(req.body).toBeInstanceOf(Object);
@@ -45,33 +44,32 @@ describe.only('Inventario GET', () => {
         expect(req.body.data[0].campus_id).toBeDefined();
     });
 
-    it.only("03 - Deve testar a listagem por id dos inventarios", async () => {
+    it("03 - Deve testar a listagem por id dos inventarios", async () => {
         const req = await request(app)
         .get('/inventarios/1')
         .set("Accept", "aplication/json")
         .set("Authorization", `Bearer ${token}`);
-        console.log(req.body)
         expect(req.status).toBe(200);
         expect(req.body.data).toBeInstanceOf(Object);
         expect(req.body.data.id).toBeDefined();
         expect(req.body.data.nome).toBeDefined();
         expect(req.body.data.data).toBeDefined();
         expect(req.body.data.concluido).toBeDefined();
-        expect(req.body.data.campus).toBeDefined();
+        expect(req.body.data.campus_id).toBeDefined();
     });
 
-    it("04 - Deve testar a listagem por id dos inventarios com o id errado", async () => {
+    it("04 - Deve testar a listagem por id dos inventarios com o id errado fora do limite", async () => {
         const req = await request(app)
         .get('/inventarios/1000')
         .set("Accept", "aplication/json")
         .set("Authorization", `Bearer ${token}`);
         expect(req.status).toBe(400);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeUndefined();
-        expect(req.body.data.inve_nome).toBeUndefined();
-        expect(req.body.data.inve_data).toBeUndefined();
-        expect(req.body.data.inve_concluido).toBeUndefined();
-        expect(req.body.data.inve_campus).toBeUndefined();
+        expect(req.body.data.id).toBeUndefined();
+        expect(req.body.data.nome).toBeUndefined();
+        expect(req.body.data.data).toBeUndefined();
+        expect(req.body.data.concluido).toBeUndefined();
+        expect(req.body.data.campus_id).toBeUndefined();
     });
 
     it("05 - Deve testar a listagem por id como string do inventarios", async () => {
@@ -81,26 +79,27 @@ describe.only('Inventario GET', () => {
         .set("Authorization", `Bearer ${token}`);
         expect(req.status).toBe(400);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeUndefined();
-        expect(req.body.data.inve_nome).toBeUndefined();
-        expect(req.body.data.inve_data).toBeUndefined();
-        expect(req.body.data.inve_concluido).toBeUndefined();
-        expect(req.body.data.inve_campus).toBeUndefined();
+        expect(req.body.data.id).toBeUndefined();
+        expect(req.body.data.nome).toBeUndefined();
+        expect(req.body.data.data).toBeUndefined();
+        expect(req.body.data.concluido).toBeUndefined();
+        expect(req.body.data.campus_id).toBeUndefined();
     });
 
-    it("06 - Deve testar se a query de nome funcionario funciona", async () => {
+    it("06 - Deve testar se a query de nome inventario funciona", async () => {
     
         const req = await request(app)
         .get('/inventarios?nome=Inventário+de+Mobiliário')
         .set("Accept", "aplication/json")
         .set("Authorization", `Bearer ${token}`);
-        console.log(req.body);
         expect(req.status).toBe(200);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeDefined();
-        expect(req.body.data.inve_nome).toBeDefined();
-        expect(req.body.data.inve_data).toBeDefined();
-        expect(req.body.data.inve_concluido).toBeDefined(); 
+        expect(req.body.data.id).toBeDefined();
+        expect(req.body.data.nome).toBeDefined();
+        expect(req.body.data.data).toBeDefined();
+        expect(req.body.data.concluido).toBeDefined();
+        expect(req.body.data.concluido).toBeDefined();
+        expect(req.body.data.campus_id).toBeDefined(); 
     });
 
     it("07 - Deve testar se a query de nome não funciona", async () => {
@@ -111,11 +110,11 @@ describe.only('Inventario GET', () => {
         .set("Authorization", `Bearer ${token}`);
         expect(req.status).toBe(400);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeUndefined();
-        expect(req.body.data.inve_nome).toBeUndefined();
-        expect(req.body.data.inve_data).toBeUndefined();
-        expect(req.body.data.inve_concluido).toBeUndefined();
-        expect(req.body.data.inve_campus).toBeUndefined();
+        expect(req.body.data.id).toBeUndefined();
+        expect(req.body.data.nome).toBeUndefined();
+        expect(req.body.data.data).toBeUndefined();
+        expect(req.body.data.concluido).toBeUndefined();
+        expect(req.body.data.campus_id).toBeUndefined();
     }); 
 
     it("08 - Deve testar se a query de concluido funcionario funciona", async () => {
@@ -125,10 +124,10 @@ describe.only('Inventario GET', () => {
         .set("Authorization", `Bearer ${token}`);
         expect(req.status).toBe(200);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeDefined();
-        expect(req.body.data.inve_nome).toBeDefined();
-        expect(req.body.data.inve_data).toBeDefined();
-        expect(req.body.data.inve_concluido).toBeDefined(); 
+        expect(req.body.data.id).toBeDefined();
+        expect(req.body.data.nome).toBeDefined();
+        expect(req.body.data.data).toBeDefined();
+        expect(req.body.data.concluido).toBeDefined(); 
     });
 
     it("09 - Deve testar se a query de campus funcionario funciona", async () => {
@@ -138,11 +137,11 @@ describe.only('Inventario GET', () => {
         .set("Authorization", `Bearer ${token}`);
         expect(req.status).toBe(200);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeUndefined();
-        expect(req.body.data.inve_nome).toBeUndefined();
-        expect(req.body.data.inve_data).toBeUndefined();
-        expect(req.body.data.inve_concluido).toBeUndefined();
-        expect(req.body.data.inve_campus).toBeUndefined();
+        expect(req.body.data.id).toBeUndefined();
+        expect(req.body.data.nome).toBeUndefined();
+        expect(req.body.data.data).toBeUndefined();
+        expect(req.body.data.concluido).toBeUndefined();
+        expect(req.body.data.campus_id).toBeUndefined();
     }); 
     it("08 - Deve testar se a query de campus funcionario funciona", async () => {
         const req = await request(app)
@@ -154,7 +153,7 @@ describe.only('Inventario GET', () => {
         expect(req.body.data.inve_id).toBeDefined();
         expect(req.body.data.inve_nome).toBeDefined();
         expect(req.body.data.inve_data).toBeDefined();
-        expect(req.body.data.inve_concluido).toBeDefined(); 
+        expect(req.body.data.campus_id).toBeDefined(); 
     });
 
     it("07 - Deve testar se a query de concluido funcionario funciona", async () => {
@@ -164,11 +163,11 @@ describe.only('Inventario GET', () => {
         .set("Authorization", `Bearer ${token}`);
         expect(req.status).toBe(400);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeUndefined();
-        expect(req.body.data.inve_nome).toBeUndefined();
-        expect(req.body.data.inve_data).toBeUndefined();
-        expect(req.body.data.inve_concluido).toBeUndefined();
-        expect(req.body.data.inve_campus).toBeUndefined();
+        expect(req.body.data.id).toBeUndefined();
+        expect(req.body.data.nome).toBeUndefined();
+        expect(req.body.data.data).toBeUndefined();
+        expect(req.body.data.concluido).toBeUndefined();
+        expect(req.body.data.campus_id).toBeUndefined();
     });
 
     //colocar teste para query
@@ -192,11 +191,11 @@ describe("Inventario POST",() => {
         });
         expect(req.status).toBe(201);
         expect(req.body.data).toBeInstanceOf(Object);
-        expect(req.body.data.inve_id).toBeUndefined();
-        expect(req.body.data.inve_nome).toBeUndefined();
-        expect(req.body.data.inve_data).toBeUndefined();
-        expect(req.body.data.inve_concluido).toBeUndefined();
-        expect(req.body.data.inve_campus).toBeUndefined();
+        expect(req.body.data.id).toBeUndefined();
+        expect(req.body.data.nome).toBeUndefined();
+        expect(req.body.data.data).toBeUndefined();
+        expect(req.body.data.concluido).toBeUndefined();
+        expect(req.body.data.campus_id).toBeUndefined();
     });
 
 });
