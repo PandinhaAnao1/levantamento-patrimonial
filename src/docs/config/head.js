@@ -1,6 +1,7 @@
 import bensRoutes from "../routes/bensRoutesDoc.js";
-import bensSchemas from "../shemas/bensShemaDoc.js";
+import bensSchemas from "../schemas/bensShemaDoc.js";
 import loginRoutes from "../routes/loginRoutesDoc.js";
+import loginSchema from "../schemas/loginSchemaDoc.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
@@ -57,7 +58,8 @@ const getSwaggerOptions = () => {
                     }
                 },
                 schemas: {
-                    ...bensSchemas
+                    ...bensSchemas,
+                    ...loginSchema
                 }
             },
             security: [{

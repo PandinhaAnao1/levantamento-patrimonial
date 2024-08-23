@@ -26,7 +26,7 @@ class UsuarioController {
             console.log(error);
             if(error instanceof TypeError) return sendError(res,401,error.message);
             
-            if(error instanceof ReferenceError) return sendError(res,401,error.message);
+            if(error instanceof ReferenceError) return sendError(res,404,error.message);
             
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
         }  

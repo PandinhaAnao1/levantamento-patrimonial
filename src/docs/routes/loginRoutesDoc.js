@@ -18,9 +18,8 @@ const loginRoutes = {
                                     type: "string",
                                     description: "Senha do usuario",
                                     example: "senhatest"
-                                },
-                                required: ["email", "senha"]
-                            }
+                                }
+                            }, required: ["email", "senha"]
                         }
                     }
                 }
@@ -32,22 +31,22 @@ const loginRoutes = {
                         $ref: "#/components/schemas/retornoLogin"
                     }
                 },
-                "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
+                "401": {
+                    description: "E-mail inválido ou senha não fornecida.",
                     content: {
-                        $ref: "#/components/schemas/erro400"
+                        $ref: "#/components/schemas/typeErrorLogin"
                     }                
                 },
                 "404": {
-                    description: "Nem um registro encontrado.",
+                    description: "Usuario não exite na base de dados!.",
                     content: {
-                        $ref: "#/components/schemas/erro404Get"
+                        $ref: "#/components/schemas/ReferenceErrorLogin"
                     }                
                 },
                 "500": {
                     description: "Servidor encontrou um erro interno.",
                     content: {
-                        $ref: "#/components/schemas/erro500"
+                        $ref: "#/components/schemas/erro500Login"
                     }                
                 },
             }

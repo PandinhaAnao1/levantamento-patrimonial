@@ -57,31 +57,28 @@ const bensSchemas = {
             code: 200,
             message: "Requisição bem sucedida.",
             errors: [],
-            data: [{
-                bens_id: 1,
-                bens_sala_id:1,
-                bens_nome: "Notebook Lenovo",
-                bens_tombo: "TOMBO007",
-                bens_responsavel: "Ana Silva",
-                bens_decricao: "Notebook leve e portátil, processador Intel i5",
-                bens_imagem:"http://lorempixel.com/640/480",
-                bens_valor: "1249.99",
-                bens_estado: null,
-                bens_ocioso: null,
-                bens_encontrado: false
-            },
-            {
-                bens_id: 2,
-                bens_sala_id:1,
-                bens_nome: "Mesa de centro",
-                bens_tombo: "TOMBO020",
-                bens_responsavel: "Ana Silva",
-                bens_decricao: "Mesa de centro com pés de madeira.",
-                bens_imagem:"http://lorempixel.com/640/480",
-                bens_valor: "149.99",
-                bens_estado: null,
-                bens_ocioso: null,
-                bens_encontrado: false
+            data: [
+                {
+                    id: 2,
+                    sala_id: 2,
+                    inventario_id: 2,
+                    nome: "Generic Granite Computer",
+                    tombo: "TB2345",
+                    responsavel: "Elen Albuquerque Jr.",
+                    descricao: "Unde repellat cum facilis voluptatem similique dolore et magni. Reiciendis ex itaque tenetur quam eum odit. Exercitationem ducimus deserunt veritatis modi. Non natus earum. Voluptatibus debitis ratione occaecati quia dolorum.",
+                    auditado: false,
+                    valor: "375"
+                },
+                {
+                    id: 4,
+                    sala_id: 4,
+                    inventario_id: 2,
+                    nome: "Mesa de centro",
+                    tombo: "TB2345",
+                    responsavel: "Salomao Carvalho",
+                    descricao: "Labore maxime alias impedit vel doloremque nobis. Eos perferendis placeat ut voluptates nulla recusandae ratione non. Mollitia harum qui voluptas hic quo. Non veniam nobis qui quis omnis cum. Aut eum cum ratione rerum consequatur accusantium et. Sed expedita omnis officiis fugiat aut amet saepe amet vero.",
+                    auditado: true,
+                    valor: "1132"
             }]
         }
     },
@@ -90,37 +87,36 @@ const bensSchemas = {
         type: "object",
         example: {
             error: false,
-            code: 200,
-            message: "Requisição bem sucedida.",
+            code: 201,
+            message: "Requisição bem sucedida, recurso foi criado",
             errors: [],
             data: {
-                bens_id: 1,
-                bens_sala_id:1,
-                bens_nome: "Notebook Lenovo",
-                bens_tombo: "TOMBO007",
-                bens_responsavel: "Ana Silva",
-                bens_decricao: "Notebook leve e portátil, processador Intel i5",
-                bens_imagem:"http://lorempixel.com/640/480",
-                bens_valor: "1249.99",
-                bens_estado: null,
-                bens_ocioso: null,
-                bens_encontrado: false
+                id: 21,
+                sala_id: 4,
+                inventario_id: 2,
+                nome: "Computador i5 7500KF",
+                tombo: "TB2345",
+                responsavel: "Salomao Carvalho",
+                descricao: "Labore maxime alias impedit vel doloremque nobis. Eos perferendis placeat ut voluptates nulla recusandae ratione non.",
+                auditado: false,
+                valor: "1132"
             }
-            
         }
     },
 
     BemCriadoBody: {
         type: "object",
         example: {
-            sala_id:1,
-            bens_nome: "Notebook Lenovo",
-            bens_tombo: "TOMBO007",
-            bens_responsavel: "Ana Silva",
-            bens_decricao: "Notebook leve e portátil, processador Intel i5",
-            bens_valor: "1249.99",
-
+            sala_id: 4,
+            inventario_id: 2,
+            nome: "Computador i5 7500KF",
+            tombo: "TB2345",
+            responsavel: "Salomao Carvalho",
+            descricao: "Labore maxime alias impedit vel doloremque nobis. Eos perferendis placeat ut voluptates nulla recusandae ratione non.",
+            auditado: false,
+            valor: "1132"
         }
+        
     },
 
     BemCriadoRes: {
@@ -149,15 +145,13 @@ const bensSchemas = {
     BemAdicionarBody: {
         type: "object",
         example: {
-            bens_id:1,
+            bem_id:24,
             sala_id:1,
-            usua_id:1,
-            inve_id:1,
-            bens_nome: "Notebook Lenovo",
-            bens_decricao: "Notebook leve e portátil, processador Intel i5",
-            bens_imagem:"http://lorempixel.com/640/480",
-            bens_estado:"bom",
-            bens_ocioso:false,
+            inventario_id:2,
+            usuario_id:1,
+            estado:"ruim",
+            ocioso:true,
+            imagem:null
         }
         
     },
@@ -167,28 +161,28 @@ const bensSchemas = {
         example: {
             error: false,
             code: 201,
-            message: "Requisição bem sucedida, recurso foi criado",
-            errors: [],
+            message: "Bem auditado",
             data: {
-                historico:{ 
-                    hist_id: 1,
-                    hist_usuarios_id: 1,
-                    hist_inventarios_id: 1,
-                    hist_salas_id: 1,
-                    hist_bens_id: 1
+                levantamento: {
+                    id: 22,
+                    usuario_id: 1,
+                    inventario_id: 2,
+                    sala_id: 1,
+                    bem_id: 24,
+                    estado: "ruim",
+                    ocioso: true,
+                    imagem: null
                 },
-                bem:{
-                    bens_id: 1,
-                    bens_sala_id:1,
-                    bens_nome: "Notebook Lenovo",
-                    bens_tombo: null,
-                    bens_responsavel: null,
-                    bens_decricao: "Notebook leve e portátil, processador Intel i5",
-                    bens_imagem: "http://lorempixel.com/640/480",
-                    bens_valor: null,
-                    bens_estado: "bom",
-                    bens_ocioso: false,
-                    bens_encontrado: true
+                bem: {
+                    id: 24,
+                    sala_id: 4,
+                    inventario_id: 2,
+                    nome: "Computador i5 7500KF",
+                    tombo: "TB2345",
+                    responsavel: "Salomao Carvalho",
+                    descricao: "Labore maxime alias impedit vel doloremque nobis. Eos perferendis placeat ut voluptates nulla recusandae ratione non.",
+                    auditado: false,
+                    valor: "1132"
                 }
             }
         }
@@ -207,7 +201,6 @@ const bensSchemas = {
         }
         
     },
-
 
     // erros
     erro400: {

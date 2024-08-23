@@ -40,11 +40,7 @@ describe('get bens', () => {
         expect(req.body.data[0].tombo).toBeDefined()
         expect(req.body.data[0].responsavel).toBeDefined()
     })
-    // ...(parametros.nome && { nome: {contains: parametros.nome }}),
-    // ...(parametros.tombo && { tombo: parametros.tombo }),
-    // ...(parametros.responsavel && { responsavel: {contains: parametros.responsavel} }),
-    // ...(parametros.descricao && { descricao: {contains: parametros.descricao} }),
-    // ...(parametros.auditado && { auditado: parametros.auditado}),
+
     it("2-Deve retornar um erro quando um pametro passado estiver no formato errado.", async () => {
         const req = await request(app)
         .get('/bens')
@@ -139,7 +135,7 @@ describe('get bens', () => {
 describe('post adicinar bem já auditando ele', () => {
     it("1-deve adicionar um bem e retornar o bem criado.", async () => {
         const req = await request(app)
-        .post('/bens/criar/auditar')
+        .post('/bens/adicionar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -165,7 +161,7 @@ describe('post adicinar bem já auditando ele', () => {
 
     it("2-deve retornar error ao tentar adicionar um bem sem um dos campos obrigatórios.", async () => {
         const req = await request(app)
-        .post('/bens/criar/auditar')
+        .post('/bens/adicionar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -185,7 +181,7 @@ describe('post adicinar bem já auditando ele', () => {
 
     it("3-deve retornar error ao tentar adicionar um bem com uma sala_id que não existe.", async () => {
         const req = await request(app)
-        .post('/bens/criar/auditar')
+        .post('/bens/adicionar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -276,7 +272,7 @@ describe('post criar bem', () => {
 describe('auditar bens', () => {
     it("1-deve auditar um bem e retornar o bem auditado e o histórico inserido.", async () => {
         const req = await request(app)
-        .patch('/bens/auditar')
+        .post('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -304,7 +300,7 @@ describe('auditar bens', () => {
 
     it("2-deve retornar error ao tentar auditar um bem com uma sala_id que não existe.", async () => {
         const req = await request(app)
-        .patch('/bens/auditar')
+        .post('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -323,7 +319,7 @@ describe('auditar bens', () => {
 
     it("3-deve retornar error ao tentar auditar um bem com um usuario_id que não existe.", async () => {
         const req = await request(app)
-        .patch('/bens/auditar')
+        .post('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -342,7 +338,7 @@ describe('auditar bens', () => {
 
     it("4-deve retornar error ao tentar auditar um bem com um bem_id que não existe.", async () => {
         const req = await request(app)
-        .patch('/bens/auditar')
+        .post('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -361,7 +357,7 @@ describe('auditar bens', () => {
 
     it("5-deve retornar error ao tentar auditar um bem com uma sala_id em formato incorreto.", async () => {
         const req = await request(app)
-        .patch('/bens/auditar')
+        .post('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
@@ -380,7 +376,7 @@ describe('auditar bens', () => {
 
     it("6-deve retornar error ao tentar auditar um bem que já foi auditado.", async () => {
         const req = await request(app)
-        .patch('/bens/auditar')
+        .post('/bens/auditar')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({

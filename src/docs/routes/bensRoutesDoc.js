@@ -14,7 +14,38 @@ const bensRoutes = {
                                     type: "integer",
                                     description: "ID da sala onde o bem está.",
                                     example: 1
-                                }
+                                },
+                                inventario_id: {
+                                    type: "integer",
+                                    description: "ID do inventário que o bem pertence.",
+                                    example: 1,
+                                    required: true,
+                                },
+                                nome: {
+                                    type: "string",
+                                    description: "Nome do bem.",
+                                    example: "a"
+                                },
+                                tombo: {
+                                    type: "string",
+                                    description: "Tombo do bem.",
+                                    example: "TB2345"
+                                },
+                                responsavel: {
+                                    type: "string",
+                                    description: "Nome do responsável do bem.",
+                                    example: "a"
+                                },
+                                descricao: {
+                                    type: "string",
+                                    description: "Descrição do bem.",
+                                    example: "a"
+                                },
+                                auditado: {
+                                    type: "boolean",
+                                    description: "Informa se o bem está auditado ou não.",
+                                    example: true
+                                },
                             }
                         }
                     }
@@ -51,56 +82,6 @@ const bensRoutes = {
                 },
             }
         },
-    },
-    "/bens/:id": {
-        get: {
-            tags: ["Bens"],
-            summary: "Busca um bem pelo ID dele.",
-            security: [{ BearerAuth: [] }],
-            parameters:  [
-                {
-                    name: "bens_id",
-                    in: "query",
-                    description: "Filtra um bem pelo ID.",
-                    required: true,
-                    schema: {
-                        type: "Int"
-                    }
-                }
-            ],
-            responses: {
-                "200": {
-                    description: "Bem criado com sucesso",
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/BemListarPorIdRes"
-                            }
-                        }
-                    }
-                },
-                "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
-                    content: {
-                        $ref: "#/components/schemas/erro400"
-                    }                
-                },
-                "404": {
-                    description: "Nem um registro encontrado.",
-                    content: {
-                        $ref: "#/components/schemas/erro404Get"
-                    }                
-                },
-                "500": {
-                    description: "Servidor encontrou um erro interno.",
-                    content: {
-                        $ref: "#/components/schemas/erro500"
-                    }                
-                },
-            }
-        }
-    },
-    "/bens/create": {
         post: {
             tags: ["Bens"],
             summary: "Cria um novo bem",
@@ -136,6 +117,54 @@ const bensRoutes = {
                     description: "O sala_id informado não existem",
                     content: {
                         $ref: "#/components/schemas/erro404Create"
+                    }                
+                },
+                "500": {
+                    description: "Servidor encontrou um erro interno.",
+                    content: {
+                        $ref: "#/components/schemas/erro500"
+                    }                
+                },
+            }
+        }
+    },
+    "/bens/:id": {
+        get: {
+            tags: ["Bens"],
+            summary: "Busca um bem pelo ID dele.",
+            security: [{ BearerAuth: [] }],
+            parameters:  [
+                {
+                    name: "bem_id",
+                    in: "query",
+                    description: "Filtra um bem pelo ID.",
+                    required: true,
+                    schema: {
+                        type: "Int"
+                    }
+                }
+            ],
+            responses: {
+                "200": {
+                    description: "Bem criado com sucesso",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/BemListarPorIdRes"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    description: "Ouve um erro em algum parametro do body da requisição.",
+                    content: {
+                        $ref: "#/components/schemas/erro400"
+                    }                
+                },
+                "404": {
+                    description: "Nem um registro encontrado.",
+                    content: {
+                        $ref: "#/components/schemas/erro404Get"
                     }                
                 },
                 "500": {
