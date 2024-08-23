@@ -189,7 +189,7 @@ class UsuarioService{
             data:{
 
                 ...(nome && { nome: nome}),
-                ...(status && { status: status }),
+                ...(status !== undefined && { status: status }),
                 ...(funcao && { funcao: funcao}),
 
             }
