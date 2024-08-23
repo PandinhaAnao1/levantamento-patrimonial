@@ -1,5 +1,5 @@
 import { error } from "node:console";
-import InventarioService from "../services/inventarioService.js";
+import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
 import { ZodError } from "zod";
 class InventarioController {
@@ -19,10 +19,16 @@ class InventarioController {
             }); 
             
         }catch (erro){
-            //Colcar logica de erro por code
-            if(erro instanceof ZodError){
-                return sendError(res,400,erro.errors[0].message);
-            }
+            if(error instanceof ZodError) {
+                const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+                if (customError) {
+                    let errors = error.errors[0];
+                    return sendError(res,parseInt(errors.params?.staus),errors.message);
+                } else {
+                    return sendError(res,401,"Erro ao realizar consulta dos inventários!");
+                }              
+              }
+        
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
     }
   }
@@ -35,12 +41,17 @@ class InventarioController {
       
    
         }catch(erro){
-            
+            if(error instanceof ZodError) {
+                const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+                if (customError) {
+                    let errors = error.errors[0];
+                    return sendError(res,parseInt(errors.params?.staus),errors.message);
+                } else {
+                    return sendError(res,401,"Erro ao realizar do inventario");
+                }              
+              }
 
-            if(erro instanceof ZodError){
-                return sendError(res,400,erro.errors[0].message);
-            }
-            
+          
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
         }
 

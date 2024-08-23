@@ -28,6 +28,15 @@ class  UsuarioSchema{
         funcao: z.string().min(1).max(80)
     });
 
+
+    static atualizarUsuarioSchema = z.object({
+
+        nome: z.string().min(1).max(80).optional(),
+        funcao:z.string().min(1).max(80).optional(),
+        status:z.boolean().optional()
+
+    })
+
 }
 
 export default UsuarioSchema;

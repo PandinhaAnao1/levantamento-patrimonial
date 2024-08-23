@@ -27,6 +27,11 @@ class UsuarioRepository{
       return await prisma.usuario.create(criarConta);
     }
 
+    static async atualizar(atualizarUsuario){
+      return await prisma.usuario.update(atualizarUsuario);
+    }
+
+
 }
 
 

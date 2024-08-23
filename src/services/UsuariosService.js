@@ -1,6 +1,7 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
 import UsuarioSchema from "../shemas/UsuarioSchema.js";
+import {z, ZodError} from "zod";
 import jwt from 'jsonwebtoken';
 
 class UsuarioService{
@@ -17,33 +18,51 @@ class UsuarioService{
         *
         * @return {Object} O retorno é um objeto do javascript com os dados de usuario e token.
         */
-        const PRIVATE_KEY = '1010FFF'
+        
 
-        const {email, senha} = UsuarioSchema.login.parse(login); 
-                
-        const senhaHash = senha;
+        const {email, senha} = UsuarioSchema.login.parse(login);
+
+        const JWT = process.env.PRIVATE_KEY;
+
         const flitros = {
             where: {
                 email: email,
-                senha: senhaHash,
             },
-            select:{
-                id: true,
-                nome: true,
-                email: true,
-                senha: false,
-                funcao: true,
-                status: true,
-            }
         }
-        //await bcrypt.hash(senha, 10);
         const usuario = await UsuarioRepository.login(flitros);
-        if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
+
+        if(!usuario){ 
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Usuario não exite na base de dados verifique se o email esta correto!",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
+            }]);  
+        };
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        if(!senhaValida){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Senha informada esta incorreta!",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
+            }]);  
+        }
+
         const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 
-        const token = jwt.sign({ data: {'_id': usuario.id} }, PRIVATE_KEY, jwtConfig);
+        const token = jwt.sign({ data: {'_id': usuario.id} }, JWT, jwtConfig);
         
-        return { usuario, token}
+        return { 
+            data:{
+                token: token,
+                usuario: usuario, 
+            }
+        }
     }
 
     static async listarUsuarios(parametros){
@@ -51,6 +70,13 @@ class UsuarioService{
         const {nome,funcao,status} = UsuarioSchema.listarUsuarios.parse(parametros);
 
         let filtro = {
+            select:{
+                "senha":false,
+                "nome":true,
+                "funcao":true,
+                "status":true
+                
+              },
             where: {
                 ...(nome && { nome: {contains: nome} }),
                 ...(funcao && { funcao: funcao }),
@@ -94,11 +120,25 @@ class UsuarioService{
     }
 
     static async criarUsuario(criarConta) {
-        const { nome, email, senha, funcao, status } = UsuarioSchema.criarUsuario.parse(criarConta);
         
-    
+        
+        const { nome, email, senha, funcao, status } = UsuarioSchema.criarUsuario.parse(criarConta);
+        const usuarioExist = UsuarioService.listarUsuarios({email:email});
+
+
+        if(usuarioExist){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Não foi possivel criar usuario pois email já está cadastrado",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 409, // Adicionando um detalhe personalizado
+                  },
+            }]);
+        }
+        
         const saltRounds = 10;
- 
+        
         const senhaHashed = await bcrypt.hash(senha, saltRounds);
     
       
@@ -116,6 +156,52 @@ class UsuarioService{
         const novaConta = await UsuarioRepository.criarUsuario(criacao);
     
         return novaConta;
+    }
+
+
+    static async atualizarUsuario(atualizacoes){
+        console.log(atualizacoes)
+
+        let regex = /^[0-9]+$/;
+
+        const {nome, status,funcao} = UsuarioSchema.atualizarUsuarioSchema.parse(atualizacoes);
+
+        
+        let idString = atualizacoes.id;
+
+        console.log(idString)
+
+        if(!regex.test(idString)){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"O id do usuario deve ser um numero!",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+        
+        const {id} = UsuarioSchema.listarUsuarioPorId.parse({'id':parseInt(idString)});
+
+        let usuarioAtualizado = {
+            where:{
+                id: id,
+
+            },
+            data:{
+
+                ...(nome && { nome: nome}),
+                ...(status && { status: status }),
+                ...(funcao && { funcao: funcao}),
+
+            }
+        }
+
+
+
+        const usuario = await UsuarioRepository.atualizar(usuarioAtualizado);
+        console.log(usuario)
+        return usuario;
+
+
     }
 
 }

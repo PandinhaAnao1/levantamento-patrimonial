@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import { ZodError, ZodIssueCode } from "zod";
 import { prisma } from "../configs/prismaClient.js"
 import UsuarioService from '../services/UsuariosService.js'
 import {sendResponse, sendError} from '../utils/mensages.js';
@@ -17,18 +17,21 @@ class UsuarioController {
         */
         
         try{
-            const data =  await UsuarioService.login(req.body);
+            const usuario =  await UsuarioService.login(req.body);
 
-            return sendResponse(res,200, {
-              data:
-              {
-                  user: data.usuario,
-                  token: data.token
-              }});
+            return sendResponse(res,200, {...usuario});
         }catch(error){
-            console.log(error);
+            console.log(error)
             //colocar a verificacao se o usuario esta ativo
-            if(error instanceof ZodError) return sendError(res,401,error.message);
+            if(error instanceof ZodError) {
+              const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+              if (customError) {
+                let errors = error.errors[0];
+                return sendError(res,parseInt(errors.params?.staus),errors.message);
+              } else {
+                return sendError(res,401,"Erro ao realizar autenticação");
+              }              
+            }
                         
             return sendError(res,500,"Ocorreu um erro interno no servidor!");
         }  
@@ -81,11 +84,17 @@ class UsuarioController {
 
       return sendResponse(res,201, {data:novoUsuario});
       
-     } catch (erro) {
-      console.log(erro)
+     } catch (error) {
       
-      if(erro instanceof ZodError){
-        
+      if(error instanceof ZodError) {
+        const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+        console.log(customError)
+        if (customError) {
+          let errors = error.errors[0];
+          return sendError(res,parseInt(errors.params?.staus),errors.message);
+        } else {
+          return sendError(res,401,"Erro ao realizar autenticação");
+        }              
       }
 
       return sendError(res,500,"Ocorreu um erro interno no servidor!");
@@ -93,9 +102,28 @@ class UsuarioController {
      }
   }
 
-  static atualizarUsuario = (req, res) => {
-    return null; // atualiza todos os campos
-  };
+  static atualizarUsuario = async (req, res) => {
+    try{
+      let id = req.params.id;
+      let novoUsuario = {
+        id: id,
+        ...req.body
+      }
+      console.log(req.params)
+      
+      const usuario = await UsuarioService.atualizarUsuario(novoUsuario)
+
+      return sendResponse(res,201, {data: usuario,});
+      
+    }catch(erro){
+      console.log(erro)
+      if(erro instanceof ZodError){
+          return sendError(res,400,erro.errors[0].message);
+      }
+      
+      return sendError(res,500,"Ocorreu um erro interno no servidor!");
+  }
+  }
 }
 
 export default UsuarioController;
