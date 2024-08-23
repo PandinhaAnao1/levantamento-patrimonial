@@ -1,69 +1,102 @@
 import { error } from "node:console";
-import InventarioService from "../services/inventarioService.js";
+import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
+import { ZodError } from "zod";
 class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
 
-            const data = await InventarioService.listarInventarios(req.query)
-
+            const invetarios = await InventarioService.listarInventarios(req.query);
+            const totalDeItens = await InventarioService.contarInventarios(req.query);
+            
             return sendResponse(res,200, {
-                data:data.inventarios ?? [],
-                resultados:data.total ?? 1,
-                totalPaginas: Math.ceil((data.total ?? 1)/10),
+                data: invetarios,
+                resultados:totalDeItens,
+                totalPaginas: Math.ceil((totalDeItens ?? 1)/10),
                 limite: 10,
-                pagina: req.query.pagina ?? 1,
+                pagina: req.query.pagina,
 
             }); 
             
         }catch (erro){
-            console.log(erro)
-            if(erro instanceof TypeError){
-                return sendError();
-                
-                res.status(400).json([{
-                    data:[],
-                    erro: false,
-                    code: 200,
-                    resultados:0,
-                    totalPaginas: 1,
-                    limite: 10,
-                    pagina: 1,
-                    message:"Não existe nehum inventario com essas caracteristicas!"
-                }])
-            }
-        return res.status(500).json([{
-            data:[],
-            resultados:0,
-            totalPaginas: 1,
-            limite: 10,
-            pagina: 1,
-            error: true, 
-            code: 500, 
-            message: "Ocorreu um erro interno no servidor!"
-        }])
+            if(error instanceof ZodError) {
+                const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+                if (customError) {
+                    let errors = error.errors[0];
+                    return sendError(res,parseInt(errors.params?.staus),errors.message);
+                } else {
+                    return sendError(res,401,"Erro ao realizar consulta dos inventários!");
+                }              
+              }
+        
+            return sendError(res,500,"Ocorreu um erro interno no servidor!");
     }
   }
 
-  static listarInventarioPorId = async (req, res) => {
-    try{
-
-        let idInventario = parseInt(req.params.id);
-        console.log(idInventario);
-
-        const inventario = await InventarioService.listarInventarioPorId(idInventario);
+    static listarInventarioPorId = async (req, res) => {
+        try{
+            const inventario = await InventarioService.listarInventarioPorId(req.params);
         
-        console.log(inventario);
-        return res.status(200).json({
-            data: [inventario]
-        });
+            return sendResponse(res,200, {data: inventario,});  
+      
    
-    }catch(erro){
+        }catch(erro){
+            if(error instanceof ZodError) {
+                const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+                if (customError) {
+                    let errors = error.errors[0];
+                    return sendError(res,parseInt(errors.params?.staus),errors.message);
+                } else {
+                    return sendError(res,401,"Erro ao realizar do inventario");
+                }              
+              }
 
-        console.log(erro);
+          
+            return sendError(res,500,"Ocorreu um erro interno no servidor!");
+        }
+
     }
 
-}
+    static criarInventario = async (req, res) => {
+        try{
+
+            const inventario = await InventarioService.criarInventario(req.body);
+        
+            return sendResponse(res,201, {data: inventario,});  
+      
+   
+        }catch(erro){
+
+            if(erro instanceof ZodError){
+                return sendError(res,400,erro.errors[0].message);
+            }
+            
+            return sendError(res,500,"Ocorreu um erro interno no servidor!");
+        }
+
+    }
+
+    static atualizarInventario = async (req, res) => {
+
+        try{
+            
+            let id = req.params;
+
+            const inventario = await InventarioService.atualizarInvetario({id:id, ...req.body});
+        
+            return sendResponse(res,201, {data: inventario,});  
+      
+   
+        }catch(erro){
+
+            if(erro instanceof ZodError){
+                return sendError(res,400,erro.errors[0].message);
+            }
+            
+            return sendError(res,500,"Ocorreu um erro interno no servidor!");
+        }
+
+    }
 
 }
 

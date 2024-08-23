@@ -1,5 +1,7 @@
 import { prisma } from "../src/configs//prismaClient.js"
 import faker from 'faker-br';
+import bcrypt from 'bcrypt';
+
 
 async function clearDatabase() {
   try {
@@ -18,12 +20,18 @@ async function clearDatabase() {
 
 async function seedDatabase() {
   try {
+    let SALT = parseInt(process.env.SALT);
+
+    let salt = await bcrypt.genSalt(SALT);
+    
+    const senhaHash = await bcrypt.hash("senhatest", salt);
+
     // Inserindo dados na tabela `usuario`
     const usuarios = await prisma.usuario.createMany({
       data: [
-        { email: "test123@gmail.com", funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
-        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: "senhatest", status: true },
-        { email: faker.internet.email(), funcao: 'funcionario cpalm', nome: faker.name.findName(), senha: "senhatest", status: false },
+        { email: 'emailExample@gmail.com', funcao: 'auditor', nome: faker.name.findName(), senha: senhaHash, status: true },
+        { email: faker.internet.email(), funcao: 'auditor', nome: faker.name.findName(), senha: senhaHash, status: true },
+        { email: faker.internet.email(), funcao: 'funcionario cpalm', nome: faker.name.findName(), senha: senhaHash, status: false },
       ],
     });
 
