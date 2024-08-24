@@ -26,7 +26,7 @@ describe('get bens', () => {
         .get('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .send({
+        .query({
             inventario_id:1
         })
         expect(req.body.error).toEqual(false)
@@ -41,17 +41,17 @@ describe('get bens', () => {
         expect(req.body.data[0].responsavel).toBeDefined()
     })
 
-    it("2-Deve retornar um erro quando um pametro passado estiver no formato errado.", async () => {
+    it("2-Deve retornar um bem que contenha os seguintes parâmetros.", async () => {
         const req = await request(app)
         .get('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .send({
+        .query({
             sala_id:sala_id,
             inventario_id: 1,
+            responsavel:"a",
             nome:"a",
             tombo:"TB2345",
-            responsavel:"a",
             descricao:"a",
             auditado: true
         })
@@ -73,7 +73,7 @@ describe('get bens', () => {
         .get('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .send({
+        .query({
             inventario_id:1,
             sala_id:1000000
         })
@@ -87,7 +87,7 @@ describe('get bens', () => {
         .get('/bens')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .send({
+        .query({
             inventario_id:1,
             sala_id:"n"
         })

@@ -6,7 +6,7 @@ class BemController {
 
     static listarbens = async (req, res) => {
         try {
-            const {sala_id, inventario_id, nome, tombo, responsavel, descricao, auditado} = req.body;
+            const {sala_id, inventario_id, nome, tombo, responsavel, descricao, auditado} = req.query;
             const parametros = {
                 sala_id: sala_id,
                 inventario_id: inventario_id,
@@ -14,18 +14,18 @@ class BemController {
                 tombo: tombo,
                 responsavel: responsavel,
                 descricao: descricao,
-                auditado: auditado
+                auditado: Boolean(auditado)
             }
             const bensExists = await bemService.listar(parametros)
 
             return sendResponse(res,200,{data: bensExists})
 
         } catch (err) {
+            console.error(err)
             if(err.message === "Nem um registro encontrado.") {
                 return sendError(res, 404, ["Nem um registro encontrado."])
 
             }else if (err instanceof z.ZodError) {
-                console.error(err)
                 const errorMessages = err.issues.map((issue) => issue.message);
                 return sendError(res, 400, errorMessages)
 

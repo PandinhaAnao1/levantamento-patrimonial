@@ -4,53 +4,65 @@ const bensRoutes = {
             tags: ["Bens"],
             summary: "Lista todos os bens",
             security: [{ bearerAuth: [] }],
-            requestBody: {
-                content: {
-                    "application/json": {
-                        schema: {
-                            type: "object",
-                            properties: {
-                                sala_id: {
-                                    type: "integer",
-                                    description: "ID da sala onde o bem está.",
-                                    example: 1
-                                },
-                                inventario_id: {
-                                    type: "integer",
-                                    description: "ID do inventário ao qual o bem pertence.",
-                                    example: 1,
-                                    required: true,
-                                },
-                                nome: {
-                                    type: "string",
-                                    description: "Nome do bem.",
-                                    example: "a"
-                                },
-                                tombo: {
-                                    type: "string",
-                                    description: "Tombo do bem.",
-                                    example: "TB2345"
-                                },
-                                responsavel: {
-                                    type: "string",
-                                    description: "Nome do responsável pelo bem.",
-                                    example: "a"
-                                },
-                                descricao: {
-                                    type: "string",
-                                    description: "Descrição do bem.",
-                                    example: "a"
-                                },
-                                auditado: {
-                                    type: "boolean",
-                                    description: "Informa se o bem está auditado ou não.",
-                                    example: true
-                                },
-                            }
-                        }
+            parameters: [
+                {
+                    name: "sala_id",
+                    in: "path",
+                    description: "ID da sala onde o bem está.",
+                    schema: {
+                        type: "integer"
                     }
-                }
-            },
+                },
+                {
+                    name: "inventario_id",
+                    in: "path",
+                    description: "ID do inventário ao qual o bem pertence.",
+                    required: true,
+                    schema: {
+                        type: "integer"
+                    }
+                },
+                {
+                    name: "nome",
+                    in: "path",
+                    description: "Nome do bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "tombo",
+                    in: "path",
+                    description: "Tombo do bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "responsavel",
+                    in: "path",
+                    description: "Nome do responsável pelo bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "descricao",
+                    in: "path",
+                    description: "Descrição do bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "auditado",
+                    in: "path",
+                    description: "Informa se o bem está auditado ou não.",
+                    schema: {
+                        type: "boolean"
+                    }
+                },
+            ],
             responses: {
                 "200": {
                     description: "Requisição bem-sucedida.",
