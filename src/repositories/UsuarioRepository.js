@@ -31,7 +31,16 @@ class UsuarioRepository{
       return await prisma.usuario.update(atualizarUsuario);
     }
 
-
+    static async usuarioCadastrado(usuario_id){
+      return await prisma.usuario.findFirst({
+          where:{
+              id: usuario_id
+          },
+          select:{
+              id: true
+          }
+      })
+  }
 }
 
 

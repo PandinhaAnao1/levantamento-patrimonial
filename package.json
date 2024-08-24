@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "seed":"node Database/seed.js",
+    "seed": "node Database/seed.js",
     "test": "jest ",
-    "test:detect":"jest --detectOpenHandles",
+    "test:detect": "jest --detectOpenHandles",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
     "dev": "nodemon server.js",
