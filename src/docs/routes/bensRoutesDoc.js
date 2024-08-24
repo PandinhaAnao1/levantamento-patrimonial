@@ -1,30 +1,71 @@
-
-
 const bensRoutes = {
     "/bens": {
         get: {
             tags: ["Bens"],
             summary: "Lista todos os bens",
-            security: [{ BearerAuth: [] }],
-            requestBody: {
-                content: {
-                    "application/json": {
-                        schema: {
-                            type: "object",
-                            properties: {
-                                sala_id: {
-                                    type: "integer",
-                                    description: "ID da sala onde o bem está.",
-                                    example: 1
-                                }
-                            }
-                        }
+            security: [{ bearerAuth: [] }],
+            parameters: [
+                {
+                    name: "sala_id",
+                    in: "query",
+                    description: "ID da sala onde o bem está.",
+                    schema: {
+                        type: "integer"
                     }
-                }
-            },
+                },
+                {
+                    name: "inventario_id",
+                    in: "query",
+                    description: "ID do inventário ao qual o bem pertence.",
+                    required: true,
+                    schema: {
+                        type: "integer"
+                    }
+                },
+                {
+                    name: "nome",
+                    in: "query",
+                    description: "Nome do bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "tombo",
+                    in: "query",
+                    description: "Tombo do bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "responsavel",
+                    in: "query",
+                    description: "Nome do responsável pelo bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "descricao",
+                    in: "query",
+                    description: "Descrição do bem.",
+                    schema: {
+                        type: "string"
+                    }
+                },
+                {
+                    name: "auditado",
+                    in: "query",
+                    description: "Informa se o bem está auditado ou não.",
+                    schema: {
+                        type: "boolean"
+                    }
+                },
+            ],
             responses: {
                 "200": {
-                    description: "Requisição bem sucedida.",
+                    description: "Requisição bem-sucedida.",
                     content: {
                         "application/json": {
                             schema: {
@@ -34,13 +75,13 @@ const bensRoutes = {
                     }
                 },
                 "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
+                    description: "Houve um erro em algum parâmetro do corpo da requisição.",
                     content: {
                         $ref: "#/components/schemas/erro400"
                     }                
                 },
                 "404": {
-                    description: "Nem um registro encontrado.",
+                    description: "Nenhum registro encontrado.",
                     content: {
                         $ref: "#/components/schemas/erro404Get"
                     }                
@@ -53,56 +94,6 @@ const bensRoutes = {
                 },
             }
         },
-    },
-    "/bens/:id": {
-        get: {
-            tags: ["Bens"],
-            summary: "Busca um bem pelo ID dele.",
-            security: [{ BearerAuth: [] }],
-            parameters:  [
-                {
-                    name: "bens_id",
-                    in: "query",
-                    description: "Filtra um bem pelo ID.",
-                    required: true,
-                    schema: {
-                        type: "Int"
-                    }
-                }
-            ],
-            responses: {
-                "200": {
-                    description: "Bem criado com sucesso",
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/BemListarPorIdRes"
-                            }
-                        }
-                    }
-                },
-                "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
-                    content: {
-                        $ref: "#/components/schemas/erro400"
-                    }                
-                },
-                "404": {
-                    description: "Nem um registro encontrado.",
-                    content: {
-                        $ref: "#/components/schemas/erro404Get"
-                    }                
-                },
-                "500": {
-                    description: "Servidor encontrou um erro interno.",
-                    content: {
-                        $ref: "#/components/schemas/erro500"
-                    }                
-                },
-            }
-        }
-    },
-    "/bens/create": {
         post: {
             tags: ["Bens"],
             summary: "Cria um novo bem",
@@ -129,15 +120,63 @@ const bensRoutes = {
                     }
                 },
                 "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
+                    description: "Houve um erro em algum parâmetro do corpo da requisição.",
                     content: {
                         $ref: "#/components/schemas/erro400"
                     }                
                 },
                 "404": {
-                    description: "O sala_id informado não existem",
+                    description: "O sala_id informado não existe.",
                     content: {
                         $ref: "#/components/schemas/erro404Create"
+                    }                
+                },
+                "500": {
+                    description: "Servidor encontrou um erro interno.",
+                    content: {
+                        $ref: "#/components/schemas/erro500"
+                    }                
+                },
+            }
+        }
+    },
+    "/bens/{id}": {
+        get: {
+            tags: ["Bens"],
+            summary: "Busca um bem pelo ID.",
+            security: [{ bearerAuth: [] }],
+            parameters: [
+                {
+                    name: "id",
+                    in: "path",
+                    description: "Filtra um bem pelo ID.",
+                    required: true,
+                    schema: {
+                        type: "integer"
+                    }
+                }
+            ],
+            responses: {
+                "200": {
+                    description: "Bem encontrado com sucesso.",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/BemListarPorIdRes"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    description: "Houve um erro em algum parâmetro do corpo da requisição.",
+                    content: {
+                        $ref: "#/components/schemas/erro400"
+                    }                
+                },
+                "404": {
+                    description: "Nenhum registro encontrado.",
+                    content: {
+                        $ref: "#/components/schemas/erro404Get"
                     }                
                 },
                 "500": {
@@ -152,7 +191,7 @@ const bensRoutes = {
     "/bens/adicionar": {
         post: {
             tags: ["Bens"],
-            summary: "Cria um novo bem e já auditar ele.",
+            summary: "Cria um novo bem e já o audita.",
             security: [{ bearerAuth: [] }],
             requestBody: {
                 content: {
@@ -170,19 +209,19 @@ const bensRoutes = {
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: "#/components/schemas/BemAdicionar_AduditarRes"
+                                $ref: "#/components/schemas/BemAdicionar_AuditarRes"
                             }
                         }
                     }
                 },
                 "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
+                    description: "Houve um erro em algum parâmetro do corpo da requisição.",
                     content: {
                         $ref: "#/components/schemas/erro400"
                     }                
                 },
                 "404": {
-                    description: "Usuario, sala ou inventário não existem.",
+                    description: "Usuário, sala ou inventário não existem.",
                     content: {
                         $ref: "#/components/schemas/erro404Adicionar"
                     }                
@@ -199,7 +238,7 @@ const bensRoutes = {
     "/bens/auditar": {
         post: {
             tags: ["Bens"],
-            summary: "Cria um novo bem e já auditar ele.",
+            summary: "Cria um novo bem e já o audita.",
             security: [{ bearerAuth: [] }],
             requestBody: {
                 content: {
@@ -217,13 +256,13 @@ const bensRoutes = {
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: "#/components/schemas/BemAdicionar_AduditarRes"
+                                $ref: "#/components/schemas/BemAdicionar_AuditarRes"
                             }
                         }
                     }
                 },
                 "400": {
-                    description: "Ouve um erro em algum parametro do body da requisição.",
+                    description: "Houve um erro em algum parâmetro do corpo da requisição.",
                     content: {
                         $ref: "#/components/schemas/erro400"
                     }                
@@ -235,7 +274,7 @@ const bensRoutes = {
                     }                
                 },
                 "404": {
-                    description: "Usuario não existe ou Bem inforamdo não existe.",
+                    description: "Usuário não existe ou bem informado não existe.",
                     content: {
                         $ref: "#/components/schemas/erro404Auditar"
                     }                
@@ -249,7 +288,6 @@ const bensRoutes = {
             }
         }
     }
-    
 };
 
 export default bensRoutes;

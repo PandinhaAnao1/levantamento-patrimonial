@@ -1,10 +1,5 @@
 import BemController from '../../controllers/BemController.js';
 import {describe, expect, test} from '@jest/globals';
-import bemService from '../../services/bemService.js'
-import bensRepository from '../../repositories/BemRepository.js';
-import { z } from 'zod';
-import faker from 'faker-br';
-import { builtinModules } from 'module';
 
 jest.mock('../../repositories/BemRepository', () => ({
     findAll: jest.fn(),
