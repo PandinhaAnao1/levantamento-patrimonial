@@ -38,12 +38,6 @@ const loginRoutes = {
                         $ref: "#/components/schemas/typeErrorLogin"
                     }                
                 },
-                "404": {
-                    description: "Usuário não existe na base de dados.",
-                    content: {
-                        $ref: "#/components/schemas/ReferenceErrorLogin"
-                    }                
-                },
                 "500": {
                     description: "Servidor encontrou um erro interno.",
                     content: {
