@@ -1,5 +1,7 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
+import UsuarioSchema from "../shemas/UsuarioSchema.js";
+import {z, ZodError} from "zod";
 import jwt from 'jsonwebtoken';
 
 class UsuarioService{
@@ -16,55 +18,192 @@ class UsuarioService{
         *
         * @return {Object} O retorno é um objeto do javascript com os dados de usuario e token.
         */
-        const PRIVATE_KEY = '1010FFF'
-
-        const {email, senha} = login 
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
-        if(!emailRegex.test(email) || !senha || !email) throw new TypeError("E-mail inválido ou senha não fornecida.");
-        
-        const senhaHash = senha;
+
+        const {email, senha} = UsuarioSchema.login.parse(login);
+
+        const JWT = process.env.PRIVATE_KEY;
+
         const flitros = {
             where: {
                 email: email,
-                senha: senhaHash,
             },
-            select:{
-                id: true,
-                nome: true,
-                email: true,
-                senha: false,
-                funcao: true,
-                status: true,
-            }
         }
-        //await bcrypt.hash(senha, 10);
         const usuario = await UsuarioRepository.login(flitros);
-        if(usuario == null || usuario == undefined) throw new ReferenceError("Usuario não exite na base de dados!"); 
+
+        if(!usuario){ 
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Usuario não exite na base de dados verifique se o email esta correto!",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
+            }]);  
+        };
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        if(!senhaValida){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Senha informada esta incorreta!",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 401, // Adicionando um detalhe personalizado
+                  },
+            }]);  
+        }
+
         const jwtConfig = {  expiresIn: '4d',    algorithm: 'HS256', };
 
-        const token = jwt.sign({ data: {'_id': usuario.usua_id} }, PRIVATE_KEY, jwtConfig);
+        const token = jwt.sign({ data: {'_id': usuario.id} }, JWT, jwtConfig);
         
-        return {
-            'user':usuario,
-            'token':token
+        return { 
+            data:{
+                token: token,
+                usuario: usuario, 
+            }
         }
     }
 
-    static async listarUsuarios(){
-        return await ContaRepository.listarTodos()
+    static async listarUsuarios(parametros){
+
+        const {nome,funcao,status} = UsuarioSchema.listarUsuarios.parse(parametros);
+
+        let filtro = {
+            select:{
+                "senha":false,
+                "nome":true,
+                "funcao":true,
+                "status":true
+                
+              },
+            where: {
+                ...(nome && { nome: {contains: nome} }),
+                ...(funcao && { funcao: funcao }),
+                ...(status && { status: status })
+            }
+        };
+
+        const usuarios = await UsuarioRepository.listarUsuarios(filtro);
+
+        if(!usuarios){
+            throw new z.ZodError([{
+                path: ["usuarios"],
+                message:"Não exite usario com esse parametro",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+        return usuarios;
+
+
     }
 
-    static async listarUsuarioPorId(id){
-        const usuariosExists = await ContaRepository.listar(id)
+    static async listarUsuarioPorId(parametros){
         
-        if(!usuariosExists){
+        const {id} = UsuarioSchema.listarUsuarioPorId.parse({id:parametros});
+        
+        
+        let filtro = {
+            where: {
+                ...(id && { id: id }),
+            }
+        };
+        
+        const usuario = await UsuarioRepository.listarUsuarioPorId(filtro);
+
+        
+        if(!usuario){
             throw new Error ("usuario não existe");
         }
 
-        return usuariosExists
+        return usuario
     }
+
+    static async criarUsuario(criarConta) {
+        
+        
+        const { nome, email, senha, funcao, status } = UsuarioSchema.criarUsuario.parse(criarConta);
+        const usuarioExist = UsuarioService.listarUsuarios({email:email});
+
+
+        if(usuarioExist){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"Não foi possivel criar usuario pois email já está cadastrado",
+                code: z.ZodIssueCode.custom,
+                params: {
+                    status: 409, // Adicionando um detalhe personalizado
+                  },
+            }]);
+        }
+        
+        const saltRounds = 10;
+        
+        const senhaHashed = await bcrypt.hash(senha, saltRounds);
+    
+      
+        let criacao = {
+            data: {
+                nome: nome,
+                email: email,
+                senha: senhaHashed,  
+                funcao: funcao,
+                status: true
+            }
+        };
+    
+        // Salvando o novo usuário no repositório
+        const novaConta = await UsuarioRepository.criarUsuario(criacao);
+    
+        return novaConta;
+    }
+
+
+    static async atualizarUsuario(atualizacoes){
+        console.log(atualizacoes)
+
+        let regex = /^[0-9]+$/;
+
+        const {nome, status,funcao} = UsuarioSchema.atualizarUsuarioSchema.parse(atualizacoes);
+
+        
+        let idString = atualizacoes.id;
+
+        console.log(idString)
+
+        if(!regex.test(idString)){
+            throw new z.ZodError([{
+                path: ["usuario"],
+                message:"O id do usuario deve ser um numero!",
+                code: z.ZodIssueCode.invalid_type,
+            }]);
+        }
+        
+        const {id} = UsuarioSchema.listarUsuarioPorId.parse({'id':parseInt(idString)});
+
+        let usuarioAtualizado = {
+            where:{
+                id: id,
+
+            },
+            data:{
+
+                ...(nome && { nome: nome}),
+                ...(status !== undefined && { status: status }),
+                ...(funcao && { funcao: funcao}),
+
+            }
+        }
+
+
+
+        const usuario = await UsuarioRepository.atualizar(usuarioAtualizado);
+        console.log(usuario)
+        return usuario;
+
+
+    }
+
 }
 
 export default UsuarioService;

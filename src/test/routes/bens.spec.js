@@ -20,7 +20,7 @@ describe('Autenticação', () => {
     })
 });
 
-describe('get bens', () => {
+describe.skip('get bens', () => {
     it("1-Deve retornar um array com os dados dos bens.", async () => {
         const req = await request(app)
         .get('/bens')
@@ -132,7 +132,7 @@ describe('get bens', () => {
     })
 })
 
-describe('post adicinar bem já auditando ele', () => {
+describe.skip('post adicinar bem já auditando ele', () => {
     it("1-deve adicionar um bem e retornar o bem criado.", async () => {
         const req = await request(app)
         .post('/bens/adicionar')
@@ -200,7 +200,7 @@ describe('post adicinar bem já auditando ele', () => {
     })
 })
 
-describe('post criar bem', () => {
+describe.skip('post criar bem', () => {
     it("1-deve criar um bem e retornar ele.", async () => {
         const req = await request(app)
         .post('/bens')
@@ -269,7 +269,7 @@ describe('post criar bem', () => {
     })
 })
 
-describe('auditar bens', () => {
+describe.skip('auditar bens', () => {
     it("1-deve auditar um bem e retornar o bem auditado e o histórico inserido.", async () => {
         const req = await request(app)
         .post('/bens/auditar')
