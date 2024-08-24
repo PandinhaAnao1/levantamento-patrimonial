@@ -5,6 +5,19 @@ import exp from "constants";
 import {postLogin} from "../auth.js";
 
 
+describe.only('usuario GET', () => {
+    let token;
+    
+    it.only("00 - Deve autenticar", async () => {
+        const res = await postLogin(request(app)).expect(200);
+        
+        expect(res.body?.data?.token).toBeTruthy();
+        
+        token = res.body?.data?.token;
+    });
+});
+
+
 
 describe('usuario', () => {
     let token;
