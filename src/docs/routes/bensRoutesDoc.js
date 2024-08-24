@@ -7,7 +7,7 @@ const bensRoutes = {
             parameters: [
                 {
                     name: "sala_id",
-                    in: "path",
+                    in: "query",
                     description: "ID da sala onde o bem está.",
                     schema: {
                         type: "integer"
@@ -15,7 +15,7 @@ const bensRoutes = {
                 },
                 {
                     name: "inventario_id",
-                    in: "path",
+                    in: "query",
                     description: "ID do inventário ao qual o bem pertence.",
                     required: true,
                     schema: {
@@ -24,7 +24,7 @@ const bensRoutes = {
                 },
                 {
                     name: "nome",
-                    in: "path",
+                    in: "query",
                     description: "Nome do bem.",
                     schema: {
                         type: "string"
@@ -32,7 +32,7 @@ const bensRoutes = {
                 },
                 {
                     name: "tombo",
-                    in: "path",
+                    in: "query",
                     description: "Tombo do bem.",
                     schema: {
                         type: "string"
@@ -40,7 +40,7 @@ const bensRoutes = {
                 },
                 {
                     name: "responsavel",
-                    in: "path",
+                    in: "query",
                     description: "Nome do responsável pelo bem.",
                     schema: {
                         type: "string"
@@ -48,7 +48,7 @@ const bensRoutes = {
                 },
                 {
                     name: "descricao",
-                    in: "path",
+                    in: "query",
                     description: "Descrição do bem.",
                     schema: {
                         type: "string"
@@ -56,7 +56,7 @@ const bensRoutes = {
                 },
                 {
                     name: "auditado",
-                    in: "path",
+                    in: "query",
                     description: "Informa se o bem está auditado ou não.",
                     schema: {
                         type: "boolean"
@@ -140,7 +140,7 @@ const bensRoutes = {
             }
         }
     },
-    "/bens/:id": {
+    "/bens/{id}": {
         get: {
             tags: ["Bens"],
             summary: "Busca um bem pelo ID.",
