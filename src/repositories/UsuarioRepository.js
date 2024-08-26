@@ -42,10 +42,9 @@ class UsuarioRepository{
     }
 
     static createFilterUsuario(parametros){
-      console.log(parametros)
       let filtro = {
           where: {
-              ...(parametros.status && { status: parametros.status }),
+              ...(parametros.status != undefined && { status: parametros.status }),
               ...(parametros.email && { email: {contains: parametros.email }}),
               ...(parametros.funcao && { funcao: parametros.funcao }),
               ...(parametros.nome && { nome: {contains: parametros.nome }}),

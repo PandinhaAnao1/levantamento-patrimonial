@@ -73,7 +73,7 @@ class UsuarioService{
 
         const usuarios = await UsuarioRepository.listarUsuarios(filtro);
 
-        if(!usuarios){
+        if(usuarios.length == 0){
             throw new Error ("Nem um usuário encontrado");
         }
         return usuarios;
@@ -98,7 +98,7 @@ class UsuarioService{
         
         const { nome, email, senha, funcao, status } = UsuarioSchema.criarUsuario.parse(criarConta);
         const usuarioExist = await UsuarioRepository.userExist(email)
-        console.log(usuarioExist)
+
         if(usuarioExist){
             throw new Error ("Não foi possivel criar usuario pois email já está cadastrado.")
         }
@@ -116,7 +116,8 @@ class UsuarioService{
         // Salvando o novo usuário no repositório
         const novaConta = await UsuarioRepository.criarUsuario({
             data: insert, 
-            select: UsuarioRepository.createFilterUsuario({}).select});
+            select: UsuarioRepository.createFilterUsuario({}).select}
+        );
     
         return novaConta;
     }
