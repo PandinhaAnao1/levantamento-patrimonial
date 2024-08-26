@@ -19,7 +19,6 @@ class UsuarioService{
         *
         * @return {Object} O retorno é um objeto do javascript com os dados de usuario e token.
         */
-        
 
         const {email, senha} = UsuarioSchema.login.parse(login);
 
@@ -95,8 +94,6 @@ class UsuarioService{
             }]);
         }
         return usuarios;
-
-
     }
 
     static async listarUsuarioPorId(parametros){

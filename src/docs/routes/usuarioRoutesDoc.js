@@ -93,11 +93,24 @@ const usuarioRoutes = {
                     }                
                 },
             }
-        },
+        }
+    },
+        "/usuario/{id}": {
         patch: {
             tags: ["Usuários"],
             summary: "Atualizar uma conta",
             security: [{ bearerAuth: [] }],
+            parameters: [
+                {
+                    name: "id",
+                    in: "path",
+                    description: "ID do usuário",
+                    required: true,
+                    schema: {
+                        type: "integer"
+                    }
+                }
+            ],
             requestBody: {
                 content: {
                     "application/json": {

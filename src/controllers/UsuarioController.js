@@ -100,7 +100,7 @@ class UsuarioController {
 
   static atualizarUsuario = async (req, res) => {
     try{
-      let id = req.params.id;
+      let id = req.params.id
       let novoUsuario = {
         id: parseInt(id),
         ...req.body
@@ -111,7 +111,6 @@ class UsuarioController {
       return sendResponse(res,201, {data: usuario});
       
     }catch(err){
-      console.log(err.message)
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 

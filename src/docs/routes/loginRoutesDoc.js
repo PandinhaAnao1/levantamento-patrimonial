@@ -12,7 +12,7 @@ const loginRoutes = {
                                 email: {
                                     type: "string",
                                     description: "Email do usuário.",
-                                    example: "test123@gmail.com"
+                                    example: "emailExample@gmail.com"
                                 },
                                 senha: {
                                     type: "string",
