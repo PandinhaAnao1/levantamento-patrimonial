@@ -134,7 +134,8 @@ describe('bens-create', () => {
                 valor: 200
             };
 
-        bensRepository.salaExist.mockReturnValue({sala_nome: "teste unitario"});
+        bensRepository.salaExist.mockReturnValue({nome: "teste unitario"});
+        bensRepository.inventarioExist.mockReturnValue({nome: "teste unitario"});
         bensRepository.createBem.mockResolvedValue(mockBens);
 
         const bens = await bemService.create(mockBens);
@@ -159,7 +160,7 @@ describe('bens-create', () => {
         bensRepository.salaExist.mockReturnValue(null);
         bensRepository.createBem.mockResolvedValue(mockBens);
 
-        await expect(bemService.create(mockBens)).rejects.toThrow("O sala_id informado não existe.");
+        await expect(bemService.create(mockBens)).rejects.toThrow("Sala ou inventário informado não existe.");
         expect(bensRepository.salaExist).toHaveBeenCalledWith(mockBens.sala_id);
 
     });

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import UsuarioSchema from "../shemas/UsuarioSchema.js";
 import {z, ZodError} from "zod";
 import jwt from 'jsonwebtoken';
+import 'dotenv/config'
 
 class UsuarioService{
     
@@ -18,7 +19,6 @@ class UsuarioService{
         *
         * @return {Object} O retorno é um objeto do javascript com os dados de usuario e token.
         */
-        
 
         const {email, senha} = UsuarioSchema.login.parse(login);
 
@@ -94,8 +94,6 @@ class UsuarioService{
             }]);
         }
         return usuarios;
-
-
     }
 
     static async listarUsuarioPorId(parametros){
@@ -159,51 +157,36 @@ class UsuarioService{
     }
 
 
-    static async atualizarUsuario(atualizacoes){
-        console.log(atualizacoes)
+    static async atualizarUsuario(parametro){
 
-        let regex = /^[0-9]+$/;
+        parametro = UsuarioSchema.atualizarUsuarioSchema.parse(parametro);
 
-        const {nome, status,funcao} = UsuarioSchema.atualizarUsuarioSchema.parse(atualizacoes);
+        const {id, nome, status, email, funcao} = parametro;
 
-        
-        let idString = atualizacoes.id;
+        const usuarioExiste = await UsuarioRepository.usuarioCadastrado(id);
 
-        console.log(idString)
-
-        if(!regex.test(idString)){
-            throw new z.ZodError([{
-                path: ["usuario"],
-                message:"O id do usuario deve ser um numero!",
-                code: z.ZodIssueCode.invalid_type,
-            }]);
+        if(usuarioExiste == null){
+            throw new Error ("Usuário não existe.")
         }
-        
-        const {id} = UsuarioSchema.listarUsuarioPorId.parse({'id':parseInt(idString)});
 
-        let usuarioAtualizado = {
-            where:{
-                id: id,
-
-            },
-            data:{
-
-                ...(nome && { nome: nome}),
-                ...(status !== undefined && { status: status }),
-                ...(funcao && { funcao: funcao}),
-
+        let atualizacao = {
+            where:{ id: id },
+            data:{ 
+                nome:nome,
+                status:status,
+                email:email,
+                funcao:funcao},
+            select:{
+                id:true,
+                nome:true,
+                status:true,
+                email:true,
+                funcao:true
             }
         }
 
-
-
-        const usuario = await UsuarioRepository.atualizar(usuarioAtualizado);
-        console.log(usuario)
-        return usuario;
-
-
+        return await UsuarioRepository.atualizar(atualizacao);
     }
-
 }
 
 export default UsuarioService;
