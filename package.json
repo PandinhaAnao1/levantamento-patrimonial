@@ -5,14 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "seed":"node Database/seed.js",
+    "seed": "node Database/seed.js",
     "test": "jest ",
-    "test:detect":"jest --detectOpenHandles",
+    "test:detect": "jest --detectOpenHandles",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
     "dev": "nodemon server.js",
     "server": "docker compose up --build -d",
-    "prisma": "npx prisma db pull & npx prisma migrate",
+    "prisma": "npx prisma db pull & npx prisma generate",
     "dataBase": "cd Database && docker compose up --build -d",
     "dataBase_off": "cd Database && docker compose down"
   },

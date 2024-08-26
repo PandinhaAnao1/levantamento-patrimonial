@@ -6,18 +6,24 @@ class BemController {
 
     static listarbens = async (req, res) => {
         try {
-            const {sala_id} = req.body;
+            const {sala_id, inventario_id, nome, tombo, responsavel, descricao, auditado} = req.query;
             const parametros = {
-                sala_id: sala_id
+                sala_id: sala_id,
+                inventario_id: inventario_id,
+                nome: nome,
+                tombo: tombo,
+                responsavel: responsavel,
+                descricao: descricao,
+                auditado: Boolean(auditado)
             }
             const bensExists = await bemService.listar(parametros)
 
             return sendResponse(res,200,{data: bensExists})
 
         } catch (err) {
-            
-            if(err.message === "Nem um registro encontrado") {
-                return sendError(res, 404, ["Nem um registro encontrado"])
+            console.error(err)
+            if(err.message === "Nem um registro encontrado.") {
+                return sendError(res, 404, ["Nem um registro encontrado."])
 
             }else if (err instanceof z.ZodError) {
                 const errorMessages = err.issues.map((issue) => issue.message);
@@ -31,18 +37,17 @@ class BemController {
 
     static listarPorId = async (req, res) => {
         try {
-            let bens_id =  req.params.id
+            let bem_id =  req.params.id
             const parametros = {
-                bens_id: parseInt(bens_id)
+                bem_id: parseInt(bem_id)
             }
 
             const bensExist = await bemService.listarPorId(parametros)
             return sendResponse(res,200,{data: bensExist})
 
         } catch (err) {
-
-            if(err.message === "Nem um registro encontrado") {
-                return sendError(res, 404, ["Nem um registro encontrado"])
+            if(err.message === "Nem um registro encontrado.") {
+                return sendError(res, 404, ["Nem um registro encontrado."])
 
             }else if (err instanceof z.ZodError) {
 
@@ -59,20 +64,20 @@ class BemController {
         try {
             const parametros = {
                 sala_id: parseInt(req.body.sala_id),
-                bens_nome: req.body.bens_nome,
-                bens_tombo: req.body.bens_tombo,
-                bens_decricao: req.body.bens_decricao ,
-                bens_responsavel: req.body.bens_responsavel ?? "",
-                bens_encontrado: false,
-                bens_valor: req.body.bens_valor,
+                inventario_id: parseInt(req.body.inventario_id),
+                nome: req.body.nome,
+                tombo: req.body.tombo,
+                descricao: req.body.descricao ,
+                responsavel: req.body.responsavel,
+                valor: req.body.valor ?? null,
+                auditado: false,
             };
             const bemCreate = await bemService.create(parametros)
             return sendResponse(res,201,{data: bemCreate})
 
         }catch(err){
-            
-            if (err.message === "O sala_id informado não existem") {
-                return sendError(res, 404, ["O sala_id informado não existem"])
+            if (err.message === "Sala ou inventário informado não existe.") {
+                return sendError(res, 404, ["Sala ou inventário informado não existe."])
 
             }else if (err instanceof z.ZodError) {
                 const errorMessages = err.issues.map((issue) => issue.message);
@@ -88,16 +93,14 @@ class BemController {
         
         try {
             const parametros = {
-                sala_id: req.body.sala_id,
-                inve_id: req.body.inve_id,
-                usua_id: req.body.usua_id,
-                bens_nome: req.body.bens_nome,
-                bens_decricao: req.body.bens_decricao,
-                bens_estado: req.body.bens_estado,
-                bens_ocioso: req.body.bens_ocioso,
-                bens_imagem: req.body.bens_imagem ?? null,
-                bens_responsavel: req.body.bens_responsavel ?? null,
-                bens_encontrado: true,
+                sala_id: parseInt(req.body.sala_id),
+                inventario_id: parseInt(req.body.inventario_id),
+                usuario_id: parseInt(req.body.usuario_id),
+                nome: req.body.nome,
+                descricao: req.body.descricao,
+                estado: req.body.estado,
+                ocioso: req.body.ocioso,
+                imagem: req.body.imagem ?? null
             };
             const bemAdicionado = await bemService.adicionarBem(parametros)
 
@@ -120,28 +123,27 @@ class BemController {
     static auditarBem = async (req, res) => {
         try{
             const parametros = {
-                bens_id: req.body.bens_id,
+                bem_id: req.body.bem_id,
                 sala_id: req.body.sala_id,
-                inve_id: req.body.inve_id,
-                usua_id: req.body.usua_id,
-                bens_estado: req.body.bens_estado,
-                bens_ocioso: req.body.bens_ocioso,
-                bens_imagem: req.body.bens_imagem ?? null,
-                bens_encontrado: true,
+                inventario_id: req.body.inventario_id,
+                usuario_id: req.body.usuario_id,
+                estado: req.body.estado,
+                ocioso: req.body.ocioso,
+                imagem: req.body.imagem ?? null
             };
 
             const bemAuditado = await bemService.auditarBem(parametros)
             return res.status(201).json({ error: false, code: 201, message: "Bem auditado", data: bemAuditado});
 
         }catch(err){
-            if (err.message === "Usuario não existe") {
-                return sendError(res, 404, ["Usuario não existe"])
+            if (err.message === "Usuario inforamdo não existe.") {
+                return sendError(res, 404, ["Usuario inforamdo não existe."])
 
-            }else if (err.message === "bem inforamdo não existe") {
-                return sendError(res, 404, ["bem inforamdo não existe"])
+            }else if (err.message === "Bem inforamdo não existe.") {
+                return sendError(res, 404, ["Bem inforamdo não existe."])
 
-            }else if (err.message === "O Bem não pertence a sala ou inventário informado") {
-                return sendError(res, 400, ["O Bem não pertence a sala ou inventário informado"])
+            }else if (err.message === "O Bem não pertence ao inventário informado.") {
+                return sendError(res, 400, ["O Bem não pertence ao inventário informado."])
 
             }else if(err.message === 'Bem já foi auditado.') {
                 return sendError(res, 403, ['Bem já foi auditado.'])

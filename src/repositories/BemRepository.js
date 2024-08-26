@@ -3,104 +3,99 @@ import { prisma } from "../configs/prismaClient.js"
 class BemRepository{
 
     async findAll(filtro){
-        return await prisma.bens.findMany(filtro);
+        return await prisma.bem.findMany(filtro);
     }
 
     async findById(filtro){
-        return await prisma.bens.findUnique(filtro);
+        return await prisma.bem.findUnique(filtro);
     }
 
     async createBem(data){
-        return await prisma.bens.create(data);
+        return await prisma.bem.create(data);
     }
 
-    async createHistorico(data){
-        return await prisma.historico.create(data)
-    }
-
-    async updataBem(data){
-        return await prisma.bens.update(data)
+    async createLevantamento(data){
+        return await prisma.levantamento.create(data)
     }
 
     createFilter(parametros){
         let filtro = {
             where: {
-                ...(parametros.sala_id && { bens_sala_id: parametros.sala_id }),
-                ...(parametros.bens_id && { bens_id: parametros.bens_id })
+                ...(parametros.sala_id && { sala_id: parametros.sala_id }),
+                ...(parametros.inventario_id && { inventario_id: parametros.inventario_id }),
+                ...(parametros.bem_id && { id: parametros.bem_id }),
+                ...(parametros.nome && { nome: {contains: parametros.nome }}),
+                ...(parametros.tombo && { tombo: parametros.tombo }),
+                ...(parametros.responsavel && { responsavel: {contains: parametros.responsavel} }),
+                ...(parametros.descricao && { descricao: {contains: parametros.descricao} }),
+                ...(parametros.auditado && { auditado: parametros.auditado}),
             },
             select: {
-                bens_id:true,
-                bens_sala_id:true,
-                bens_nome:true,
-                bens_tombo:true,
-                bens_responsavel:true,
-                bens_decricao:true,
-                bens_imagem:true,
-                bens_valor:true,
-                bens_estado:true,
-                bens_ocioso:true,
-                bens_encontrado:true,
+                id:true,
+                sala_id:true,
+                inventario_id: true,
+                nome:true,
+                tombo:true,
+                responsavel:true,
+                descricao:true,
+                auditado:true,
+                valor:true,
             }
         }
         return filtro;
     }
 
-    async userExist(usua_id){
-        return await prisma.usuarios.findFirst({
+    async userExist(usuario_id){
+        return await prisma.usuario.findFirst({
             where:{
-                usua_id: usua_id
+                id: usuario_id
             },
             select:{
-                usua_id: true
+                id: true
             }
         })
     }
 
     async getIds(bem_id){
-        return await prisma.bens.findFirst({
+        return await prisma.bem.findFirst({
             where: {
-                bens_id: bem_id
+                id: bem_id
             },
             select: {
-                bens_sala_id: true,
-                salas: {
-                    select: {
-                    sala_inve_id: true
-                    }
-                }
+                inventario_id: true,
             }
         });
     }
 
     async salaExist(sala_id){
-        return await prisma.salas.findFirst({
+        return await prisma.sala.findFirst({
             where:{
-                sala_id: sala_id
+                id: sala_id
             },
             select:{
-                sala_id:true
+                id:true
             }
         })
     }
 
-    async inventarioExist(inve_id){
-        return await prisma.inventarios.findFirst({
+    async inventarioExist(inventario_id){
+        return await prisma.inventario.findFirst({
             where:{
-                inve_id: inve_id
+                id: inventario_id
             },
             select:{
-                inve_id:true
+                id:true
             }
         })
     }
 
-    async bemJaFoiAuditado(bens_id){
-        return await prisma.historico.findFirst({
+    async bemJaFoiAuditado(bem_id){
+        return await prisma.levantamento.findFirst({
             where:{
-                hist_bens_id: bens_id
+                bem_id: bem_id
             },
             select:{
-                hist_id:true
+                id:true
             }
         })
     }

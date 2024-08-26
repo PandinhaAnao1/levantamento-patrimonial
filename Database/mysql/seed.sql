@@ -33,7 +33,7 @@ INSERT INTO db_Levantamento_Patrimonial.bem (
     nome, 
     tombo, 
     responsavel, 
-    decricao, 
+    descricao, 
     valor
 ) VALUES 
     (1, 1, 'Notebook Lenovo', 'TOMBO007', 'Ana Silva', 'Notebook leve e portátil, processador Intel i5', 1249.99),
