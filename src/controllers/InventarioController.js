@@ -1,7 +1,6 @@
-import { error } from "node:console";
 import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
-import { ZodError } from "zod";
+import { ZodError, ZodIssueCode } from "zod";
 class InventarioController {
     static listarInventarios = async (req, res) => {
         try {
@@ -18,7 +17,7 @@ class InventarioController {
 
             }); 
             
-        }catch (erro){
+        }catch (error){
             if(error instanceof ZodError) {
                 const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
                 if (customError) {
@@ -40,14 +39,15 @@ class InventarioController {
             return sendResponse(res,200, {data: inventario,});  
       
    
-        }catch(erro){
+        }catch(error){
+
             if(error instanceof ZodError) {
-                const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+                const customError = error.issues[0].code = 'custom' ? true : false;
                 if (customError) {
                     let errors = error.errors[0];
-                    return sendError(res,parseInt(errors.params?.staus),errors.message);
+                    return sendError(res,parseInt(errors.params?.status),errors.message);
                 } else {
-                    return sendError(res,401,"Erro ao realizar do inventario");
+                    return sendError(res,401,"Erro ao buscar inventario");
                 }              
               }
 
@@ -66,6 +66,7 @@ class InventarioController {
       
    
         }catch(erro){
+            console.log(erro)
 
             if(erro instanceof ZodError){
                 return sendError(res,400,erro.errors[0].message);
@@ -88,6 +89,7 @@ class InventarioController {
       
    
         }catch(erro){
+            console.log(erro)
 
             if(erro instanceof ZodError){
                 return sendError(res,400,erro.errors[0].message);
