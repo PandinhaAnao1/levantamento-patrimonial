@@ -46,7 +46,7 @@ async function seedDatabase() {
     // Inserindo dados na tabela `inventario`
     const inventarios = await prisma.inventario.createMany({
       data: [
-        { nome: faker.commerce.productName(), data: faker.date.past(), concluido: faker.random.boolean(), campus_id: 1 },
+        { nome: 'Inventario teste', data: faker.date.past(), concluido: faker.random.boolean(), campus_id: 1 },
         { nome: faker.commerce.productName(), data: faker.date.past(), concluido: faker.random.boolean(), campus_id: 2 },
       ],
     });

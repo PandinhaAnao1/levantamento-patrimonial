@@ -1,7 +1,7 @@
 import { skip } from "node:test";
 import InvRepository from "../repositories/InventarioRepository.js";
 import IvSchema from "../shemas/InventarioSchema.js";
-import {z}  from "zod";
+import {z, ZodIssueCode}  from "zod";
 
 class InventarioService{
     
@@ -28,7 +28,7 @@ class InventarioService{
                 message:"Não foi contar inventários com esse parâmetros!",
                 code: z.ZodIssueCode.custom,
                 params: {
-                    status: 400, // Adicionando um detalhe personalizado
+                    status: 404, // Adicionando um detalhe personalizado
                   },
             }]);
         }
@@ -60,7 +60,7 @@ class InventarioService{
                 message:"Não foi possível encontrar inventários com esse parâmetros",
                 code: z.ZodIssueCode.custom,
                 params: {
-                    status: 401, // Adicionando um detalhe personalizado
+                    status: 404, // Adicionando um detalhe personalizado
                   },
             }]);
         }
@@ -82,7 +82,7 @@ class InventarioService{
                 message:"O id do inventario deve ser um numero!",
                 code: z.ZodIssueCode.custom,
                 params: {
-                    status: 401, // Adicionando um detalhe personalizado
+                    status: 404, // Adicionando um detalhe personalizado
                   },
 
             }]);
@@ -100,7 +100,10 @@ class InventarioService{
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"Não foi possivel encontrar um inventario com esse id",
-                code: z.ZodIssueCode.invalid_type,
+                code: z.ZodIssueCode.custom,
+                params:{
+                    status: 404
+                }
             }]);
         };
 
@@ -110,15 +113,17 @@ class InventarioService{
 
     static async criarInventario(inventario){
 
-
+        
         const {nome,data,campus} = IvSchema.criar.parse(inventario);
         //Vou ter que espeara alguem criar a rota de listar campus por id para
         //concluir essa funcao pois vou precisar o listar campus por id
         let body = {
-            nome:nome,
-            data:data,
-            concluido:0,
-            campus:campus
+            data:{
+                nome:nome,
+                data:data,
+                concluido:false,
+                campus_id: campus
+            }
         };
 
 
@@ -136,26 +141,41 @@ class InventarioService{
 
         //Colar verificação se o inventario foi atualizado
 
-        const {nome, status} = IvSchema.atualizarSchema.parse(nome);
-
-        let idString = atualizacoes.id;
-
-        if(!regex.test(idString)){
+        
+        const  { id,  ... resto} = atualizacoes;
+        //Corrigir o .id usar algma forma melhor
+        if(!regex.test(id.id)){
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"O id do inventario deve ser um numero!",
-                code: z.ZodIssueCode.invalid_type,
+                code: z.ZodIssueCode.custom,
+                params:{
+                    status: 404
+                }
             }]);
         }
-        const {id} = IvSchema.listarPorIdSchema.parse({'id':parseInt(idString)});        
+        let numero  = {id:parseInt(id.id)};
+        console.log(numero)
+        const {nome, status} = IvSchema.atualizarSchema.parse(resto);
+
+        // if(!status && status != null && status != undefined){
+        //     throw new z.ZodError([{
+        //         path: ["inventario"],
+        //         message:"O inventario pode ser apenas atualizado para concluido!",
+        //         code: z.ZodIssueCode.custom,
+        //         params:{
+        //             status: 404
+        //         }
+        //     }]);
+        // }
 
         let inventarioAtulizado = {
             where: {
-                id: id,
+                id: numero.id,
             },
             data: {
                 ...(nome && { nome: nome}),
-                ...(status && { concluido: 1}),                
+                ...(status && { concluido: true}),                
             },
         }
 
