@@ -38,39 +38,51 @@ class UsuarioController {
   static listarUsuario = async (req, res) => {
     try {
 
-      const listaContas = await UsuarioService.listarUsuarios(req.query);
-      return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: listaContas});
+      const {nome, funcao, status, email} = req.query
+
+      const paramentros = {
+        nome: nome,
+        funcao: funcao,
+        status: Boolean(status),
+        email: email
+      }
+
+      const listaUsuarios = await UsuarioService.listarUsuarios(paramentros);
+      return sendResponse(res,200, {data: listaUsuarios});
 
     } catch (err) {
-      console.error(err);
-      return res.status(500).json([
-        {
-          error: true,
-          code: 500,
-          message: "OCORREU UM ERRO INTERNO",
-        },
-      ]);
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
+
+      }else if (err.message === "Nem um usuário encontrado") {
+        return sendError(res,404,"Nem um usuário encontrado");
+
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+
+      }
     }
   };
 
   static listarUsuarioPorId = async (req, res) => {
     try {
-      const id_conta = parseInt(req.params.id);
-      const unitExists = await UsuarioService.listarUsuarioPorId(id_conta)
+      const id = parseInt(req.params.id);
+      const usuario = await UsuarioService.listarUsuarioPorId(id)
 
-      return res.status(200).json({ error: false, code: 200, message: "Registros encontrados", data: unitExists});
+      return sendResponse(res,200, {data: usuario});
+
     } catch (err) {
-      if (err.message === 'usuario não existe') {
-        return res.status(404).json({ error: true, code: 404, message: err.message});
-    }
-      console.error(err);
-      return res.status(500).json([
-        {
-          error: true,
-          code: 500,
-          message: "OCORREU UM ERRO INTERNO",
-        },
-      ]);
+      console.error(err)
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
+
+      }else if (err.message === "Usuario não encontrado.") {
+        return sendError(res,404,"Usuario não encontrado.");
+
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+
+      }
     }
   };
 
@@ -81,19 +93,17 @@ class UsuarioController {
 
       return sendResponse(res,201, {data:novoUsuario});
       
-     } catch (error) {
-      
-      if(error instanceof ZodError) {
-        const customError = error.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
-        if (customError) {
-          let errors = error.errors[0];
-          return sendError(res,parseInt(errors.params?.staus),errors.message);
-        } else {
-          return sendError(res,401,"Erro ao realizar autenticação");
-        }              
-      }
+     } catch (err) {
+      console.error(err)
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
 
-      return sendError(res,500,"Ocorreu um erro interno no servidor!");
+      }else if(err.message == "Não foi possivel criar usuario pois email já está cadastrado." ){
+        return sendError(res,404,["Não foi possivel criar usuario pois email já está cadastrado."]);
+
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+      }
 
      }
   }
