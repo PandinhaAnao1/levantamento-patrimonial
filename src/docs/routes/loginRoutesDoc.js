@@ -12,7 +12,7 @@ const loginRoutes = {
                                 email: {
                                     type: "string",
                                     description: "Email do usuário.",
-                                    example: "test123@gmail.com"
+                                    example: "emailExample@gmail.com"
                                 },
                                 senha: {
                                     type: "string",
@@ -36,12 +36,6 @@ const loginRoutes = {
                     description: "E-mail inválido ou senha não fornecida.",
                     content: {
                         $ref: "#/components/schemas/typeErrorLogin"
-                    }                
-                },
-                "404": {
-                    description: "Usuário não existe na base de dados.",
-                    content: {
-                        $ref: "#/components/schemas/ReferenceErrorLogin"
                     }                
                 },
                 "500": {

@@ -134,7 +134,8 @@ describe('bens-create', () => {
                 valor: 200
             };
 
-        bensRepository.salaExist.mockReturnValue({sala_nome: "teste unitario"});
+        bensRepository.salaExist.mockReturnValue({nome: "teste unitario"});
+        bensRepository.inventarioExist.mockReturnValue({nome: "teste unitario"});
         bensRepository.createBem.mockResolvedValue(mockBens);
 
         const bens = await bemService.create(mockBens);

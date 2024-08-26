@@ -30,13 +30,12 @@ class  UsuarioSchema{
 
 
     static atualizarUsuarioSchema = z.object({
-
-        nome: z.string().min(1).max(80).optional(),
-        funcao:z.string().min(1).max(80).optional(),
-        status:z.boolean().optional()
-
+        id: z.number().int().positive(),
+        nome: z.string().min(1).max(80).default(null).optional(),
+        email: z.string().min(1).max(80).default(null).optional(), 
+        status: z.boolean().default(null).optional(),
+        funcao: z.string().min(1).max(80).default(null).optional()
     })
-
 }
 
 export default UsuarioSchema;

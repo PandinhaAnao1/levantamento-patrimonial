@@ -23,25 +23,6 @@ const loginSchema = {
         }
     },
 
-    ReferenceErrorLogin: {
-        "application/json": {
-            schema: {
-            type: "object",
-                example: {
-                    data: [],
-                    error: true,
-                    code: 401,
-                    message: "Cliente sem credenciais para acessar o recurso solicitado.",
-                    errors: [
-                        {
-                            "message": "Usuario não exite na base de dados!"
-                        }
-                    ]
-                }
-            }
-        }
-    },
-
     typeErrorLogin: {
         "application/json": {
             schema: {
@@ -53,13 +34,17 @@ const loginSchema = {
                     message: "Cliente sem credenciais para acessar o recurso solicitado.",
                     errors: [
                         {
-                            "message": "E-mail inválido ou senha não fornecida."
+                            "message": "Usuario não exite na base de dados verifique se o email esta correto!"
+                        },
+                        {
+                            "message": "Senha informada esta incorreta!"
                         }
                     ]
                 }
             }
         }
     },
+    
     erro500Login: {
         "application/json": {
             schema: {
