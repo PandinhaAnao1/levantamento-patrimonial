@@ -1,7 +1,7 @@
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import bcrypt from 'bcrypt';
 import UsuarioSchema from "../shemas/UsuarioSchema.js";
-import {z, ZodError} from "zod";
+import {z} from "zod";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 
@@ -67,51 +67,28 @@ class UsuarioService{
 
     static async listarUsuarios(parametros){
 
-        const {nome,funcao,status} = UsuarioSchema.listarUsuarios.parse(parametros);
+        parametros = UsuarioSchema.listarUsuarios.parse(parametros);
 
-        let filtro = {
-            select:{
-                "senha":false,
-                "nome":true,
-                "funcao":true,
-                "status":true
-                
-              },
-            where: {
-                ...(nome && { nome: {contains: nome} }),
-                ...(funcao && { funcao: funcao }),
-                ...(status && { status: status })
-            }
-        };
+        let filtro = UsuarioRepository.createFilterUsuario(parametros)
 
         const usuarios = await UsuarioRepository.listarUsuarios(filtro);
 
-        if(!usuarios){
-            throw new z.ZodError([{
-                path: ["usuarios"],
-                message:"Não exite usario com esse parametro",
-                code: z.ZodIssueCode.invalid_type,
-            }]);
+        if(usuarios.length == 0){
+            throw new Error ("Nem um usuário encontrado");
         }
         return usuarios;
     }
 
-    static async listarUsuarioPorId(parametros){
+    static async listarUsuarioPorId(id){
         
-        const {id} = UsuarioSchema.listarUsuarioPorId.parse({id:parametros});
-        
-        
-        let filtro = {
-            where: {
-                ...(id && { id: id }),
-            }
-        };
+        id = UsuarioSchema.listarUsuarioPorId.parse({id});
+        const filtro = UsuarioRepository.createFilterUsuario(id)
         
         const usuario = await UsuarioRepository.listarUsuarioPorId(filtro);
 
         
         if(!usuario){
-            throw new Error ("usuario não existe");
+            throw new Error ("Usuario não encontrado.");
         }
 
         return usuario
@@ -119,39 +96,28 @@ class UsuarioService{
 
     static async criarUsuario(criarConta) {
         
-        
         const { nome, email, senha, funcao, status } = UsuarioSchema.criarUsuario.parse(criarConta);
-        const usuarioExist = UsuarioService.listarUsuarios({email:email});
-
+        const usuarioExist = await UsuarioRepository.userExist(email)
 
         if(usuarioExist){
-            throw new z.ZodError([{
-                path: ["usuario"],
-                message:"Não foi possivel criar usuario pois email já está cadastrado",
-                code: z.ZodIssueCode.custom,
-                params: {
-                    status: 409, // Adicionando um detalhe personalizado
-                  },
-            }]);
+            throw new Error ("Não foi possivel criar usuario pois email já está cadastrado.")
         }
         
-        const saltRounds = 10;
-        
-        const senhaHashed = await bcrypt.hash(senha, saltRounds);
+        const senhaHashed = await bcrypt.hash(senha, parseInt(process.env.SALT));
     
-      
-        let criacao = {
-            data: {
+        let insert = {
                 nome: nome,
                 email: email,
                 senha: senhaHashed,  
                 funcao: funcao,
-                status: true
-            }
+                status: status
         };
     
         // Salvando o novo usuário no repositório
-        const novaConta = await UsuarioRepository.criarUsuario(criacao);
+        const novaConta = await UsuarioRepository.criarUsuario({
+            data: insert, 
+            select: UsuarioRepository.createFilterUsuario({}).select}
+        );
     
         return novaConta;
     }

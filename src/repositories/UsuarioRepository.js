@@ -16,12 +16,11 @@ class UsuarioRepository{
 
     static async listarUsuarios(filtros){
         return await prisma.usuario.findMany(filtros);
-      }
+    }
     
     static async listarUsuarioPorId(filtros) {
-        return await prisma.usuario.findFirst(filtros);
+        return await prisma.usuario.findFirst(filtros)
     }
-
 
     static async criarUsuario(criarConta){
       return await prisma.usuario.create(criarConta);
@@ -40,7 +39,37 @@ class UsuarioRepository{
               id: true
           }
       })
-  }
+    }
+
+    static createFilterUsuario(parametros){
+      let filtro = {
+          where: {
+              ...(parametros.status != undefined && { status: parametros.status }),
+              ...(parametros.email && { email: {contains: parametros.email }}),
+              ...(parametros.funcao && { funcao: parametros.funcao }),
+              ...(parametros.nome && { nome: {contains: parametros.nome }}),
+              ...(parametros.id && { id: parametros.id }),
+          },select:{
+            id:true,
+            senha:false,
+            nome:true,
+            funcao:true,
+            status:true,
+            email:true}
+      }
+      return filtro;
+    }
+
+    static async userExist(email){
+      return await prisma.usuario.findFirst({
+          where:{
+              email: email
+          },
+          select:{
+              id: true
+          }
+      })
+    }
 }
 
 

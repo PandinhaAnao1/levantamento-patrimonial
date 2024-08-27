@@ -1,11 +1,10 @@
 import request from "supertest";
 import { describe, expect, it, test } from '@jest/globals';
 import app from '../../app.js'
-import exp from "constants";
-import {postLogin} from "../auth.js";
-
+import faker from 'faker-br';
 
 let token;
+let usuario_criado = null
 
 describe('Teste de Autenticação', () => {
 
@@ -49,72 +48,185 @@ describe('Teste de Autenticação', () => {
     })
 });
 
-describe('get usuario', () => {
-
-    it(" Deve retornar um array com os dados das contas", async () => {
+describe('get usuários', () => {
+    it("1-deve retornar uma lista com os usuários filtrados.", async () => {
         const req = await request(app)
         .get('/usuario')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .set("Authorization", `Bearer ${token}`);
-        
-        console.log(req.body)
-
+        .query({
+            email:'a',
+            nome:"a",
+            funcao:"auditor",
+            status:true
+        })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
-        expect(req.body.data).toBeInstanceOf(Array)
-        expect(req.body.data.length).toBeGreaterThan(0)
-        expect(req.body.message).toEqual("Registros encontrados");
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
+        expect(req.body.data).toBeInstanceOf(Object)
         expect(req.body.data[0].id).toBeDefined()
-        expect(req.body.data[0].email).toBeDefined()
-        expect(req.body.data[0].senha).toBeDefined()
-        expect(req.body.data[0].funcao).toBeDefined()
-        expect(req.body.data[0].status).toBeDefined()
         expect(req.body.data[0].nome).toBeDefined()
-        
+        expect(req.body.data[0].status).toBeDefined()
+        expect(req.body.data[0].funcao).toBeDefined()
     })
 
+    it("1-deve retornar uma lista com os usuários filtrados com status como false.", async () => {
+        const req = await request(app)
+        .get('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .query({
+            status:false
+        })
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(200)
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
+        expect(req.body.data).toBeInstanceOf(Object)
+        expect(req.body.data[0].id).toBeDefined()
+        expect(req.body.data[0].nome).toBeDefined()
+        expect(req.body.data[0].status).toBeDefined()
+        expect(req.body.data[0].funcao).toBeDefined()
+    })
 
+    it("2-deve retornar um erro quando nem um usuário for encontrado", async () => {
+        const req = await request(app)
+        .get('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .query({
+            email:'usuario não deve existir',
+            nome:"a",
+            funcao:"auditor",
+            status:true
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(404)
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
+    })
 
-    it("Deve retornar um objeto com os dados de apenas uma conta", async () => {
+    it("3-deve retornar um erro quando os tipos dos dados não forem os corretos.(status)", async () => {
+        const req = await request(app)
+        .get('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .query({
+            email: "a",
+            nome:"a",
+            funcao:"auditor",
+            status:"tru"
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+    })
+})
+
+describe('get usuários por id', () => {
+    it("1-deve retornar um usuário.", async () => {
         const req = await request(app)
         .get('/usuario/1')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .set("Authorization", `Bearer ${token}`);
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
         expect(req.body.data).toBeInstanceOf(Object)
-        expect(req.body.data.id).toBeDefined();
-        expect(req.body.data.email).toBeDefined();
-        expect(req.body.data.senha).toBeDefined();
-        expect(req.body.data.funcao).toBeDefined();
-        expect(req.body.data.status).toBeDefined();
-        expect(req.body.data.nome).toBeDefined();
-
+        expect(req.body.data.id).toBeDefined()
+        expect(req.body.data.nome).toBeDefined()
+        expect(req.body.data.status).toBeDefined()
+        expect(req.body.data.funcao).toBeDefined()
     })
 
-    it("Deve retornar um error se algum id da conta não existir", async () => {
-
+    it("2-deve retornar um erro quando nem um uruário for encontrado.", async () => {
         const req = await request(app)
-        .get('/usuario/10101010010101010')
+        .get('/usuario/89898981')
+        .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
-        .set("Authorization", `Bearer ${token}`);
-        expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
-        expect(req.body.message).toEqual("usuario não existe")
-
+        expect(req.status).toBe(404)
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
-    
+
+    it("3-deve retornar um erro quando o id passado não estiver no formato correto.", async () => {
+        const req = await request(app)
+        .get('/usuario/n21')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+    })
+})
+
+describe('create usuários', () => {
+    it("1-deve retornar um usuário.", async () => {
+        const req = await request(app)
+        .post('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .send({
+            nome: faker.name.findName(),
+            funcao: "CPALM",
+            status: true,
+            senha: "testesenha",
+            email: faker.internet.email()
+        })
+        usuario_criado = req.body.data.id
+
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(201)
+        expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
+        expect(req.body.data).toBeInstanceOf(Object)
+        expect(req.body.data.id).toBeDefined()
+        expect(req.body.data.nome).toBeDefined()
+        expect(req.body.data.status).toBeDefined()
+        expect(req.body.data.funcao).toBeDefined()
+    })
+
+    it("2-deve retornar um erro quando o email já estiver em uso.", async () => {
+        const req = await request(app)
+        .post('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .send({
+            nome: faker.name.findName(),
+            funcao: "CPALM",
+            status: true,
+            senha: "testesenha",
+            email: "emailExample@gmail.com"
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(404)
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
+    })
+
+    it("3-deve retornar um erro quando o id passado não estiver no formato correto.", async () => {
+        const req = await request(app)
+        .post('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .send({
+            nome: true,
+            funcao: "CPALM",
+            status: true,
+            senha: "testesenha",
+            email: faker.internet.email()
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+    })
 })
 
 
 describe('patch usuários', () => {
-    it("1-deve adicionar um bem e retornar o bem criado.", async () => {
+    it("1-deve atualizar os dados de um usuário.", async () => {
         const req = await request(app)
-        .patch('/usuario/2')
+        .patch(`/usuario/${usuario_criado}`)
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            nome:"Leonardo",
+            nome: faker.name.findName(),
             funcao:"auditor",
             status:true
         })
@@ -134,7 +246,7 @@ describe('patch usuários', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            nome:"Leonardo",
+            nome: faker.name.findName(),
             funcao:"auditor",
             status:true
         })

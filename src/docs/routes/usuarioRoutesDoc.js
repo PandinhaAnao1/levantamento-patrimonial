@@ -6,62 +6,37 @@ const usuarioRoutes = {
             security: [{ bearerAuth: [] }],
             parameters: [
                 {
-                    name: "sala_id",
-                    in: "query",
-                    description: "ID da sala onde o bem está.",
-                    schema: {
-                        type: "integer"
-                    }
-                },
-                {
-                    name: "inventario_id",
-                    in: "query",
-                    description: "ID do inventário ao qual o bem pertence.",
-                    required: true,
-                    schema: {
-                        type: "integer"
-                    }
-                },
-                {
                     name: "nome",
                     in: "query",
-                    description: "Nome do bem.",
+                    description: "Nome do usuário.",
                     schema: {
                         type: "string"
                     }
                 },
                 {
-                    name: "tombo",
+                    name: "funcao",
                     in: "query",
-                    description: "Tombo do bem.",
+                    description: "Função do usuário",
                     schema: {
                         type: "string"
                     }
                 },
                 {
-                    name: "responsavel",
+                    name: "status",
                     in: "query",
-                    description: "Nome do responsável pelo bem.",
-                    schema: {
-                        type: "string"
-                    }
-                },
-                {
-                    name: "descricao",
-                    in: "query",
-                    description: "Descrição do bem.",
-                    schema: {
-                        type: "string"
-                    }
-                },
-                {
-                    name: "auditado",
-                    in: "query",
-                    description: "Informa se o bem está auditado ou não.",
+                    description: "Status da usuário, true ou false.",
                     schema: {
                         type: "boolean"
                     }
                 },
+                {
+                    name: "email",
+                    in: "query",
+                    description: "Email do usuário",
+                    schema: {
+                        type: "string"
+                    }
+                }
             ],
             responses: {
                 "200": {
@@ -69,7 +44,7 @@ const usuarioRoutes = {
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: "#/components/schemas/BemListarRes"
+                                $ref: "#/components/schemas/get_usuario"
                             }
                         }
                     }
@@ -77,13 +52,58 @@ const usuarioRoutes = {
                 "400": {
                     description: "Houve um erro em algum parâmetro do corpo da requisição.",
                     content: {
-                        $ref: "#/components/schemas/erro400"
+                        $ref: "#/components/schemas/erro400usuario"
                     }                
                 },
                 "404": {
                     description: "Nenhum registro encontrado.",
                     content: {
-                        $ref: "#/components/schemas/erro404Get"
+                        $ref: "#/components/schemas/erro404usuario"
+                    }                
+                },
+                "500": {
+                    description: "Servidor encontrou um erro interno.",
+                    content: {
+                        $ref: "#/components/schemas/erro500"
+                    }                
+                },
+            }
+        },
+        post: {
+            tags: ["Usuários"],
+            summary: "Lista todos os usuario",
+            security: [{ bearerAuth: [] }],
+            requestBody: {
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/createUsuárioBody"
+                        }
+                    }
+                },
+                required: true
+            },
+            responses: {
+                "201": {
+                    description: "Requisição bem-sucedida.",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/createUsuárioRes"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    description: "Houve um erro em algum parâmetro do corpo da requisição.",
+                    content: {
+                        $ref: "#/components/schemas/erro400usuario"
+                    }                
+                },
+                "404": {
+                    description: "Email já está em uso.",
+                    content: {
+                        $ref: "#/components/schemas/erro404usuarioCreate"
                     }                
                 },
                 "500": {
@@ -96,6 +116,52 @@ const usuarioRoutes = {
         }
     },
         "/usuario/{id}": {
+            get: {
+                tags: ["Usuários"],
+                summary: "Lista todos os usuario",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "id",
+                        in: "path",
+                        description: "id do usuário",
+                        required: true,
+                        schema: {
+                            type: "integer"
+                        }
+                    }
+                ],
+                responses: {
+                    "200": {
+                        description: "Requisição bem-sucedida.",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    $ref: "#/components/schemas/get_usuario_por_id"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        description: "Houve um erro em algum parâmetro do corpo da requisição.",
+                        content: {
+                            $ref: "#/components/schemas/erro400usuario"
+                        }                
+                    },
+                    "404": {
+                        description: "Nenhum registro encontrado.",
+                        content: {
+                            $ref: "#/components/schemas/erro404usuarioPorId"
+                        }                
+                    },
+                    "500": {
+                        description: "Servidor encontrou um erro interno.",
+                        content: {
+                            $ref: "#/components/schemas/erro500"
+                        }                
+                    },
+                }
+            },
         patch: {
             tags: ["Usuários"],
             summary: "Atualizar uma conta",

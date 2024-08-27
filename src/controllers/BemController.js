@@ -21,7 +21,6 @@ class BemController {
             return sendResponse(res,200,{data: bensExists})
 
         } catch (err) {
-            console.error(err)
             if(err.message === "Nem um registro encontrado.") {
                 return sendError(res, 404, ["Nem um registro encontrado."])
 
