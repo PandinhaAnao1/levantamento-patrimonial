@@ -20,9 +20,11 @@ class UsuarioController {
 
             return sendResponse(res,200, {...usuario});
         }catch(err){
+    
             //colocar a verificacao se o usuario esta ativo
             if(err instanceof ZodError) {
               const customError = err.issues.find(issue => issue.code === z.ZodIssueCode.custom);
+              console.error(customError)
               if (customError) {
                 let errors = err.errors[0];
                 return sendError(res,parseInt(errors.params?.status),errors.message);
@@ -48,6 +50,7 @@ class UsuarioController {
       return sendResponse(res,200, {data: listaUsuarios});
 
     } catch (err) {
+
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
@@ -56,7 +59,6 @@ class UsuarioController {
 
       }else{
         return sendError(res,500,"Ocorreu um erro interno no servidor!");
-
       }
     }
   };
@@ -69,7 +71,7 @@ class UsuarioController {
       return sendResponse(res,200, {data: usuario});
 
     } catch (err) {
-      console.error(err)
+
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
@@ -91,6 +93,7 @@ class UsuarioController {
       return sendResponse(res,201, {data:novoUsuario});
       
      } catch (err) {
+
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
@@ -116,6 +119,7 @@ class UsuarioController {
       return sendResponse(res,201, {data: usuario});
       
     }catch(err){
+
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 

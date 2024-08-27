@@ -70,6 +70,24 @@ describe('get usuários', () => {
         expect(req.body.data[0].funcao).toBeDefined()
     })
 
+    it("1-deve retornar uma lista com os usuários filtrados com status como false.", async () => {
+        const req = await request(app)
+        .get('/usuario')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .query({
+            status:false
+        })
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(200)
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
+        expect(req.body.data).toBeInstanceOf(Object)
+        expect(req.body.data[0].id).toBeDefined()
+        expect(req.body.data[0].nome).toBeDefined()
+        expect(req.body.data[0].status).toBeDefined()
+        expect(req.body.data[0].funcao).toBeDefined()
+    })
+
     it("2-deve retornar um erro quando nem um usuário for encontrado", async () => {
         const req = await request(app)
         .get('/usuario')
@@ -154,7 +172,7 @@ describe('create usuários', () => {
             email: faker.internet.email()
         })
         usuario_criado = req.body.data.id
-        console.log(req.body)
+
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
         expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
