@@ -76,6 +76,10 @@ class InventarioService{
         let regex = /^[0-9]+$/;
         
         let idString = parametros.id;
+        // Colocar apenas throw { erro: true, code:200}
+        //  
+
+        // //}
         if(!regex.test(idString)){
             throw new z.ZodError([{
                 path: ["inventario"],
