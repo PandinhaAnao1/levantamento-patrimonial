@@ -5,7 +5,7 @@ import {sendResponse, sendError} from '../utils/mensages.js';
 class UsuarioController {
     static listarCampus = async (req, res) => {
         try {
-            const {nome, telefone, cidade, bairro, rua} = req.query
+            const {nome, telefone, cidade, bairro, rua, numoro_residencia} = req.query
 
             const paramentros = {
 
@@ -14,15 +14,16 @@ class UsuarioController {
               cidade: cidade,
               bairro: bairro,
               rua: rua,
+              numoro_residencia: numoro_residencia
 
             }
 
-            const listarCampus = await CampusService.listarCampus(paramentros);
+            const listarCampus = await CampusService.listar(paramentros);
 
           return sendResponse(res,200, {data: listarCampus});
-      
+
           } catch (err) {
-      
+            console.error(err)
             if(err instanceof ZodError){
               return sendError(res,400,err.errors[0].message);
               
@@ -32,7 +33,8 @@ class UsuarioController {
               return sendError(res,500,"Ocorreu um erro interno no servidor!");
             }
           }
-    }
+    };
+    
     static listarCampusPorId = async (req, res) => {
         try {
             return sendResponse(res,200, {data: "teste chegou"});

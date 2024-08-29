@@ -17,7 +17,7 @@ class CampusRepository{
       return await prisma.campus.update(atualizarcampus);
     }
 
-    static createFilterUsuario(parametros){
+    static createFilterCampus(parametros){
       let filtro = {
           where: {
               ...(parametros.cidade && { cidade: {contains: parametros.cidade }}),
@@ -26,21 +26,20 @@ class CampusRepository{
               ...(parametros.id && { id: parametros.id }),
               ...(parametros.bairro && { bairro: {contains: parametros.bairro }}),
               ...(parametros.rua && { rua: {contains: parametros.rua }}),
-              ...(parametros.numero && { numero: {contains: parametros.numero }}),
+              ...(parametros.numoro_residencia && { numoro_residencia: {contains: parametros.numoro_residencia }}),
 
 
 
 
-          },select:{
+          },
+          select:{
             id:true,
-            senha:false,
-            nome:true,
-            rua:true,
-            bairro:true,
+            cidade:true,
             telefone:true,
-            numero:true,
-            cidade:true
-
+            nome:true,
+            bairro:true,
+            rua:true,
+            numoro_residencia:true
 
           }
       }
