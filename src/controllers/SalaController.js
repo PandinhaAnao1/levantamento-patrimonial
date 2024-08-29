@@ -1,46 +1,80 @@
-import SalaService  from '../services/salaService.js';
+import SalaService from "../services/salaService.js";
+import { z, ZodError } from "zod";
+import {sendResponse, sendError} from '../utils/mensages.js';
 
 class SalaController {
 
-    static listarBensSalas = async (req, res) => {
-   
-        try {
-            const id = req.params.id;
+    static listarSalas = async (req, res) => {
+    try{
 
-            let filtro = {
-                where: {
-                    iten_sala_id: parseInt(id)
-                },
+      return sendResponse(res,200, {data: "teste chegou"});
 
-                select: {
-                    iten_id: true,
-                    iten_nome: true,
-                    iten_tombo: true,
-                }
-            }
+    }catch(err){
+    console.error(err)
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
 
-            const itemExiste = await SalaService.listarPorIdSala(filtro)
+      }else if(err.message == "Sala não encontrada." ){
+        return sendError(res,404,["Sala não encontrada."]);
 
-            if (itemExiste.length === 0) {
-                return res.status(400).json([{
-                    error: true,
-                    code: 400,
-                    message: "Nenhum item encontrado"
-                }])
-            } else {
-                return res.status(200).json(
-                    {
-                        error: false,
-                        code: 200,
-                        message: "itens encontrado",
-                        data: itemExiste
-                    }
-                )
-            }
-        } catch {
-            return res.status(500).json([{ error: true, code: 500, message: "Erro interno do Servidor" }])
-    
-        }
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+      }
+  }
+    }
+    static listarSalasPorId = async (req, res) => {
+    try{
+
+      return sendResponse(res,200, {data: "teste chegou"});
+
+    }catch(err){
+    console.error(err)
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
+
+      }else if(err.message == "Sala não encontrada." ){
+        return sendError(res,404,["Sala não encontrada."]);
+
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+      }
+  }
+    }
+    static cadastrarSalas = async (req, res) => {
+    try{
+
+      return sendResponse(res,200, {data: "teste chegou"});
+
+    }catch(err){
+    console.error(err)
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
+
+      }else if(err.message == "Sala não encontrada." ){
+        return sendError(res,404,["Sala não encontrada."]);
+
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+      }
+  }
+    }
+    static atualizarSalas = async (req, res) => {
+    try{
+
+      return sendResponse(res,200, {data: "teste chegou"});
+
+    }catch(err){
+    console.error(err)
+      if(err instanceof ZodError){
+        return sendError(res,400,err.errors[0].message);
+
+      }else if(err.message == "Sala não encontrada." ){
+        return sendError(res,404,["Sala não encontrada."]);
+
+      }else{
+        return sendError(res,500,"Ocorreu um erro interno no servidor!");
+      }
+  }
     }
 }
 
