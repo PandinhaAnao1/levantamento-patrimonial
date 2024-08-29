@@ -14,6 +14,21 @@ class SalaRepository{
     static async atualizar(filtro){
         return await prisma.sala.update(filtro)
     }
+
+    static createFilterSala(parametros){
+        let filtro = {
+            where: {
+                ...(parametros.id && { id: parametros.id }),
+                ...(parametros.inventario_id && { bem: {some:{ inventario_id: parametros.inventario_id }}}),
+                ...(parametros.nome && { nome: {contains: parametros.nome }}),
+
+            },select:{
+              id:true,
+              nome:true,
+            }
+        }
+        return filtro;
+      }
     
 }
 
