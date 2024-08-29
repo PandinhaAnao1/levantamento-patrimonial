@@ -6,8 +6,14 @@ class CampusService{
     static async listar (parametros){
         parametros = campusSchema.listarCampus.parse(parametros);
 
-        let filtro 
-        
+        let filtro = CampusRepository.createFilterCampus(parametros)
+
+        const campus = await CampusRepository.listarCampus(filtro);
+
+        if(campus.length == 0){
+            throw new Error ("Nenhum campo encontrado");
+        }
+        return campus;
     }
 
     static listarPorId = async (req, res) => {
