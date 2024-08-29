@@ -16,5 +16,12 @@ class CampusRepository{
     static async atualizar(filtros){
       return await prisma.campus.update(atualizarcampus);
     }
+
+
 }
+
+
+
+
+
 export default CampusRepository
