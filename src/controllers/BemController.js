@@ -97,7 +97,7 @@ class BemController {
                 usuario_id: parseInt(req.body.usuario_id),
                 nome: req.body.nome,
                 descricao: req.body.descricao,
-                estado: req.body.estado,
+                estado: req.body.estado, 
                 ocioso: req.body.ocioso,
                 imagem: req.body.imagem ?? null
             };
