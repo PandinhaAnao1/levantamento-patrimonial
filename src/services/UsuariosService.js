@@ -74,7 +74,7 @@ class UsuarioService{
         const usuarios = await UsuarioRepository.listarUsuarios(filtro);
 
         if(usuarios.length == 0){
-            throw new Error ("Nem um usuário encontrado");
+            throw new Error ("Nenhum usuário encontrado");
         }
         return usuarios;
     }
