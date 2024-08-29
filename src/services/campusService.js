@@ -3,10 +3,13 @@ import campusSchema from "../shemas/bemSchema.js";
 import {z} from "zod";
 
 class CampusService{
-    static listar = async (req, res) => {
-        return null
+    static async listar (parametros){
+        parametros = campusSchema.listarCampus.parse(parametros);
+
+        let filtro 
         
     }
+
     static listarPorId = async (req, res) => {
         return null
         
