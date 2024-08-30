@@ -11,6 +11,6 @@ class campusSchema{
 
     });
 
-
+    static listarCampusPorId = z.object({id:z.number().int().min(1).positive()});
 }
 export default campusSchema;
