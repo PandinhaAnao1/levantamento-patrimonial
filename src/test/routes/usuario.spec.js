@@ -171,6 +171,7 @@ describe('create usuários', () => {
             senha: "testesenha",
             email: faker.internet.email()
         })
+        console.log(req.body)
         usuario_criado = req.body.data.id
 
         expect(req.body.error).toEqual(false)
@@ -230,6 +231,7 @@ describe('patch usuários', () => {
             funcao:"auditor",
             status:true
         })
+        
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(201)
         expect(req.body.message).toEqual("Requisição bem sucedida, recurso foi criado")
@@ -240,7 +242,7 @@ describe('patch usuários', () => {
         expect(req.body.data.funcao).toBeDefined()
     })
 
-    it("1-deve retornar um erro casa o usuário não exista.", async () => {
+    it("2-deve retornar um erro casa o usuário não exista.", async () => {
         const req = await request(app)
         .patch('/usuario/20909090')
         .set("Authorization", `Bearer ${token}`)
@@ -255,7 +257,7 @@ describe('patch usuários', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("1-deve retornar um erro quando os tipos dos dados não forem os corretos.(nome)", async () => {
+    it("3-deve retornar um erro quando os tipos dos dados não forem os corretos.(nome)", async () => {
         const req = await request(app)
         .patch('/usuario/20909090')
         .set("Authorization", `Bearer ${token}`)
