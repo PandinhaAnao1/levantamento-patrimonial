@@ -17,11 +17,11 @@ class CampusService{
         return campus;
     }
 
-    static async listarPorId  (pametros)  {
+    static async listarPorId(id){
         id = campusSchema.listarCampusPorId.parse({id});
         const filtro = CampusRepository.createFilterCampus(id)
 
-        const campus = await CampusRepository.listarCampusPorId(filtro);
+        const campus = await CampusRepository.listarPorId(filtro);
 
         if(!campus){
             throw new Error (" Campus não encontrado");
