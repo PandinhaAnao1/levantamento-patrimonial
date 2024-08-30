@@ -34,8 +34,8 @@ class CampusService{
     static async cadastrar (cadastrarCampus){
         
         const {nome,cidade,bairro,rua,numero,telefone} = campusSchema.cadastrarCampus.parse(cadastrarCampus);
-        const campusExist = await CampusRepository.campusExist(nome,cidade,bairro,rua,numero,telefone)
-
+        const campusExist = await CampusRepository.criar(nome,cidade,bairro,rua,numero,telefone)
+ 
         if(campusExist){
             throw new Error ("Não foi possivel cadastrar o campus pois já existe um campus com esse nome cadastrado")
         }

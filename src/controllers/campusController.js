@@ -1,6 +1,7 @@
 import { z, ZodError } from "zod";
 import CampusService from '../services/campusService.js'
 import {sendResponse, sendError} from '../utils/mensages.js';
+import campusSchema from "../shemas/campusSchema.js";
 
 class UsuarioController {
     static listarCampus = async (req, res) => {
