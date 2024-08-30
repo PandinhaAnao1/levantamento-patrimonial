@@ -15,7 +15,6 @@ class SalaController {
       return sendResponse(res,200, {data: salas});
 
     }catch(err){
-      console.error(err)
         if(err instanceof ZodError){
           return sendError(res,400,err.errors[0].message);
 
@@ -39,7 +38,6 @@ class SalaController {
       return sendResponse(res,200, {data: sala});
 
     }catch(err){
-      console.error(err)
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
@@ -58,10 +56,10 @@ class SalaController {
       const nome = req.body.nome
       const salaCriada = await SalaService.cadastrar({nome})
 
-      return sendResponse(res,200, {data: salaCriada});
+      return sendResponse(res,201, {data: salaCriada});
 
     }catch(err){
-      console.error(err)
+
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
@@ -81,9 +79,8 @@ class SalaController {
         nome:nome,
         id:parseInt(id)
       }
-      console.log(parametros)
       const salaAtualizada = await SalaService.atualizar(parametros)
-      return sendResponse(res,200, {data: salaAtualizada});
+      return sendResponse(res,201, {data: salaAtualizada});
 
     }catch(err){
       console.error(err)
