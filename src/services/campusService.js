@@ -17,9 +17,18 @@ class CampusService{
         return campus;
     }
 
-    static listarPorId = async (req, res) => {
-        return null
+    static async listarPorId(id){
+        id = campusSchema.listarCampusPorId.parse({id});
+        const filtro = CampusRepository.createFilterCampus(id)
+
+        const campus = await CampusRepository.listarPorId(filtro);
+
+        if(!campus){
+            throw new Error (" Campus não encontrado");
+        }
         
+        return campus
+
     }
     static cadastrar = async (req, res) => {
         return null
