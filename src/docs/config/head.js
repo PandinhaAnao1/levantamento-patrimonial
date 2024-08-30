@@ -4,6 +4,8 @@ import loginRoutes from "../routes/loginRoutesDoc.js";
 import loginSchema from "../schemas/loginSchemaDoc.js";
 import usuarioRoutes from "../routes/usuarioRoutesDoc.js";
 import usuarioSchemas from "../schemas/usuarioSchemaDoc.js";
+import salaRoutes from "../routes/salaRoutesDoc.js";
+import salaSchemas from "../schemas/salaSchemaDoc.js";
 
 // Função para definir as URLs do servidor dependendo do ambiente
 const getServersInCorrectOrder = () => {
@@ -39,7 +41,7 @@ const getSwaggerOptions = () => {
                     description: "Rotas para gestão de Inventários"
                 },
                 {
-                    name: "Salas",
+                    name: "Sala",
                     description: "Rotas para gestão de Salas"
                 },
                 {
@@ -50,7 +52,8 @@ const getSwaggerOptions = () => {
             paths: {
                 ...bensRoutes,
                 ...loginRoutes,
-                ...usuarioRoutes
+                ...usuarioRoutes,
+                ...salaRoutes,
             },
             components: {
                 securitySchemes: {
@@ -63,7 +66,8 @@ const getSwaggerOptions = () => {
                 schemas: {
                     ...bensSchemas,
                     ...loginSchema,
-                    ...usuarioSchemas
+                    ...usuarioSchemas,
+                    ...salaSchemas,
                 }
             },
             security: [{
