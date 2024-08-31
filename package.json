@@ -9,7 +9,7 @@
     "test": "jest ",
     "test:detect": "jest --detectOpenHandles",
     "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage",
+    "coverage": "jest --coverage",
     "dev": "nodemon server.js",
     "server": "docker compose up --build -d",
     "prisma": "npx prisma db pull & npx prisma generate",

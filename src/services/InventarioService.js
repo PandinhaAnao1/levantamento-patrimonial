@@ -28,7 +28,7 @@ class InventarioService{
                 message:"Não foi contar inventários com esse parâmetros!",
                 code: z.ZodIssueCode.custom,
                 params: {
-                    status: 404, // Adicionando um detalhe personalizado
+                    status: 404, 
                   },
             }]);
         }
