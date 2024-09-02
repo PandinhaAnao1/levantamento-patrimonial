@@ -1,9 +1,92 @@
-import { skip } from "node:test";
 import InvRepository from "../repositories/InventarioRepository.js";
 import IvSchema from "../shemas/InventarioSchema.js";
 import {z, ZodIssueCode}  from "zod";
+import Stream from "stream";
+import fastcsv from 'fast-csv';
+import InventarioRepository from "../repositories/InventarioRepository.js";
 
 class InventarioService{
+
+    static async importCSV(arquivo, inventario_id){
+
+        const csvStreamSala = new Stream.PassThrough();
+        csvStreamSala.end(arquivo.buffer);
+        
+        const nomeSalasCSV = new Set();
+
+        fastcsv.parseStream(csvStreamSala, { headers: true, delimiter: ';', columns: true})
+        .on('data', (row) => {
+            nomeSalasCSV.add(row['sala_nome']);
+        })
+
+        const salas = await InventarioRepository.listarSalas()
+        const nomeSalasBanco = []
+
+        let idSalas = filterOgj(salas)
+        
+        function filterOgj(obj){
+            return obj.reduce((obj, item) => {
+                obj[item.nome] = item.id;
+                nomeSalasBanco.push(item.nome)
+                return obj;
+              }, {});
+        }
+
+        const salasNaoCadastradas = [...nomeSalasCSV].filter(item => !nomeSalasBanco.includes(item));
+
+        if(salasNaoCadastradas.length > 0){
+            for (const salaNome of salasNaoCadastradas) {
+                await InventarioRepository.createSala({data:{
+                    nome:salaNome
+                }})
+            }
+            idSalas = filterOgj(await InventarioRepository.listarSalas())
+        }
+
+        let insertBens = []
+
+        async function insertNoBanco(){
+            await InventarioRepository.insertBens({data:insertBens})
+        }
+
+        const csvStreamBens = new Stream.PassThrough();
+        csvStreamBens.end(arquivo.buffer);
+
+
+        fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true})
+        .on('data', async (row) => {
+            
+            if(insertBens.length >= 2){
+                console.log(insertBens)
+                await insertNoBanco()
+                insertBens = []
+                console.log(`insert: ${insertBens.length}`)
+            }
+
+            console.log(insertBens.length)
+
+            const tupula = {
+                nome: row['bem_nome'],
+                tombo: row['bem_tombo'],
+                descricao: row['bem_descricao'],
+                responsavel: row['bem_responsavel'], 
+                valor: row['bem_valor'],
+                inventario_id: parseInt(inventario_id),
+                sala_id: parseInt(idSalas[row['sala_nome']]),
+                auditado: false
+            };
+            insertBens.push(tupula)
+        })
+        .on('end', async () => {
+            if(insertBens.length > 0){
+                console.log('finalizou')
+                console.log(insertBens.length)
+                await InventarioRepository.insertBens({data:insertBens})
+                insertBens = []
+            }
+        }) 
+    }
+
     
     static async contarInventarios(filtros){
 

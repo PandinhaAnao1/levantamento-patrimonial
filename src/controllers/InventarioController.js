@@ -1,7 +1,41 @@
 import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
 import { ZodError, ZodIssueCode } from "zod";
+import Stream from "stream";
+import fastcsv from 'fast-csv';
+
+
 class InventarioController {
+
+    static importCSV = async (req, res) => {
+        try{
+            if (!req.file) {
+                return res.status(400).send('Nenhum arquivo enviado.');
+            }
+            const arquivo = req.file
+          
+            const retorno = await InventarioService.importCSV(arquivo, req.body.inventario_id)
+              
+
+            return sendResponse(res,200, {data: retorno});  
+
+        }catch(err){
+            console.error(err)
+            if(err instanceof ZodError) {
+                const customError = err.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
+                if (customError) {
+                    let errors = err.errors[0];
+                    return sendError(res,parseInt(errors.params?.staus),errors.message);
+                } else {
+                    return sendError(res,401,"Erro ao realizar consulta dos inventários!");
+                }              
+              }
+        
+            return sendError(res,500,"Ocorreu um erro interno no servidor!");
+        }
+            
+    }
+
     static listarInventarios = async (req, res) => {
         try {
 
