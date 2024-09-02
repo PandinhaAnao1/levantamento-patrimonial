@@ -68,7 +68,7 @@ describe('bens-listar', () => {
     });
 });
 
-describe('bens-listar', () => {
+describe('bens-listar-por-id', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });

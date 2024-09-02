@@ -24,7 +24,6 @@ class UsuarioController {
             //colocar a verificacao se o usuario esta ativo
             if(err instanceof ZodError) {
               const customError = err.issues.find(issue => issue.code === z.ZodIssueCode.custom);
-              console.error(customError)
               if (customError) {
                 let errors = err.errors[0];
                 return sendError(res,parseInt(errors.params?.status),errors.message);
@@ -93,7 +92,7 @@ class UsuarioController {
       return sendResponse(res,201, {data:novoUsuario});
       
      } catch (err) {
-
+      console.error(err)
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 

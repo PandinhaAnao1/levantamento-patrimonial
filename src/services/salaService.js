@@ -1,19 +1,75 @@
 import SalaRepository from "../repositories/SalaRepository.js";
+import salaSchema from "../shemas/salaSchema.js";
 import {z} from "zod";
 
 class SalaService{
     
-    static async listar(filtro){
-        return SalaRepository.listar(filtro)
+    static async listar(parametros){
+        const schema = new salaSchema().listarSchema()
+        parametros = schema.parse(parametros)
+
+        const filtro = SalaRepository.createFilterSala(parametros)
+
+        const salas = await SalaRepository.filtrar(filtro)
+
+        if (salas.length == 0){
+            throw new Error("Salas não encontradas.");
+        }
+
+        return salas
     }
-    static async listarPorId(filtro){
-        return SalaRepository.listarPorId(filtro)
+
+
+    static async listarPorId(parametros){
+        const schema = new salaSchema().listarPorIdSchema()
+        parametros = schema.parse(parametros)
+
+        const filtro = SalaRepository.createFilterSala(parametros)
+
+        const sala = await SalaRepository.filtrarPorId(filtro)
+
+        if (sala == null){
+            throw new Error("Sala não encontrada.");
+        }
+        
+        return sala
     }
-    static async cadastrar(filtro){
-        return SalaRepository.cadastrar(filtro)
+
+
+    static async cadastrar(parametros){
+        const schema = new salaSchema().CriarSchema()
+        parametros = schema.parse(parametros)
+
+        const consulta = SalaRepository.createFilterSala(parametros)
+
+        return SalaRepository.cadastrar({
+            data:{nome:parametros.nome},
+            select:consulta.select
+        })
     }
-    static async atualizar(filtro){
-        return SalaRepository.atualizar(filtro)
+
+
+    static async atualizar(parametros){        
+        const schema = new salaSchema().atualizarSchema()
+        parametros = schema.parse(parametros)
+        const id = parametros.id
+
+        const consulta = SalaRepository.createFilterSala({id})
+
+        const sala = await SalaRepository.filtrarPorId(consulta)
+
+        if (sala == null){
+            throw new Error("Sala não encontrada.");
+        }
+
+        return await SalaRepository.atualizar({
+            where: consulta.where,
+            data:{
+                nome: parametros.nome
+            },
+            select: consulta.select
+        })
+
     }
 }
 

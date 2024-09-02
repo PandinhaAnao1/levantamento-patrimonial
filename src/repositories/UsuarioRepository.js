@@ -23,7 +23,7 @@ class UsuarioRepository{
     }
 
     static async criarUsuario(criarConta){
-      return await prisma.usuario.findFirst(criarConta);
+      return await prisma.usuario.create(criarConta);
     }
 
     static async atualizar(atualizarUsuario){
