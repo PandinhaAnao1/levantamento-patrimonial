@@ -33,12 +33,22 @@ class CampusService{
     }
     static async cadastrar (cadastrarCampus){
         
-        const {nome,cidade,bairro,rua,numero,telefone} = campusSchema.cadastrarCampus.parse(cadastrarCampus);
-        const campusExist = await CampusRepository.campusExist(nome,cidade,bairro,rua,numero,telefone)
-
-        if(campusExist){
+        const {nome,cidade,bairro,rua,numoro_residencia,telefone} = campusSchema.cadastrarCampus.parse(cadastrarCampus);   
+        const filtro = CampusRepository.createFilterCampus({nome, cidade})
+        const campusExist = await CampusRepository.listar(filtro)
+        console.log(campusExist)
+        if(campusExist.length > 0){
             throw new Error ("Não foi possivel cadastrar o campus pois já existe um campus com esse nome cadastrado")
         }
+        const campusCreate = await CampusRepository.criar({data:{nome:nome,
+                                                                cidade:cidade,
+                                                                bairro:bairro,
+                                                                rua:rua,
+                                                                numoro_residencia:numoro_residencia,
+                                                                telefone:telefone}})
+                                                                
+        return campusCreate
+
     }
     static atualizar = async (req, res) => {
         return null
