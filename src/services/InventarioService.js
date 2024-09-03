@@ -4,7 +4,14 @@ import IvSchema from "../shemas/InventarioSchema.js";
 import {z, ZodIssueCode}  from "zod";
 
 class InventarioService{
-    
+    //Criar paginator padrão
+    //O retorno vai ser um objeto que possui:
+
+    //Total de itens: SERIA OS RESULTADOS 
+    //Total de paginas:
+    //Pagina atual:
+    //limite
+    //Usar o count ao inves do _count
     static async contarInventarios(filtros){
 
         const {nome, data, concluido, campus, pagina} = IvSchema.listarSchema.parse(filtros);
@@ -130,7 +137,7 @@ class InventarioService{
             }
         };
 
-
+        //Colocar um if para veirifcar se o inventario foi criado mesmo
         const novoInventario = InvRepository.criar(body);
 
 
