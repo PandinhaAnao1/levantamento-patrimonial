@@ -1,4 +1,3 @@
-import { skip } from "node:test";
 import InvRepository from "../repositories/InventarioRepository.js";
 import IvSchema from "../shemas/InventarioSchema.js";
 import {z, ZodIssueCode}  from "zod";
