@@ -50,14 +50,51 @@ class CampusService{
         return campusCreate
 
     }
-    static atualizar = async (req, res) => {
-        return null
-        
+    static async atualizar(parametro) {
+
+        parametro = campusSchema.atualizarCampus.parse(parametro);
+    
+        const { id, nome, telefone, bairro, rua, cidade, numoro_residencia } = parametro;
+    
+
+        const campusExist = await CampusRepository.buscarPorId(id);
+    
+        if (campusExist == null) {
+            throw new Error("Campus não existe");
+        }
+    
+
+        let atualizacao = {
+            where: { id: id },
+            data: {
+                nome: nome,
+                telefone: telefone,
+                bairro: bairro,
+                rua: rua,
+                cidade: cidade,
+                numoro_residencia: numoro_residencia
+            },
+            select: {
+                id: true,
+                nome: true,
+                telefone: true,
+                rua: true,
+                bairro: true,
+                numoro_residencia: true,
+                cidade: true
+            }
+        };
+    
+
+        return await CampusRepository.atualizar(atualizacao);
     }
-    static excluir = async (req, res) => {
-        return null
+}    
+    
+
+//    static excluir = async (req, res) => {
+//        return null
         
-    }
-}
+ //   }
+//}
 
 export default CampusService;
