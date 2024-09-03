@@ -53,8 +53,8 @@ class InventarioService{
         fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true})
         .on('data', async (row) => {
             
-            if(insertBens.length >= 10){
-                
+            if(insertBens.length >= 1000){
+
                 listaInsertBens.push(insertBens)
                 insertBens = []
             }
@@ -81,6 +81,7 @@ class InventarioService{
                     await InventarioRepository.insertBens({data:bens})
                 }
                 listaInsertBens = []
+                console.log("finalizou")
             }
         }) 
     }
