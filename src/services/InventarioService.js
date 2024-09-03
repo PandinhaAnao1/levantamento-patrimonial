@@ -44,10 +44,7 @@ class InventarioService{
         }
 
         let insertBens = []
-
-        async function insertNoBanco(){
-            await InventarioRepository.insertBens({data:insertBens})
-        }
+        let listaInsertBens = []
 
         const csvStreamBens = new Stream.PassThrough();
         csvStreamBens.end(arquivo.buffer);
@@ -56,14 +53,11 @@ class InventarioService{
         fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true})
         .on('data', async (row) => {
             
-            if(insertBens.length >= 2){
-                console.log(insertBens)
-                await insertNoBanco()
+            if(insertBens.length >= 10){
+                
+                listaInsertBens.push(insertBens)
                 insertBens = []
-                console.log(`insert: ${insertBens.length}`)
             }
-
-            console.log(insertBens.length)
 
             const tupula = {
                 nome: row['bem_nome'],
@@ -79,10 +73,14 @@ class InventarioService{
         })
         .on('end', async () => {
             if(insertBens.length > 0){
-                console.log('finalizou')
-                console.log(insertBens.length)
-                await InventarioRepository.insertBens({data:insertBens})
+
+                listaInsertBens.push(insertBens)
                 insertBens = []
+
+                for (const bens of listaInsertBens) {
+                    await InventarioRepository.insertBens({data:bens})
+                }
+                listaInsertBens = []
             }
         }) 
     }
@@ -238,7 +236,7 @@ class InventarioService{
             }]);
         }
         let numero  = {id:parseInt(id.id)};
-        console.log(numero)
+
         const {nome, status} = IvSchema.atualizarSchema.parse(resto);
 
         // if(!status && status != null && status != undefined){
