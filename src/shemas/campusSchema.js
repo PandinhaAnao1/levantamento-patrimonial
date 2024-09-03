@@ -31,6 +31,7 @@ class campusSchema{
     });
 
     static atualizarCampus = z.object({
+        id: z.number().int().positive(),
         nome: z.string().trim().min(1).max(80).default(null).optional(),
         telefone: z.string().trim().min(1).max(80).default(null).optional(),
         rua: z.string().trim().min(1).max(80).default(null).optional(),

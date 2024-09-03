@@ -13,7 +13,7 @@ class CampusRepository{
       return await prisma.campus.create(filtros);
     }
 
-    static async atualizar(filtros){
+    static async atualizar(atualizarcampus){
       return await prisma.campus.update(atualizarcampus);
     }
 
