@@ -23,6 +23,7 @@
     "@babel/preset-env": "^7.25.3",
     "@prisma/client": "^5.19.0",
     "bcrypt": "^5.1.1",
+    "csv-file-validator": "^2.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "faker-br": "^0.4.1",

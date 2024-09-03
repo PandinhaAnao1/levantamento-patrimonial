@@ -5,13 +5,79 @@ import Stream from "stream";
 import fastcsv from 'fast-csv';
 import InventarioRepository from "../repositories/InventarioRepository.js";
 
-class InventarioService{
+import CSVFileValidator from 'csv-file-validator'
 
+
+class InventarioService{
+    
     static async importCSV(arquivo, inventario_id){
+        if (arquivo.mimetype != 'text/csv') {
+            throw new Error("arquivo do tipo errado.")
+        }
 
         const csvStreamSala = new Stream.PassThrough();
         csvStreamSala.end(arquivo.buffer);
-        
+
+        const config = {
+            headers: [
+                {
+                    name: 'bem_nome',
+                    inputName: 'bem_nome',
+                    required: true,
+                    requiredError: function (headerName, rowNumber, columnNumber) {
+                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
+                    }
+                },
+                {
+                    name: 'bem_tombo',
+                    inputName: 'bem_tombo',
+                    required: true,
+                    requiredError: function (headerName, rowNumber, columnNumber) {
+                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
+                    }
+                },
+                {
+                    name: 'bem_descricao',
+                    inputName: 'bem_descricao',
+                    required: true,
+                    requiredError: function (headerName, rowNumber, columnNumber) {
+                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
+                    }
+                },
+                {
+                    name: 'bem_responsavel',
+                    inputName: 'bem_responsavel',
+                    required: true,
+                    requiredError: function (headerName, rowNumber, columnNumber) {
+                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
+                    }
+                },
+                {
+                    name: 'bem_valor',
+                    inputName: 'bem_valor',
+                    required: true,
+                    requiredError: function (headerName, rowNumber, columnNumber) {
+                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
+                    }
+                },
+                {
+                    name: 'sala_nome',
+                    inputName: 'sala_nome',
+                    required: true,
+                    requiredError: function (headerName, rowNumber, columnNumber) {
+                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
+                    }
+                },
+            ]
+        }
+
+        CSVFileValidator(csvStreamSala, config)
+            .then(csvData => {
+                csvData.data // Array of objects from file
+                console.log(csvData.inValidData) // Array of error messages
+            })
+            .catch(err => {return err})
+
         const nomeSalasCSV = new Set();
 
         fastcsv.parseStream(csvStreamSala, { headers: true, delimiter: ';', columns: true})
