@@ -33,7 +33,7 @@ class CampusService{
     }
     static async cadastrar (cadastrarCampus){
         
-        const {nome,cidade,bairro,rua,numoro_residencia,telefone} = campusSchema.cadastrarCampus.parse(cadastrarCampus);   
+        const {nome,cidade,bairro,rua,numero_residencial,telefone} = campusSchema.cadastrarCampus.parse(cadastrarCampus);   
         const filtro = CampusRepository.createFilterCampus({nome, cidade})
         const campusExist = await CampusRepository.listar(filtro)
         console.log(campusExist)
@@ -44,7 +44,7 @@ class CampusService{
                                                                 cidade:cidade,
                                                                 bairro:bairro,
                                                                 rua:rua,
-                                                                numoro_residencia:numoro_residencia,
+                                                                numero_residencial:numero_residencial,
                                                                 telefone:telefone}})
                                                                 
         return campusCreate
@@ -54,7 +54,7 @@ class CampusService{
 
         parametro = campusSchema.atualizarCampus.parse(parametro);
     
-        const { id, nome, telefone, bairro, rua, cidade, numoro_residencia } = parametro;
+        const { id, nome, telefone, bairro, rua, cidade, numero_residencial } = parametro;
     
 
         const campusExist = await CampusRepository.buscarPorId(id);
@@ -72,7 +72,7 @@ class CampusService{
                 bairro: bairro,
                 rua: rua,
                 cidade: cidade,
-                numoro_residencia: numoro_residencia
+                numero_residencial: numero_residencial
             },
             select: {
                 id: true,
@@ -80,7 +80,7 @@ class CampusService{
                 telefone: true,
                 rua: true,
                 bairro: true,
-                numoro_residencia: true,
+                numero_residencial: true,
                 cidade: true
             }
         };

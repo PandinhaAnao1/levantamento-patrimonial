@@ -33,7 +33,7 @@ class CampusRepository{
               ...(parametros.id && { id: parametros.id }),
               ...(parametros.bairro && { bairro: {contains: parametros.bairro }}),
               ...(parametros.rua && { rua: {contains: parametros.rua }}),
-              ...(parametros.numoro_residencia && { numoro_residencia: {contains: parametros.numoro_residencia }}),
+              ...(parametros.numero_residencial && { numero_residencial: {contains: parametros.numero_residencial }}),
 
 
 
@@ -46,7 +46,7 @@ class CampusRepository{
             nome:true,
             bairro:true,
             rua:true,
-            numoro_residencia:true
+            numero_residencial:true
 
           }
       }

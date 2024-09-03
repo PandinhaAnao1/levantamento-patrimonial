@@ -6,7 +6,7 @@ import campusSchema from "../shemas/campusSchema.js";
 class UsuarioController {
     static listarCampus = async (req, res) => {
         try {
-            const {nome, telefone, cidade, bairro, rua, numoro_residencia} = req.query
+            const {nome, telefone, cidade, bairro, rua, numero_residencial} = req.query
 
             const paramentros = {
 
@@ -15,7 +15,7 @@ class UsuarioController {
               cidade: cidade,
               bairro: bairro,
               rua: rua,
-              numoro_residencia: numoro_residencia
+              numero_residencial: numero_residencial
 
             }
 

@@ -21,7 +21,7 @@ class campusSchema{
         cidade: z.string().min(1).trim().max(200),
         bairro: z.string().min(1).trim().max(80),
         rua: z.string().min(1).trim().max(80),
-        numoro_residencia: z.preprocess((val) => Number(val), z.number({
+        numero_residencial: z.preprocess((val) => Number(val), z.number({
             invalid_type_error: "inventario_id informado não é do tipo number",
         }).int({
             message: "numero residencial informado não é um número inteiro"
@@ -37,7 +37,7 @@ class campusSchema{
         rua: z.string().min(1).max(80).default(null).optional(),
         bairro: z.string().min(1).max(80).default(null).optional(),
         cidade: z.string().min(1).max(80).default(null).optional(),
-        numoro_residencia: z.number().int().positive(),
+        numero_residencial: z.number().int().positive(),
     })
 
 
