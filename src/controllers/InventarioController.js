@@ -1,8 +1,6 @@
 import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
 import { ZodError, ZodIssueCode } from "zod";
-import Stream from "stream";
-import fastcsv from 'fast-csv';
 
 
 class InventarioController {
@@ -14,10 +12,9 @@ class InventarioController {
             }
             const arquivo = req.file
           
-            const retorno = await InventarioService.importCSV(arquivo, req.body.inventario_id)
+            const retorno = await InventarioService.importCSV(arquivo, req.body)
               
-
-            return sendResponse(res,200, {data: retorno});  
+            return sendResponse(res,201, {data: retorno});  
 
         }catch(err){
             console.error(err)

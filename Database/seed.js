@@ -38,8 +38,8 @@ async function seedDatabase() {
     // Inserindo dados na tabela `campus`
     const campuses = await prisma.campus.createMany({
       data: [
-        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numoro_residencia: 7741 },
-        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numoro_residencia: 5534 },
+        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numero_residencial: 7741 },
+        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numero_residencial: 5534 },
       ],
     });
 
@@ -54,11 +54,11 @@ async function seedDatabase() {
     // Inserindo dados na tabela `sala`
     const salas = await prisma.sala.createMany({
       data: [
-        { nome: 'Laboratório de informática do piso 3 sala 5' },
-        { nome: 'Cantina de alimentação piso 1' },
-        { nome: 'Laboratório de química do piso 2 sala 12' },
-        { nome: 'Sala de pesquisa avançada em IA' },
-        { nome: 'Sala de Reunião de grupos de Fábrica' },
+        { nome: 'Laboratório de informática do piso 3 sala 5', campus_id: 2 },
+        { nome: 'Cantina de alimentação piso 1' , campus_id: 1},
+        { nome: 'Laboratório de química do piso 2 sala 12' , campus_id: 1},
+        { nome: 'Sala de pesquisa avançada em IA' , campus_id: 2},
+        { nome: 'Sala de Reunião de grupos de Fábrica' , campus_id: 1},
       ],
     });
 

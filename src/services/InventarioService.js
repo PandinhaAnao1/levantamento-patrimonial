@@ -10,7 +10,22 @@ import CSVFileValidator from 'csv-file-validator'
 
 class InventarioService{
     
-    static async importCSV(arquivo, inventario_id){
+    static async importCSV(arquivo, body){
+
+        const {nome,campus_id} = IvSchema.criar.parse(body);
+
+        const campusExist = await InventarioRepository.campusExist({where:{id:campus_id}, select:{nome:true}})
+
+        const inventarioExist = await InventarioRepository.listarPorId({where:{nome:nome, campus_id:campus_id}, select:{nome:true}})
+
+        if(campusExist == null){
+            throw new Error("Campus não existe.")
+        }
+
+        if(inventarioExist != null){
+            throw new Error("Este nome de inventário já está em uso.")
+        }
+
         if (arquivo.mimetype != 'text/csv') {
             throw new Error("arquivo do tipo errado.")
         }
@@ -73,11 +88,25 @@ class InventarioService{
 
         CSVFileValidator(csvStreamSala, config)
             .then(csvData => {
-                csvData.data // Array of objects from file
-                console.log(csvData.inValidData) // Array of error messages
+                if(csvData.inValidData.length > 0){
+                    throw new Error(csvData.inValidData)
+                }
             })
-            .catch(err => {return err})
 
+        const insertInventario = {
+                data:{
+                    nome:nome,
+                    data: new Date(),
+                    concluido:false,
+                    campus_id: campus_id
+                },
+                select:{
+                    id:true
+                }
+            };
+        
+        const inventarioCriado = InvRepository.criar(insertInventario);
+        
         const nomeSalasCSV = new Set();
 
         fastcsv.parseStream(csvStreamSala, { headers: true, delimiter: ';', columns: true})
@@ -103,51 +132,38 @@ class InventarioService{
         if(salasNaoCadastradas.length > 0){
             for (const salaNome of salasNaoCadastradas) {
                 await InventarioRepository.createSala({data:{
-                    nome:salaNome
+                    nome:salaNome,
+                    campus_id: campus_id
                 }})
             }
             idSalas = filterOgj(await InventarioRepository.listarSalas())
         }
 
         let insertBens = []
-        let listaInsertBens = []
 
         const csvStreamBens = new Stream.PassThrough();
         csvStreamBens.end(arquivo.buffer);
 
-
         fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true})
         .on('data', async (row) => {
-            
-            if(insertBens.length >= 1000){
-
-                listaInsertBens.push(insertBens)
-                insertBens = []
-            }
-
             const tupula = {
                 nome: row['bem_nome'],
                 tombo: row['bem_tombo'],
                 descricao: row['bem_descricao'],
                 responsavel: row['bem_responsavel'], 
                 valor: row['bem_valor'],
-                inventario_id: parseInt(inventario_id),
+                inventario_id: parseInt(inventarioCriado.id),
                 sala_id: parseInt(idSalas[row['sala_nome']]),
                 auditado: false
             };
             insertBens.push(tupula)
+
         })
         .on('end', async () => {
             if(insertBens.length > 0){
-
-                listaInsertBens.push(insertBens)
-                insertBens = []
-
-                for (const bens of listaInsertBens) {
-                    await InventarioRepository.insertBens({data:bens})
-                }
-                listaInsertBens = []
-                console.log("finalizou")
+                await InventarioRepository.insertBens({data:insertBens})
+            }else{
+                throw new Error("CSV está vazio.")
             }
         }) 
     }

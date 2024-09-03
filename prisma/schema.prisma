@@ -27,14 +27,15 @@ model bem {
 }
 
 model campus {
-  id                Int          @id @default(autoincrement())
-  nome              String?      @db.VarChar(80)
-  telefone          String?      @db.VarChar(20)
-  cidade            String?      @db.VarChar(60)
-  bairro            String?      @db.VarChar(60)
-  rua               String?      @db.VarChar(60)
-  numoro_residencia Int?
-  inventario        inventario[]
+  id                 Int          @id @default(autoincrement())
+  nome               String?      @db.VarChar(80)
+  telefone           String?      @db.VarChar(13)
+  cidade             String?      @db.VarChar(60)
+  bairro             String?      @db.VarChar(60)
+  rua                String?      @db.VarChar(60)
+  numero_residencial Int?
+  inventario         inventario[]
+  sala               sala[]
 }
 
 model inventario {
@@ -74,10 +75,16 @@ model levantamento {
 }
 
 model sala {
-  id           Int            @id @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
+  id           Int            @unique(map: "Sala_id_UNIQUE") @default(autoincrement())
   nome         String         @db.VarChar(120)
+  bloco        String?        @db.VarChar(40)
+  campus_id    Int
   bem          bem[]
   levantamento levantamento[]
+  campus       campus         @relation(fields: [campus_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sala_campus1")
+
+  @@id([id, campus_id])
+  @@index([campus_id], map: "fk_sala_campus1_idx")
 }
 
 model usuario {

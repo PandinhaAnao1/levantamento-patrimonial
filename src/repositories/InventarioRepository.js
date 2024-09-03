@@ -39,6 +39,10 @@ class InventarioRepository {
     return await prisma.inventario.update(inventario);
   }
 
+  static async campusExist(filtro){
+    return await prisma.campus.findFirst(filtro)
+  }
+
 }
 
 export default InventarioRepository;
