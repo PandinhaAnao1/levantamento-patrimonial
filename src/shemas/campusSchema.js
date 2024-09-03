@@ -37,7 +37,6 @@ class campusSchema{
         rua: z.string().trim().min(1).max(80).default(null).optional(),
         bairro: z.string().trim().min(1).max(80).default(null).optional(),
         cidade: z.string().trim().min(1).max(80).default(null).optional(),
-        numoro_residencia: z.int().trim().min(1).max(80).default(null).optional()
     })
 
 

@@ -50,12 +50,12 @@ class CampusService{
         return campusCreate
 
     }
-    static async atualizarCampus(parametro){
-        parametro = campusSchema.atualizarCampus.parse(parametro);
+    static async atualizarcampus(parametro){
+        parametro = campusSchema.atualizarcampus.parse(parametro);
 
         const {id, nome, telefone, bairro, rua, cidade, numoro_residencia} = parametro;
 
-        const campusExist = await CampusRepository.atualizarCampus(id);
+        const campusExist = await CampusRepository.atualizarcampus(id);
 
         if(campusExist == null){
             throw new Error ("campus ja existe")

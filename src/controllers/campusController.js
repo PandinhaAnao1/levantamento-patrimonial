@@ -79,12 +79,22 @@ class UsuarioController {
     }
     static atualizarCampus = async (req, res) => {
         try {
-            return sendResponse(res,200, {data: "teste chegou"});
+          let id = req.params.id
+          let novoCampus = {
+            id: parseInt(id),
+            ...req.body
+          }
+
+          const campus = await CampusService.atualizarCampus(novoCampus)
+
+            return sendResponse(res,200, {data:campus});
       
           } catch (err) {
-      
+            console.error(err)
             if(err instanceof ZodError){
               return sendError(res,400,err.errors[0].message);
+            }else if(err.message == "Campus não existe." ){
+              return sendError(res,404,["Campus não existe."]);
       
             }else{
               return sendError(res,500,"Ocorreu um erro interno no servidor!");
