@@ -1,3 +1,4 @@
+import { error } from "node:console";
 import CampusRepository from "../repositories/campusRepository.js"
 import campusSchema from "../shemas/campusSchema.js";
 import {z} from "zod";
@@ -30,9 +31,24 @@ class CampusService{
         return campus
 
     }
-    static cadastrar = async (req, res) => {
-        return null
+    static async cadastrar (cadastrarCampus){
         
+        const {nome,cidade,bairro,rua,numoro_residencia,telefone} = campusSchema.cadastrarCampus.parse(cadastrarCampus);   
+        const filtro = CampusRepository.createFilterCampus({nome, cidade})
+        const campusExist = await CampusRepository.listar(filtro)
+        console.log(campusExist)
+        if(campusExist.length > 0){
+            throw new Error ("Não foi possivel cadastrar o campus pois já existe um campus com esse nome cadastrado")
+        }
+        const campusCreate = await CampusRepository.criar({data:{nome:nome,
+                                                                cidade:cidade,
+                                                                bairro:bairro,
+                                                                rua:rua,
+                                                                numoro_residencia:numoro_residencia,
+                                                                telefone:telefone}})
+                                                                
+        return campusCreate
+
     }
     static atualizar = async (req, res) => {
         return null

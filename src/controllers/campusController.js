@@ -1,6 +1,7 @@
 import { z, ZodError } from "zod";
 import CampusService from '../services/campusService.js'
 import {sendResponse, sendError} from '../utils/mensages.js';
+import campusSchema from "../shemas/campusSchema.js";
 
 class UsuarioController {
     static listarCampus = async (req, res) => {
@@ -58,12 +59,17 @@ class UsuarioController {
     }
     static cadastrarCampus = async (req, res) => {
         try {
-            return sendResponse(res,200, {data: "teste chegou"});
+           const novoCampus = await CampusService.cadastrar(req.body);
+          
+          return sendResponse(res,200, {data: novoCampus});
       
           } catch (err) {
-      
+            console.error(err)
             if(err instanceof ZodError){
               return sendError(res,400,err.errors[0].message);
+            
+            }else if(err.message == "Não foi possivel cadastrar campus pois os dados já estão cadastrado." ){
+              return sendError(res,404,["Não foi possivel cadastrar campus pois os dados já estão cadastrado."]);
       
             }else{
               return sendError(res,500,"Ocorreu um erro interno no servidor!");

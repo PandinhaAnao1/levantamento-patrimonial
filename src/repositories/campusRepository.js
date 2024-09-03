@@ -10,7 +10,7 @@ class CampusRepository{
     }
 
     static async criar(filtros){
-      return await prisma.campus.create(criarConta);
+      return await prisma.campus.create(filtros);
     }
 
     static async atualizar(filtros){
