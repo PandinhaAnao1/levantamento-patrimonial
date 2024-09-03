@@ -85,7 +85,7 @@ class UsuarioController {
             ...req.body
           }
 
-          const campus = await CampusService.atualizarCampus(novoCampus)
+          const campus = await CampusService.atualizar(novoCampus)
 
             return sendResponse(res,200, {data:campus});
       

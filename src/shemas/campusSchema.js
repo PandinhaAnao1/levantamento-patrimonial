@@ -32,11 +32,12 @@ class campusSchema{
 
     static atualizarCampus = z.object({
         id: z.number().int().positive(),
-        nome: z.string().trim().min(1).max(80).default(null).optional(),
-        telefone: z.string().trim().min(1).max(80).default(null).optional(),
-        rua: z.string().trim().min(1).max(80).default(null).optional(),
-        bairro: z.string().trim().min(1).max(80).default(null).optional(),
-        cidade: z.string().trim().min(1).max(80).default(null).optional(),
+        nome: z.string().min(1).max(80).default(null).optional(),
+        telefone: z.number().int().positive(),
+        rua: z.string().min(1).max(80).default(null).optional(),
+        bairro: z.string().min(1).max(80).default(null).optional(),
+        cidade: z.string().min(1).max(80).default(null).optional(),
+        numoro_residencia: z.number().int().positive(),
     })
 
 
