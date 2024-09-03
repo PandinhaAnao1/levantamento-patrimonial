@@ -113,7 +113,7 @@ class UsuarioService{
                 status: status
         };
     
-        // Salvando o novo usuário no repositório
+
         const novaConta = await UsuarioRepository.criarUsuario({
             data: insert, 
             select: UsuarioRepository.createFilterUsuario({}).select}

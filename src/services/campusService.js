@@ -50,41 +50,45 @@ class CampusService{
         return campusCreate
 
     }
-    static async atualizar(parametro){
+    static async atualizar(parametro) {
+
         parametro = campusSchema.atualizarCampus.parse(parametro);
+    
+        const { id, nome, telefone, bairro, rua, cidade, numoro_residencia } = parametro;
+    
 
-        const {id, nome, telefone, bairro, rua, cidade, numoro_residencia} = parametro;
-
-        const campusExist = await CampusRepository.atualizar(id);
-
-        if(campusExist == null){
-            throw new Error ("campus ja existe")
+        const campusExist = await CampusRepository.buscarPorId(id);
+    
+        if (campusExist == null) {
+            throw new Error("Campus não existe");
         }
+    
 
         let atualizacao = {
-            where:{id: id},
-            data:{
-                nome:nome,
-                telefone:telefone,
-                bairro:bairro,
-                rua:rua,
-                cidade:cidade,
-                numoro_residencia:numoro_residencia},
-                select:{
-                    id:true,
-                    nome:true,
-                    telefone:true,
-                    rua:true,
-                    bairro:true,
-                    numoro_residencia:true,
-                    cidade:true
-
-                }
-
+            where: { id: id },
+            data: {
+                nome: nome,
+                telefone: telefone,
+                bairro: bairro,
+                rua: rua,
+                cidade: cidade,
+                numoro_residencia: numoro_residencia
+            },
+            select: {
+                id: true,
+                nome: true,
+                telefone: true,
+                rua: true,
+                bairro: true,
+                numoro_residencia: true,
+                cidade: true
             }
-            return await CampusRepository.atualizar(atualizacao)
-        }
+        };
+    
+
+        return await CampusRepository.atualizar(atualizacao);
     }
+}    
     
 
 //    static excluir = async (req, res) => {
