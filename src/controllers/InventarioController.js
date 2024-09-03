@@ -1,6 +1,6 @@
 import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
-import { ZodError, ZodIssueCode } from "zod";
+import { ZodError, ZodIssueCode,array,z } from "zod";
 
 
 class InventarioController {
@@ -11,24 +11,39 @@ class InventarioController {
                 return res.status(400).send('Nenhum arquivo enviado.');
             }
             const arquivo = req.file
+            const parametros = {
+                nome: req.body.nome,
+                campus_id: parseInt(req.body.campus_id)
+            }
           
-            const retorno = await InventarioService.importCSV(arquivo, req.body)
+            const retorno = await InventarioService.importCSV(arquivo, parametros)
               
             return sendResponse(res,201, {data: retorno});  
 
         }catch(err){
             console.error(err)
-            if(err instanceof ZodError) {
-                const customError = err.issues.find(issue => issue.params?.code === ZodIssueCode.custom);
-                if (customError) {
-                    let errors = err.errors[0];
-                    return sendError(res,parseInt(errors.params?.staus),errors.message);
-                } else {
-                    return sendError(res,401,"Erro ao realizar consulta dos inventários!");
-                }              
-              }
-        
-            return sendError(res,500,"Ocorreu um erro interno no servidor!");
+            if (err instanceof z.ZodError) {
+                const errorMessages = err.issues.map((issue) => issue.message);
+                return sendError(res, 400, errorMessages)
+
+            }else if(err.message === "Campus não existe.") {
+                return sendError(res, 404, ["Campus não existe."])
+
+            }else if(err.message === "O nome do inventário já está em uso.") {
+                return sendError(res, 404, ["O nome do inventário já está em uso."])
+
+            }else if(err.message === "arquivo do tipo errado.") {
+                return sendError(res, 404, ["arquivo do tipo errado."])
+
+            }else if(err.message === "Estrutura do CSV está incorreta.") {
+                return sendError(res, 404, "Estrutura do CSV está incorreta.")
+
+            }else if(err.message === "CSV está vazio.") {
+                return sendError(res, 404, ["CSV está vazio."])
+
+            }else{
+                return sendError(res,500,"Ocorreu um erro interno no servidor!");
+            }
         }
             
     }

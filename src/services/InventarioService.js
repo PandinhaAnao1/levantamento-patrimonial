@@ -10,164 +10,127 @@ import CSVFileValidator from 'csv-file-validator'
 
 class InventarioService{
     
-    static async importCSV(arquivo, body){
-
-        const {nome,campus_id} = IvSchema.criar.parse(body);
-
-        const campusExist = await InventarioRepository.campusExist({where:{id:campus_id}, select:{nome:true}})
-
-        const inventarioExist = await InventarioRepository.listarPorId({where:{nome:nome, campus_id:campus_id}, select:{nome:true}})
-
-        if(campusExist == null){
-            throw new Error("Campus não existe.")
+    static async importCSV(arquivo, parametros) {
+        const { nome, campus_id } = IvSchema.criar.parse(parametros);
+    
+        const campusExist = await InventarioRepository.campusExist({ where: { id: campus_id }, select: { nome: true } });
+    
+        const inventarioExist = await InventarioRepository.listar({ where: { nome: nome, campus_id: campus_id }, select: { nome: true } });
+    
+        if (!campusExist) {
+            throw new Error("Campus não existe.");
         }
-
-        if(inventarioExist != null){
-            throw new Error("Este nome de inventário já está em uso.")
+    
+        if (inventarioExist.length > 0) {
+            throw new Error("O nome do inventário já está em uso.");
         }
-
-        if (arquivo.mimetype != 'text/csv') {
-            throw new Error("arquivo do tipo errado.")
+    
+        if (arquivo.mimetype !== 'text/csv') {
+            throw new Error("Arquivo do tipo errado.");
         }
-
+    
         const csvStreamSala = new Stream.PassThrough();
         csvStreamSala.end(arquivo.buffer);
-
+    
         const config = {
             headers: [
-                {
-                    name: 'bem_nome',
-                    inputName: 'bem_nome',
-                    required: true,
-                    requiredError: function (headerName, rowNumber, columnNumber) {
-                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
-                    }
-                },
-                {
-                    name: 'bem_tombo',
-                    inputName: 'bem_tombo',
-                    required: true,
-                    requiredError: function (headerName, rowNumber, columnNumber) {
-                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
-                    }
-                },
-                {
-                    name: 'bem_descricao',
-                    inputName: 'bem_descricao',
-                    required: true,
-                    requiredError: function (headerName, rowNumber, columnNumber) {
-                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
-                    }
-                },
-                {
-                    name: 'bem_responsavel',
-                    inputName: 'bem_responsavel',
-                    required: true,
-                    requiredError: function (headerName, rowNumber, columnNumber) {
-                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
-                    }
-                },
-                {
-                    name: 'bem_valor',
-                    inputName: 'bem_valor',
-                    required: true,
-                    requiredError: function (headerName, rowNumber, columnNumber) {
-                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
-                    }
-                },
-                {
-                    name: 'sala_nome',
-                    inputName: 'sala_nome',
-                    required: true,
-                    requiredError: function (headerName, rowNumber, columnNumber) {
-                        throw new Error(`${headerName} is required in the ${rowNumber} row / ${columnNumber} column`)
-                    }
-                },
+                { name: 'bem_nome', inputName: 'bem_nom', required: true },
+                { name: 'bem_tombo', inputName: 'bem_tomb', required: true },
+                { name: 'bem_descricao', inputName: 'bem_descricao', required: true },
+                { name: 'bem_responsavel', inputName: 'bem_responsavel', required: true },
+                { name: 'bem_valor', inputName: 'bem_valor', required: true },
+                { name: 'sala_nome', inputName: 'sala_nome', required: true },
             ]
+        };
+    
+        const csvData = await CSVFileValidator(csvStreamSala, config);
+        if (csvData.inValidData.length > 0) {
+            throw new Error("Estrutura do CSV está incorreta.");
         }
-
-        CSVFileValidator(csvStreamSala, config)
-            .then(csvData => {
-                if(csvData.inValidData.length > 0){
-                    throw new Error(csvData.inValidData)
-                }
-            })
-
+    
         const insertInventario = {
-                data:{
-                    nome:nome,
-                    data: new Date(),
-                    concluido:false,
-                    campus_id: campus_id
-                },
-                select:{
-                    id:true
-                }
-            };
-        
-        const inventarioCriado = InvRepository.criar(insertInventario);
-        
+            data: {
+                nome: nome,
+                data: new Date(),
+                concluido: false,
+                campus_id: campus_id
+            },
+            select: {
+                id: true
+            }
+        };
+    
+        const inventarioCriado = await InventarioRepository.criar(insertInventario);
+    
         const nomeSalasCSV = new Set();
-
-        fastcsv.parseStream(csvStreamSala, { headers: true, delimiter: ';', columns: true})
-        .on('data', (row) => {
-            nomeSalasCSV.add(row['sala_nome']);
-        })
-
-        const salas = await InventarioRepository.listarSalas()
-        const nomeSalasBanco = []
-
-        let idSalas = filterOgj(salas)
-        
-        function filterOgj(obj){
+        const csvStreamSalas = new Stream.PassThrough();
+        csvStreamSalas.end(arquivo.buffer);
+    
+        await new Promise((resolve, reject) => {
+            fastcsv.parseStream(csvStreamSalas, { headers: true, delimiter: ';', columns: true })
+                .on('data', (row) => {
+                    nomeSalasCSV.add(row['sala_nome']);
+                })
+                .on('end', () => {
+                    resolve();
+                })
+                .on('error', (err) => {
+                    reject(err);
+                });
+        });
+    
+        const salas = await InventarioRepository.listarSalas();
+        const nomeSalasBanco = [];
+        let idSalas = filterOgj(salas);
+    
+        function filterOgj(obj) {
             return obj.reduce((obj, item) => {
                 obj[item.nome] = item.id;
-                nomeSalasBanco.push(item.nome)
+                nomeSalasBanco.push(item.nome);
                 return obj;
-              }, {});
+            }, {});
         }
-
+    
         const salasNaoCadastradas = [...nomeSalasCSV].filter(item => !nomeSalasBanco.includes(item));
-
-        if(salasNaoCadastradas.length > 0){
+    
+        if (salasNaoCadastradas.length > 0) {
             for (const salaNome of salasNaoCadastradas) {
-                await InventarioRepository.createSala({data:{
-                    nome:salaNome,
-                    campus_id: campus_id
-                }})
+                await InventarioRepository.createSala({ data: { nome: salaNome, campus_id: campus_id } });
             }
-            idSalas = filterOgj(await InventarioRepository.listarSalas())
+            idSalas = filterOgj(await InventarioRepository.listarSalas());
         }
-
-        let insertBens = []
+    
+        let insertBens = [];
 
         const csvStreamBens = new Stream.PassThrough();
         csvStreamBens.end(arquivo.buffer);
-
-        fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true})
-        .on('data', async (row) => {
-            const tupula = {
-                nome: row['bem_nome'],
-                tombo: row['bem_tombo'],
-                descricao: row['bem_descricao'],
-                responsavel: row['bem_responsavel'], 
-                valor: row['bem_valor'],
-                inventario_id: parseInt(inventarioCriado.id),
-                sala_id: parseInt(idSalas[row['sala_nome']]),
-                auditado: false
-            };
-            insertBens.push(tupula)
-
-        })
-        .on('end', async () => {
-            if(insertBens.length > 0){
-                await InventarioRepository.insertBens({data:insertBens})
-            }else{
-                throw new Error("CSV está vazio.")
-            }
-        }) 
+    
+        await new Promise((resolve, reject) => {
+            fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true })
+                .on('data', (row) => {
+                    const tupula = {
+                        nome: row['bem_nome'],
+                        tombo: row['bem_tombo'],
+                        descricao: row['bem_descricao'],
+                        responsavel: row['bem_responsavel'],
+                        valor: row['bem_valor'],
+                        inventario_id: parseInt(inventarioCriado.id),
+                        sala_id: parseInt(idSalas[row['sala_nome']]),
+                        auditado: false
+                    };
+                    insertBens.push(tupula);
+                })
+                .on('end', async () => {
+                    await InventarioRepository.insertBens({ data: insertBens });
+                    resolve();
+                })
+                .on('error', (err) => {
+                    reject(err);
+                });
+        });
+    
+        return "Inventário criado com sucesso.";
     }
-
     
     static async contarInventarios(filtros){
 
@@ -201,6 +164,7 @@ class InventarioService{
         
 
     }
+
     static async listarInventarios(filtros){
         
         const {nome, data, concluido, campus, pagina} = IvSchema.listarSchema.parse(filtros);
