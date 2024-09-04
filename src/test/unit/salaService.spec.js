@@ -21,8 +21,8 @@ describe('sala-listar', () => {
     test('1-Deve chamar o banco e listar todos as salas que pertence a um inventário.', async () => {
 
         const mockSala = [
-            { id: 1, nome: 'Refeitorio 2' },
-            { id: 1, nome: 'Laboratório 2' },
+            { id: 1, nome: 'Refeitorio 2' ,campus_id:1},
+            { id: 1, nome: 'Laboratório 2' ,campus_id:1},
         ];
 
         const filter = {where: {inventario_id: 1}, select:{ nome:true, id:true}}
@@ -51,8 +51,8 @@ describe('sala-listar', () => {
     test('3-Deve retonar um erro quando o inventário_id não for informado.', async () => {
 
         const mockSala = [
-            { id: 1, nome: 'Refeitorio 2' },
-            { id: 1, nome: 'Laboratório 2' },
+            { id: 1, nome: 'Refeitorio 2' ,campus_id:1},
+            { id: 1, nome: 'Laboratório 2' ,campus_id:1},
         ];
 
         const filter = {where: {inventario_id: 1}, select:{ nome:true, id:true}}
@@ -60,7 +60,7 @@ describe('sala-listar', () => {
         SalaRepository.createFilterSala.mockReturnValue(filter);
         SalaRepository.filtrar.mockResolvedValue(mockSala);
 
-        await expect(SalaService.listar({})).rejects.toBeInstanceOf(z.ZodError);
+        await expect(SalaService.listar({campus_id:"string"})).rejects.toBeInstanceOf(z.ZodError);
     });
 });
 
@@ -72,7 +72,7 @@ describe('sala-listar-por-id', () => {
     test('1-Deve chamar o banco e buscar os dados de uma sala pelo id..', async () => {
 
         const mockSala = [
-            { id: 1, nome: 'Refeitorio 2' },
+            { id: 1, nome: 'Refeitorio 2' ,campus_id:1},
         ];
 
         const filter = {where: {id:1}, select:{ nome:true, id:true}}
@@ -101,7 +101,7 @@ describe('sala-listar-por-id', () => {
     test('3-Deve retonar um erro quando o id não for do tipo number.', async () => {
 
         const mockSala = [
-            { id: 1, nome: 'Refeitorio 2' },
+            { id: 1, nome: 'Refeitorio 2' ,campus_id:1},
         ];
 
         const filter = {where: {id: NaN}, select:{ nome:true, id:true}}
@@ -120,18 +120,18 @@ describe('sala-cadastrar', () => {
 
     test('1-Deve chamar o banco e cadastrar uma sala', async () => {
 
-        const mockSala = { id: 1, nome: 'Refeitorio 2' }
+        const mockSala = { id: 1, nome: 'Refeitorio 2', campus_id:1 }
 
         const filter = {where: {}, select:{ nome:true, id:true}}
 
         SalaRepository.createFilterSala.mockReturnValue(filter); 
         SalaRepository.cadastrar.mockResolvedValue(mockSala);
 
-        const sala = await SalaService.cadastrar({nome: 'Refeitorio 2'});
+        const sala = await SalaService.cadastrar({nome: 'Refeitorio 2', campus_id:1});
 
         expect(sala).toEqual(mockSala);
         expect(SalaRepository.cadastrar).toHaveBeenCalledWith({
-                                                                data: {nome: 'Refeitorio 2'},
+                                                                data: {nome: 'Refeitorio 2', campus_id: 1},
                                                                 select:filter.select
                                                             });
     });
@@ -139,7 +139,7 @@ describe('sala-cadastrar', () => {
     test('2-Deve retonar um erro quando o nome não for do tipo string.', async () => {
 
         const mockSala = [
-            { id: 1, nome: 'Refeitorio 2' },
+            { id: 1, nome: 'Refeitorio 2' ,campus_id:1},
         ];
 
         const filter = {where: {}, select:{ nome:true, id:true}}
@@ -158,7 +158,7 @@ describe('sala-atualizar', () => {
 
     test('1-Deve chamar o banco e atualizar uma sala', async () => {
 
-        const mockSala = { id: 1, nome: 'Refeitorio 2' }
+        const mockSala = { id: 1, nome: 'Refeitorio 2' ,campus_id:1}
 
         const filter = {where: {id: 1}, select:{ nome:true, id:true}}
 
@@ -181,7 +181,7 @@ describe('sala-atualizar', () => {
 
         const filter = {where: {id: 10000}, select:{ nome:true, id:true}}
 
-        const mockSala = { id: 1, nome: 'Refeitorio 2' }
+        const mockSala = { id: 1, nome: 'Refeitorio 2' ,campus_id:1}
 
         SalaRepository.createFilterSala.mockReturnValue(filter); 
         SalaRepository.filtrarPorId.mockResolvedValue(null);
@@ -192,7 +192,7 @@ describe('sala-atualizar', () => {
     test('3-Deve retonar um erro quando o id não for do tipo number.', async () => {
 
         const mockSala = [
-            { id: 1, nome: 'Refeitorio 2' },
+            { id: 1, nome: 'Refeitorio 2' ,campus_id:1},
         ];
 
         const filter = {where: {id: 1}, select:{ nome:true, id:true}}

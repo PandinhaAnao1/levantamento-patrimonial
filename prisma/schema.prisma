@@ -29,7 +29,7 @@ model bem {
 model campus {
   id                 Int          @id @default(autoincrement())
   nome               String?      @db.VarChar(80)
-  telefone           String?      @db.VarChar(13)
+  telefone           String?      @db.VarChar(20)
   cidade             String?      @db.VarChar(60)
   bairro             String?      @db.VarChar(60)
   rua                String?      @db.VarChar(60)

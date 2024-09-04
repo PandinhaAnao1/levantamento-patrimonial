@@ -3,13 +3,13 @@ import {z} from 'zod'
 class salaSchema{
     listarSchema(){
         return z.object({
-            inventario_id: z.preprocess((val) => Number(val), z.number({
+            campus_id: z.preprocess((val) => Number(val), z.number({
                 invalid_type_error: "ID informado não é do tipo number",
             }).int({
                 message: "ID informado não é um número inteiro"
             }).positive({
                 message: "ID informado não é positivo"
-            })),
+            })).optional(),
             nome: z.string({invalid_type_error: "nome informado não é do tipo string"}).trim().optional()
         })
     }
@@ -28,7 +28,14 @@ class salaSchema{
 
     CriarSchema(){
         return z.object({
-            nome: z.string({invalid_type_error: "nome informado não é do tipo string"}).trim()
+            nome: z.string({invalid_type_error: "nome informado não é do tipo string"}).trim(),
+            campus_id: z.preprocess((val) => Number(val), z.number({
+                invalid_type_error: "ID informado não é do tipo number",
+            }).int({
+                message: "ID informado não é um número inteiro"
+            }).positive({
+                message: "ID informado não é positivo"
+            })),
         })
     }
 
@@ -41,7 +48,14 @@ class salaSchema{
             }).positive({
                 message: "ID informado não é positivo"
             })),
-            nome: z.string({invalid_type_error: "nome informado não é do tipo string"}).trim()
+            campus_id: z.preprocess((val) => Number(val), z.number({
+                invalid_type_error: "ID informado não é do tipo number",
+            }).int({
+                message: "ID informado não é um número inteiro"
+            }).positive({
+                message: "ID informado não é positivo"
+            })).optional(),
+            nome: z.string({invalid_type_error: "nome informado não é do tipo string"}).trim().optional()
         })
     }
 }

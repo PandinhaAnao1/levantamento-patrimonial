@@ -6,15 +6,16 @@ class SalaController {
 
   static listarSalas = async (req, res) => {
     try{
-      const {inventario_id, nome} = req.query
+      const {campus_id, nome} = req.query
       const parametros = {
-        inventario_id: parseInt(inventario_id),
-        nome: nome
+        campus_id: parseInt(campus_id) ?? undefined,
+        nome: nome ?? undefined
       }
       const salas = await SalaService.listar(parametros)
       return sendResponse(res,200, {data: salas});
 
     }catch(err){
+
         if(err instanceof ZodError){
           return sendError(res,400,err.errors[0].message);
 
@@ -53,8 +54,13 @@ class SalaController {
 
   static cadastrarSalas = async (req, res) => {
     try{
-      const nome = req.body.nome
-      const salaCriada = await SalaService.cadastrar({nome})
+      const {nome, campus_id} = req.body
+
+      const parametros = {
+        nome:nome,
+        campus_id:parseInt(campus_id)
+      }
+      const salaCriada = await SalaService.cadastrar(parametros)
 
       return sendResponse(res,201, {data: salaCriada});
 
@@ -72,18 +78,18 @@ class SalaController {
 
   static atualizarSalas = async (req, res) => {
     try{
-      const nome = req.body.nome
       const id = req.params.id
 
       const parametros = {
-        nome:nome,
-        id:parseInt(id)
+        nome: req.body.nome ?? undefined,
+        id: parseInt(id),
+        campus_id: req.body.campus_id ?? undefined
       }
+
       const salaAtualizada = await SalaService.atualizar(parametros)
       return sendResponse(res,201, {data: salaAtualizada});
 
     }catch(err){
-      console.error(err)
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
