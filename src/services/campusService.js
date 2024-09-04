@@ -6,6 +6,7 @@ import {z} from "zod";
 class CampusService{
 
     static async listar (parametros){
+        console.log(parametros)
         parametros = campusSchema.listarCampus.parse(parametros);
 
         let filtro = CampusRepository.createFilterCampus(parametros)

@@ -44,6 +44,38 @@ describe('get campus', () => {
         expect(req.body.data[0].bairro).toBeDefined()
         expect(req.body.data[0].telefone).toBeDefined()
     })
+
+    it("2-deve retornar um erro quando nenhum campus for encontrado", async () => {
+        const req = await request(app)
+        .get('/campus')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        .query({
+            nome:'campus não deve existir jamais',
+            telefone:'903434659249280432374298',
+            cidade:'camaroesdonorte',
+            bairro:'a',
+            rua:'a'
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(404)
+        expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
+    })
+
+    it("3-deve retorna um erro quando os tipos de dados não forem os corretos (nome)", async () => {
+        const req = await request(app)
+        .get('/campus')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        console.log(req.body)
+        .query({
+            nome:'campus vilhena',
+        })
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message);toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+    })
+    
 })
 
 

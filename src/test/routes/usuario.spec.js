@@ -88,7 +88,7 @@ describe('get usuários', () => {
         expect(req.body.data[0].funcao).toBeDefined()
     })
 
-    it("2-deve retornar um erro quando nem um usuário for encontrado", async () => {
+    it("2-deve retornar um erro quando nenhum usuário for encontrado", async () => {
         const req = await request(app)
         .get('/usuario')
         .set("Authorization", `Bearer ${token}`)
