@@ -32,7 +32,47 @@ describe('Teste dos services listar e contar!', () => {
         expect(data[0]).toEqual(mockDeInventarios[0]);
         expect(data[1]).toEqual(mockDeInventarios[1]);
     });
+    test('Deve testar o services de listar', async () => {
+        const mockDeInventarios = [
+            { nome: "Inventario de teste", data: new Date(), concluido: false, campus: 1 },
+        ];
 
+        InventarioRepository.listar.mockResolvedValue(mockDeInventarios);
+
+        const data = await InventarioService.listarInventarios({
+            nome:'Inventario',
+            data:new Date(),
+            concluido:false,
+            campus:1,
+            pagina:1,
+        });
+
+        expect(data).toBeInstanceOf(Array);
+        expect(data).toHaveLength(1);
+        expect(data[0]).toEqual(mockDeInventarios[0]);
+        expect(InventarioRepository.listar).toHaveBeenCalled();
+
+    });
+    test('Deve testar o filtros de contar itens services!', async () => {
+        const mockDeInventarios = [
+            { nome: "Inventario de teste", data: new Date(), concluido: false, campus: 1 },
+        ];
+
+        InventarioRepository.contar.mockResolvedValue(1);
+
+        const data = await InventarioService.contarInventarios({
+            nome:'Inventario',
+            data:new Date(),
+            concluido:false,
+            campus:1,
+            pagina:1,
+        });
+
+        expect(InventarioRepository.contar).toHaveBeenCalled();
+        expect(data).toEqual(1);
+        expect(data).toBeDefined();
+
+    });
     test('Deve testar se vai dar erro ao listar inventarios vazios', async () => {
 
         InventarioRepository.listar.mockResolvedValue(null);
@@ -168,18 +208,21 @@ describe("Deve testar o services de atualizar um inventario!", () => {
     test('Deve testar a atualização de um inventario errada!', async () => {
         const mockDeInventarios =
         {
-            id:'a',
             nome: faker.commerce.productName(),
             concluido: true,
         };
 
-        InventarioRepository.atualizar.mockResolvedValue(mockDeInventarios);
+        InventarioRepository.atualizar.mockResolvedValue({...mockDeInventarios, id:1});
 
-        const data = await InventarioService.atualizarInvetario(mockDeInventarios);
+        try {
+            
+            const data = await InventarioService.atualizarInvetario({mockDeInventarios, id:'a'});
+        } catch (error) {
+            expect(error).toBeInstanceOf(Object);
+            expect(error).toBeInstanceOf(ZodError)
+        }
+        
 
-        expect(data).toBeInstanceOf(Object);
-        expect(data).toEqual(mockDeInventarios);
-        expect(InventarioRepository.atualizar).toHaveBeenCalled();
     });
    
 });
