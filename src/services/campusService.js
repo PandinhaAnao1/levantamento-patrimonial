@@ -13,7 +13,7 @@ class CampusService{
         const campus = await CampusRepository.listar(filtro);
 
         if(campus.length == 0){
-            throw new Error ("Nenhum campo encontrado");
+            throw new Error ("nenhum campus encontrado");
         }
         return campus;
     }

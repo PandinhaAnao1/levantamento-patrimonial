@@ -28,7 +28,8 @@ class UsuarioController {
             if(err instanceof ZodError){
               return sendError(res,400,err.errors[0].message);
               
-            }else if (err.message === "nenhum campo encontrado"){
+            }else if (err.message === "nenhum campus encontrado"){
+              return sendError(res,404,"campus não encontrado.");
 
             }else{
               return sendError(res,500,"Ocorreu um erro interno no servidor!");
@@ -55,7 +56,6 @@ class UsuarioController {
               return sendError(res,500,"Ocorreu um erro interno no servidor!");
             }
           }
-
     }
     static cadastrarCampus = async (req, res) => {
         try {
@@ -93,23 +93,9 @@ class UsuarioController {
             console.error(err)
             if(err instanceof ZodError){
               return sendError(res,400,err.errors[0].message);
+
             }else if(err.message == "Campus não existe." ){
               return sendError(res,404,["Campus não existe."]);
-      
-            }else{
-              return sendError(res,500,"Ocorreu um erro interno no servidor!");
-            }
-          }
-
-    }
-    static excluirCampus = async (req, res) => {
-        try {
-            return sendResponse(res,200, {data: "teste chegou"});
-      
-          } catch (err) {
-      
-            if(err instanceof ZodError){
-              return sendError(res,400,err.errors[0].message);
       
             }else{
               return sendError(res,500,"Ocorreu um erro interno no servidor!");

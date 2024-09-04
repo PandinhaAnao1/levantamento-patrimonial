@@ -38,7 +38,7 @@ async function seedDatabase() {
     // Inserindo dados na tabela `campus`
     const campuses = await prisma.campus.createMany({
       data: [
-        { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numero_residencial: 7741 },
+        { nome: "campus vilhena", telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numero_residencial: 7741 },
         { nome: faker.address.streetName(), telefone: faker.phone.phoneNumber(), cidade: faker.address.city(), bairro: faker.address.streetAddress(), rua: faker.address.streetName(), numero_residencial: 5534 },
       ],
     });
