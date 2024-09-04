@@ -155,7 +155,9 @@ class InventarioService{
         
         const  { id,  ... resto} = atualizacoes;
         //Corrigir o .id usar algma forma melhor
-        if(!regex.test(id.id)){
+        console.log(id);
+        
+        if(!regex.test(id)){
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"O id do inventario deve ser um numero!",
@@ -165,7 +167,7 @@ class InventarioService{
                 }
             }]);
         }
-        let numero  = {id:parseInt(id.id)};
+        let numero  = {id:parseInt(id)};
         console.log(numero)
         const {nome, status} = IvSchema.atualizarSchema.parse(resto);
 

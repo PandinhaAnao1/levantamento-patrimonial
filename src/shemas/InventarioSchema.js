@@ -20,7 +20,7 @@ class InventarioSchema{
 
     static atualizarSchema = z.object({
         nome: z.string().min(1).max(80).optional(),
-        concluido: z.literal(false).optional()
+        concluido: z.literal(true).optional()
     });
 }
 

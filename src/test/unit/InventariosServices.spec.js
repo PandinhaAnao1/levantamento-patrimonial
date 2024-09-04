@@ -115,22 +115,73 @@ describe('Teste dos services listar e contar!', () => {
 });
 
 describe("Deve testar o services de criar!", () => {
-    test('Deve testar o services de listar', async () => {
-        const mockDeInventarios = 
-             {
-                nome: faker.commerce.productName(), 
-                data: faker.date.past().toString(), 
-                 
-                campus: 1 
-            };
+    test('Deve testar o cadastro de um inventario!', async () => {
+        const mockDeInventarios =
+        {
+            nome: faker.commerce.productName(),
+            data: faker.date.past().toString(),
+            campus: 1
+        };
 
-        InventarioRepository.criar.mockResolvedValue({...mockDeInventarios, concluido: false});
+        InventarioRepository.criar.mockResolvedValue({ ...mockDeInventarios, concluido: false });
 
         const data = await InventarioService.criarInventario(mockDeInventarios);
 
         expect(data).toBeInstanceOf(Object);
-        expect(data).toEqual({...mockDeInventarios, concluido: false});
+        expect(data).toEqual({ ...mockDeInventarios, concluido: false });
+        expect(InventarioRepository.criar).toHaveBeenCalled();
     });
+    test('Deve testar o cadastro de um inventario!', async () => {
+        const mockDeInventarios =
+        {
+            nome: faker.commerce.productName(),
+            data: faker.date.past().toString(),
+            campus: 1
+        };
+
+        InventarioRepository.criar.mockResolvedValue({ ...mockDeInventarios, concluido: false });
+
+        const data = await InventarioService.criarInventario(mockDeInventarios);
+
+        expect(data).toBeInstanceOf(Object);
+        expect(data).toEqual({ ...mockDeInventarios, concluido: false });
+        expect(InventarioRepository.criar).toHaveBeenCalled();
+    });
+});
+describe("Deve testar o services de atualizar um inventario!", () => {
+    test('Deve testar a atualização de um inventario!', async () => {
+        const mockDeInventarios =
+        {
+            id:'1',
+            nome: faker.commerce.productName(),
+            concluido: true,
+        };
+
+        InventarioRepository.atualizar.mockResolvedValue(mockDeInventarios);
+
+        const data = await InventarioService.atualizarInvetario(mockDeInventarios);
+
+        expect(data).toBeInstanceOf(Object);
+        expect(data).toEqual(mockDeInventarios);
+        expect(InventarioRepository.atualizar).toHaveBeenCalled();
+    });
+    test('Deve testar a atualização de um inventario errada!', async () => {
+        const mockDeInventarios =
+        {
+            id:'a',
+            nome: faker.commerce.productName(),
+            concluido: true,
+        };
+
+        InventarioRepository.atualizar.mockResolvedValue(mockDeInventarios);
+
+        const data = await InventarioService.atualizarInvetario(mockDeInventarios);
+
+        expect(data).toBeInstanceOf(Object);
+        expect(data).toEqual(mockDeInventarios);
+        expect(InventarioRepository.atualizar).toHaveBeenCalled();
+    });
+   
 });
 
 
