@@ -88,13 +88,5 @@ class CampusService{
 
         return await CampusRepository.atualizar(atualizacao);
     }
-}    
-    
-
-//    static excluir = async (req, res) => {
-//        return null
-        
- //   }
-//}
-
+}        
 export default CampusService;

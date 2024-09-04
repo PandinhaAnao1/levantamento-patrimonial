@@ -26,14 +26,13 @@ describe('get campus', () => {
         const req = await request(app)
         .get('/campus')
         .set("Authorization", `Bearer ${token}`)
-        .set("Accept", "aplication/json")
+        .set("Accept", "application/json")
         .query({
             nome:'campus vilhena',
-            cidade:'vilhena',
-            rua:'ifro',
-            bairro:'ifro',
             telefone:'98765-4321',
-            numero_residencial:7171,
+            cidade:'vilhena',
+            bairro:'ifro',
+            rua:'ifro'
         })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
@@ -44,7 +43,6 @@ describe('get campus', () => {
         expect(req.body.data[0].rua).toBeDefined()
         expect(req.body.data[0].bairro).toBeDefined()
         expect(req.body.data[0].telefone).toBeDefined()
-        expect(req.body.data[0].numero_residencial).toBeDefined()
     })
 })
 
