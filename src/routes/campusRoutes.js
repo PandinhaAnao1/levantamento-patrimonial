@@ -8,6 +8,5 @@ router
     .get("/campus/:id", CampusController.listarCampusPorId) 
     .post("/campus", CampusController.cadastrarCampus) 
     .patch("/campus/:id", CampusController.atualizarCampus) 
-    .delete("/campus/:id", CampusController.excluirCampus) 
 
 export default router;

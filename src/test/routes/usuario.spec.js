@@ -19,7 +19,7 @@ describe('Teste de Autenticação', () => {
         token = req.body.data.token
     })
 
-    it("1-Deve deve retornar um erro quando o usuario não existir", async () => {
+    it("1-Deve retornar um erro quando o usuario não existir", async () => {
         const req = await request(app)
         .post('/login')
         .set("Accept", "aplication/json")
