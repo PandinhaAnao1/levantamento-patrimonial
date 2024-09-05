@@ -8,9 +8,10 @@ class SalaController {
     try{
       const {campus_id, nome} = req.query
       const parametros = {
-        campus_id: parseInt(campus_id) ?? undefined,
+        campus_id: campus_id ? parseInt(campus_id) : undefined,
         nome: nome ?? undefined
       }
+      console.log(parametros)
       const salas = await SalaService.listar(parametros)
       return sendResponse(res,200, {data: salas});
 
@@ -81,7 +82,7 @@ class SalaController {
       const id = req.params.id
 
       const parametros = {
-        nome: req.body.nome ?? undefined,
+        nome: req.body.nome ? req.body.nome : undefined,
         id: parseInt(id),
         campus_id: req.body.campus_id ?? undefined
       }

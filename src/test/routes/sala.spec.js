@@ -74,7 +74,7 @@ describe('get salas', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .query({
-            nome:4564
+            campus_id:true
         })
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
@@ -187,8 +187,18 @@ describe('Atualizar uma sala', () => {
         .patch('/sala/:id')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+    })
+
+    it("3-deve retornar um erro ao informar o nome como um number.", async () => {
+        const req = await request(app)
+        .patch('/sala/:id')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
         .send({
-            "nome": 8907,
+            campus_id: 'String',
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(400)
