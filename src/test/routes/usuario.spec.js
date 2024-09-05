@@ -95,10 +95,8 @@ describe('get usuários', () => {
         .set("Accept", "aplication/json")
         .query({
             email:'usuario não deve existir',
-            nome:"a",
-            funcao:"auditor",
-            status:true
         })
+
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(404)
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
@@ -171,7 +169,7 @@ describe('create usuários', () => {
             senha: "testesenha",
             email: faker.internet.email()
         })
-        console.log(req.body)
+
         usuario_criado = req.body.data.id
 
         expect(req.body.error).toEqual(false)

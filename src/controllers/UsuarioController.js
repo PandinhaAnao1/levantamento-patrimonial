@@ -53,8 +53,8 @@ class UsuarioController {
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 
-      }else if (err.message === "Nem um usuário encontrado") {
-        return sendError(res,404,"Nem um usuário encontrado");
+      }else if (err.message === "Nenhum usuário encontrado") {
+        return sendError(res,404,"Nenhum usuário encontrado");
 
       }else{
         return sendError(res,500,"Ocorreu um erro interno no servidor!");
@@ -92,7 +92,7 @@ class UsuarioController {
       return sendResponse(res,201, {data:novoUsuario});
       
      } catch (err) {
-      console.error(err)
+
       if(err instanceof ZodError){
         return sendError(res,400,err.errors[0].message);
 

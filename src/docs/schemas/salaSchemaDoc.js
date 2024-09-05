@@ -3,7 +3,8 @@ const salaSchemas = {
     atualizarSalaBody: {
         type: "object",
         example: {
-            nome: "sala de confraternização atualizada"
+            nome: "sala de confraternização atualizada",
+            campus_id: 1
         } 
     },
 
@@ -15,8 +16,9 @@ const salaSchemas = {
             message: "Requisição bem sucedida, recurso foi criado",
             errors: [],
             data: {
-                id: 49,
-                nome: "sala de confraternização atualizada"
+                id: 5,
+                nome: "Sala de Reunião de grupos de Fábrica",
+                campus_id: 1
             }
         }
     },
@@ -24,7 +26,8 @@ const salaSchemas = {
     createSalaBody: {
         type: "object",
         example: {
-            nome: "sala de confraternização"
+            nome: "sala de confraternização",
+            campus_id: 1
         }
         
     },
@@ -37,8 +40,9 @@ const salaSchemas = {
             message: "Requisição bem sucedida, recurso foi criado",
             errors: [],
             data: {
-                id: 49,
-                nome: "sala de confraternização"
+                id: 5,
+                nome: "Sala de Reunião de grupos de Fábrica",
+                campus_id: 1
             }
         }
         
@@ -54,23 +58,28 @@ const salaSchemas = {
             data: [
                 {
                     id: 1,
-                    nome: "teste"
+                    nome: "Laboratório de informática do piso 3 sala 5",
+                    campus_id: 2
                 },
                 {
                     id: 2,
-                    nome: "Cantina de alimentação piso 1"
+                    nome: "Cantina de alimentação piso 1",
+                    campus_id: 1
                 },
                 {
                     id: 3,
-                    nome: "Laboratório de química do piso 2 sala 12"
+                    nome: "Laboratório de química do piso 2 sala 12",
+                    campus_id: 1
                 },
                 {
                     id: 4,
-                    nome: "Sala de pesquisa avançada em IA"
+                    nome: "Sala de pesquisa avançada em IA",
+                    campus_id: 2
                 },
                 {
                     id: 5,
-                    nome: "Sala de Reunião de grupos de Fábrica"
+                    nome: "Sala de Reunião de grupos de Fábrica",
+                    campus_id: 1
                 }
             ]
         }
@@ -83,8 +92,9 @@ const salaSchemas = {
             message: "Requisição bem sucedida.",
             errors: [],
             data: {
-                    id: 1,
-                    nome: "teste"
+                id: 1,
+                nome: "Sala de Reunião de grupos de Fábrica",
+                campus_id: 1
             }
         }
     },

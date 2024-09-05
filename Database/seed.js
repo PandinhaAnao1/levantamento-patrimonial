@@ -64,7 +64,7 @@ async function seedDatabase() {
 
     // Inserindo dados na tabela `bem`
     const bens = await prisma.bem.createMany({
-      data: Array.from({ length: 12 }, (_, index) => ({
+      data: Array.from({ length: 100 }, (_, index) => ({
         sala_id: (index % 5) + 1,
         inventario_id: (index % 2) + 1,
         nome: faker.commerce.productName(),

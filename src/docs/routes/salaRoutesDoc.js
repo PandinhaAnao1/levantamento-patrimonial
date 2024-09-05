@@ -14,10 +14,10 @@ const salaRoutes = {
                     }
                 },
                 {
-                    name: "inventario_id",
+                    name: "campus_id",
                     in: "query",
                     required: true,
-                    description: "Id do inventário",
+                    description: "Id do campus",
                     schema: {
                         type: "integer"
                     }

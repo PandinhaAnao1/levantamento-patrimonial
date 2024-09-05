@@ -1,6 +1,5 @@
 import SalaRepository from "../repositories/SalaRepository.js";
 import salaSchema from "../shemas/salaSchema.js";
-import {z} from "zod";
 
 class SalaService{
     
@@ -37,19 +36,22 @@ class SalaService{
 
 
     static async cadastrar(parametros){
+        console.log(parametros)
         const schema = new salaSchema().CriarSchema()
         parametros = schema.parse(parametros)
 
         const consulta = SalaRepository.createFilterSala(parametros)
 
         return SalaRepository.cadastrar({
-            data:{nome:parametros.nome},
+            data:{nome:parametros.nome, 
+                campus_id: parametros.campus_id},
             select:consulta.select
         })
     }
 
 
-    static async atualizar(parametros){        
+    static async atualizar(parametros){     
+        console.log(parametros)   
         const schema = new salaSchema().atualizarSchema()
         parametros = schema.parse(parametros)
         const id = parametros.id

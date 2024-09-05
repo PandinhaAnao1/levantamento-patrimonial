@@ -26,7 +26,7 @@ describe('get salas', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .query({
-            inventario_id:1
+            campus_id:1
         })
         expect(req.body.error).toEqual(false)
         expect(req.status).toBe(200)
@@ -43,7 +43,7 @@ describe('get salas', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .query({
-            inventario_id: 1,
+            campus_id: 1,
             nome:"a",
         })
         expect(req.body.error).toEqual(false)
@@ -55,13 +55,13 @@ describe('get salas', () => {
         expect(req.body.data[0].nome).toBeDefined()
     })
 
-    it("3-Deve retornar um error se o id do inventário não existir.", async () => {
+    it("3-Deve retornar um error se o id do campus não existir.", async () => {
         const req = await request(app)
         .get('/sala')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .query({
-            inventario_id:18980,
+            campus_id:18980,
         })
         expect(req.status).toBe(404)
         expect(req.body.error).toEqual(true)
@@ -74,7 +74,7 @@ describe('get salas', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .query({
-            nome:4564
+            campus_id:true
         })
         expect(req.status).toBe(400)
         expect(req.body.error).toEqual(true)
@@ -122,7 +122,8 @@ describe('post cadastrar sala', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "nome": faker.commerce.productName(),
+            nome: faker.commerce.productName(),
+            campus_id:1
         })
 
         sala_id = parseInt(req.body.data.id)
@@ -156,7 +157,8 @@ describe('Atualizar uma sala', () => {
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
         .send({
-            "nome": faker.commerce.productName(),
+            nome: faker.commerce.productName(),
+            campus_id:1
         })
         console.log(req.body)
         expect(req.body.error).toEqual(false)
@@ -185,8 +187,18 @@ describe('Atualizar uma sala', () => {
         .patch('/sala/:id')
         .set("Authorization", `Bearer ${token}`)
         .set("Accept", "aplication/json")
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+    })
+
+    it("3-deve retornar um erro ao informar o nome como um number.", async () => {
+        const req = await request(app)
+        .patch('/sala/:id')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
         .send({
-            "nome": 8907,
+            campus_id: 'String',
         })
         expect(req.body.error).toEqual(true)
         expect(req.status).toBe(400)
