@@ -62,19 +62,26 @@ describe('get campus', () => {
         expect(req.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.")
     })
 
-    it("3-deve retorna um erro quando os tipos de dados não forem os corretos (nome)", async () => {
-        const req = await request(app)
-        .get('/campus')
-        .set("Authorization", `Bearer ${token}`)
-        .set("Accept", "aplication/json")
-        console.log(req.body)
-        .query({
-            nome:'campus vilhena',
-        })
-        expect(req.body.error).toEqual(true)
-        expect(req.status).toBe(400)
-        expect(req.body.message);toEqual("Requisição com sintaxe incorreta ou outros problemas.")
-    })
+it("3-deve retornar um erro quando os tipos de dados não forem os corretos (nome)", async () => {
+  const req = await request(app)
+    .get("/campus")
+    .set("Authorization", `Bearer ${token}`)
+    .set("Accept", "application/json")
+    .query({
+        nome:null,
+    });
+
+
+  expect(req.status).toBe(400);
+
+
+  expect(req.body.error).toEqual(true);
+  expect(req.body.message).toEqual(
+    "Requisição com sintaxe incorreta ou outros problemas."
+  );
+});
+
+
     
 })
 
