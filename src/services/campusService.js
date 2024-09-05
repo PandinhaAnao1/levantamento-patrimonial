@@ -25,9 +25,10 @@ class CampusService{
 
         const campus = await CampusRepository.listarPorId(filtro);
 
-        if(!campus){
-            throw new Error (" Campus não encontrado");
-        }
+            if (!campus) {
+            throw new Error("campus não encontrado.");
+}
+
         
         return campus
 

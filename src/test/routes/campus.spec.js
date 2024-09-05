@@ -3,6 +3,7 @@ import {describe, expect, it, test} from '@jest/globals';
 import app from '../../app.js'
 import faker from 'faker-br';
 import { NOMEM } from "dns";
+import { error } from "console";
 
 
 let token;
@@ -80,6 +81,52 @@ it("3-deve retornar um erro quando os tipos de dados não forem os corretos (nom
     "Requisição com sintaxe incorreta ou outros problemas."
   );
 });
+
+describe('get campus por id', () => {
+    it("1 deve retornar um campus", async () =>{
+        const req = await request(app)
+        .get('/campus/1')
+         .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        expect(req.body.error).toEqual(false)
+        expect(req.status).toBe(200)
+        expect(req.body.message).toEqual("Requisição bem sucedida.")
+        expect(req.body.data).toBeInstanceOf(Object)
+        expect(req.body.data.nome).toBeDefined();
+        expect(req.body.data.cidade).toBeDefined();
+        expect(req.body.data.rua).toBeDefined();
+        expect(req.body.data.bairro).toBeDefined();
+        expect(req.body.data.telefone).toBeDefined();
+
+    })
+})
+
+it("2-deve retornar um erro quando nem um campus for encontrado.",async() =>{
+    const req = await request(app)
+      .get('/campus/82893742397432')
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "aplication/json")
+     console.log(error)
+      expect(req.body.error).toEqual(true)
+      expect(req.status).toBe(404)
+      expect(req.body.message).toEqual(
+        "O recurso solicitado não foi encontrado no servidor."
+      );
+
+})
+
+  it("3-deve retornar um erro quando o id passado não estiver no formato correto.", async () => {
+        const req = await request(app)
+        .get('/campus/n21')
+        .set("Authorization", `Bearer ${token}`)
+        .set("Accept", "aplication/json")
+        expect(req.body.error).toEqual(true)
+        expect(req.status).toBe(400)
+        expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
+
+})
+
+
 
 
     

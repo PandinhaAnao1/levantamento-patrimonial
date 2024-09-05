@@ -137,7 +137,7 @@ describe('get usuários por id', () => {
         expect(req.body.data.funcao).toBeDefined()
     })
 
-    it("2-deve retornar um erro quando nem um uruário for encontrado.", async () => {
+    it("2-deve retornar um erro quando nem um usuario for encontrado.", async () => {
         const req = await request(app)
         .get('/usuario/89898981')
         .set("Authorization", `Bearer ${token}`)
