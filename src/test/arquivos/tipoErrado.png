@@ -1,0 +1,13 @@
+bem_nome;bem_tombo;bem_descricao;bem_responsavel;bem_valor;sala_nome
+Computador de Mesa;TMB001;Computador para escritório;João Silva;1200.00;Laboratório de Informática
+Impressora Laser;TMB002;Impressora a laser monocromática;Maria Oliveira;450.00;Laboratório de Informática
+Projetor;TMB003;Projetor de vídeo;Carlos Souza;900.00;Sala de Reunião
+Cadeira Ergonômica;TMB004;Cadeira ergonômica para escritório;Ana Costa;350.00;Sala de Reunião
+Mesa de Escritório;TMB005;Mesa de escritório com gavetas;Pedro Lima;600.00;Laboratório de Informática
+Notebook;TMB006;Notebook para uso geral;Lucia Santos;1500.00;Sala de Reunião
+Telefone;TMB007;Telefone digital com fio;Roberto Martins;120.00;Laboratório de Química
+Scanner;TMB008;Scanner de mesa;Juliana Almeida;300.00;Laboratório de Química
+Ar Condicionado;TMB009;Ar condicionado portátil;Fernanda Silva;800.00;Sala de Pesquisa
+Estante de Livros;TMB010;Estante de livros de madeira;Ricardo Pereira;200.00;Sala de Pesquisa
+Mochila;TMB011;Mochila para laptop;Eduardo Almeida;150.00;Laboratório de Informática
+Teclado;TMB012;Teclado mecânico;Tatiane Ribeiro;80.00;Sala de Pesquisa

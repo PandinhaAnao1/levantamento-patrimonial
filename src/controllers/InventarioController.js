@@ -38,10 +38,7 @@ class InventarioController {
             }else if(err.message === "Estrutura do CSV está incorreta.") {
                 return sendError(res, 404, "Estrutura do CSV está incorreta.")
 
-            }else if(err.message === "CSV está vazio.") {
-                return sendError(res, 404, ["CSV está vazio."])
-
-            }else{
+            }else {
                 return sendError(res,500,"Ocorreu um erro interno no servidor!");
             }
         }
