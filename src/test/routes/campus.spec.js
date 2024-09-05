@@ -124,7 +124,40 @@ it("2-deve retornar um erro quando nem um campus for encontrado.",async() =>{
         expect(req.status).toBe(400)
         expect(req.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.")
 
-})
+    })
+    
+    describe ('create campus',() =>{
+        it("deve retonar um campus", async () =>{
+        const req = await request(app)
+          .post("/campus")
+          .set("Authorization", `Bearer ${token}`)
+          .set("Accept", "aplication/json")
+          .send({
+            nome: faker.address.streetName(),
+            telefone: faker.phone.phoneNumber(),
+            cidade: "vilhena",
+            bairro: "ifro",
+            rua: "ifro",
+            numero_residencial: 1212,
+          });
+          console.log(req.body)
+          campus_criado = req.body.data.id
+        
+                  expect(req.body.error).toEqual(false);
+                  expect(req.status).toBe(201);
+                  expect(req.body.message).toEqual(
+                    "Requisição bem sucedida, recurso foi criado"
+                  )
+                  expect(req.body.data).toBeInstanceOf(Object)
+                  expect(req.body.data.nome).toBeDefined()
+                  expect(req.body.data.telefone).toBeDefined()
+                  expect(req.body.data.cidade).toBeDefined()
+                  expect(req.body.data.bairro).toBeDefined()
+                expect(req.body.data.rua).toBeDefined()
+                expect(req.body.data.numero_residencial).toBeDefined()
+        })
+
+    })
 
 
 
