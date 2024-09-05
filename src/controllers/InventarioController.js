@@ -30,13 +30,13 @@ class InventarioController {
                 return sendError(res, 404, ["Campus não existe."])
 
             }else if(err.message === "O nome do inventário já está em uso.") {
-                return sendError(res, 404, ["O nome do inventário já está em uso."])
+                return sendError(res, 403, ["O nome do inventário já está em uso."])
 
             }else if(err.message === "arquivo do tipo errado.") {
-                return sendError(res, 404, ["arquivo do tipo errado."])
+                return sendError(res, 400, ["arquivo do tipo errado."])
 
             }else if(err.message === "Estrutura do CSV está incorreta.") {
-                return sendError(res, 404, "Estrutura do CSV está incorreta.")
+                return sendError(res, 400, "Estrutura do CSV está incorreta.")
 
             }else {
                 return sendError(res,500,"Ocorreu um erro interno no servidor!");
