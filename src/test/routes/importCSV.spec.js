@@ -23,63 +23,136 @@ describe('Autenticação', () => {
         token = req.body.data.token
     })
 });
+
 // describe('post import csv', () => {
-//     it("1-deve ler o csv e armazenar seus dados no banco de dados", async () => {
-//         // Ensure you have defined `buffer` properly before this line
-//         const buffer = Buffer.from('your csv data here'); // Example of how you might define buffer
+//     it('1-deve ler o csv e armazenar seus dados no banco de dados', async () => {
+//         const form = new FormData();
+//         const filePath = path.resolve(__dirname, '../arquivos/correto.csv');
+//         form.append('file', fs.createReadStream(filePath));
+//         form.append('campus_id', 1);
+//         form.append('nome', "inventario teste90");
 
-//         const req = await request(app)
+
+//         const formBuffer = await new Promise((resolve, reject) => {
+//             form.pipe(concat({ encoding: 'buffer' }, resolve));
+//         });
+        
+//         console.log(formBuffer)
+
+//         const response = await request(app)
 //             .post('/inventarios/csv')
-//             .set("Authorization", `Bearer ${token}`)
-//             .set("Accept", "application/json")  // Corrected typo
-//             .field('campus_id', 1)
-//             .field('nome', "teste inventario")
-//             .attach('arquivo', buffer, '../arquivos/correto.csv');  // Ensure buffer contains CSV data
+//             .set('Authorization', `Bearer ${token}`)
+//             .set('Accept', 'application/json')
+//             .set('Content-Type', form.getHeaders()['content-type']) // Define o cabeçalho Content-Type corretamente
+//             .send(formBuffer);
 
-//         console.log(req.status);
+//         console.log(response.body)
 
-//         expect(req.status).toBe(201);
-//         expect(req.body.error).toBe(false);
-//         expect(req.body.message).toEqual("Inventário criado com sucesso.");
-//         expect(req.body.data).toBeInstanceOf(Object);
-//         expect(req.body.data.id).toBeDefined();
-//         expect(req.body.data.nome).toBeDefined();
-//         expect(req.body.data.tombo).toBeDefined();
-//         expect(req.body.data.responsavel).toBeDefined();
+//         expect(response.status).toBe(201);
+//         expect(response.body.error).toBe(false);
+//         expect(response.body.message).toEqual('Inventário criado com sucesso.');
+//         expect(response.body.data).toBeInstanceOf(Object);
+//         expect(response.body.data.id).toBeDefined();
+//         expect(response.body.data.nome).toBeDefined();
+//         expect(response.body.data.tombo).toBeDefined();
+//         expect(response.body.data.responsavel).toBeDefined();
 //     });
 // });
 
-describe('post import csv', () => {
-    it('1-deve ler o csv e armazenar seus dados no banco de dados', async () => {
-        const form = new FormData();
-        const filePath = path.resolve(__dirname, '../arquivos/correto.csv');
-        form.append('file', fs.createReadStream(filePath));
-        form.append('campus_id', 1);
-        form.append('nome', "inventario teste90");
+
+describe('POST /inventarios/csv - upload a new documentation file', () => {
+    const filePath = path.resolve(__dirname, '../arquivos/correto.csv');
+    const filePathErrado = path.resolve(__dirname, '../arquivos/estruturaErrada.csv');
+    const filePathTypeErrado = path.resolve(__dirname, '../arquivos/tipoErrado.png');
 
 
-        const formBuffer = await new Promise((resolve, reject) => {
-            form.pipe(concat({ encoding: 'buffer' }, resolve));
-        });
-        
-        console.log(formBuffer)
+    it('Inventário criado com sucesso. Dados de bens salvos.', async () => {
 
-        const response = await request(app)
-            .post('/inventarios/csv')
-            .set('Authorization', `Bearer ${token}`)
-            .set('Accept', 'application/json')
-            .set('Content-Type', form.getHeaders()['content-type']) // Define o cabeçalho Content-Type corretamente
-            .send(formBuffer);
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', 1)
+                .field('nome', faker.name.findName())
+                .attach('file', filePath);
+            
+        expect(res.status).toBe(201)
+    })
 
-        console.log(response.body)
+    it('Deve retornar um erro quando o nome do inventário já estiver em uso.', async () => {
 
-        expect(response.status).toBe(201);
-        expect(response.body.error).toBe(false);
-        expect(response.body.message).toEqual('Inventário criado com sucesso.');
-        expect(response.body.data).toBeInstanceOf(Object);
-        expect(response.body.data.id).toBeDefined();
-        expect(response.body.data.nome).toBeDefined();
-        expect(response.body.data.tombo).toBeDefined();
-        expect(response.body.data.responsavel).toBeDefined();
-    });
-});
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', 1)
+                .field('nome', "Inventário teste")
+                .attach('file', filePath);
+            
+        expect(res.status).toBe(403)
+        expect(res.body.message).toEqual("Sem permissão para atender a requisição.");
+    })
+
+    it('Deve retornar um erro quando o campus_id não existir.', async () => {
+
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', 19879789)
+                .field('nome', faker.name.findName())
+                .attach('file', filePath);
+            
+        expect(res.status).toBe(404)
+        expect(res.body.message).toEqual("O recurso solicitado não foi encontrado no servidor.");
+    })
+
+    it('Deve retornar um erro quando o arquivo for do tipo errado.', async () => {
+
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', 1)
+                .field('nome', faker.name.findName())
+                .attach('file', filePathTypeErrado);
+            
+        expect(res.status).toBe(400)
+        expect(res.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.");
+    })
+
+    it('Deve retornar um erro quando o csv estiver no formato errado.', async () => {
+
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', 1)
+                .field('nome', faker.name.findName())
+                .attach('file', filePathErrado);
+            
+        expect(res.status).toBe(400)
+        expect(res.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.");
+    })
+
+    it('Deve retornar um erro se não enviar um arquivo.', async () => {
+
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', 1)
+                .field('nome', faker.name.findName())
+            
+        expect(res.status).toBe(400)
+        expect(res.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.");
+    })
+
+    it('Deve retornar um erro se um parametro não for do tipo correto.', async () => {
+
+        fs.promises.access(filePath)
+            const res = await request(app)
+                .post('/inventarios/csv')
+                .field('campus_id', "string")
+                .field('nome', true)
+                .attach('file', filePathErrado);
+            
+        expect(res.status).toBe(400)
+        expect(res.body.message).toEqual("Requisição com sintaxe incorreta ou outros problemas.");
+    })
+
+})

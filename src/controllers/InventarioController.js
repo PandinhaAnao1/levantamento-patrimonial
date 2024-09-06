@@ -2,13 +2,12 @@ import InventarioService from "../services/InventarioService.js";
 import {sendResponse, sendError} from "../utils/mensages.js";
 import { ZodError, ZodIssueCode,array,z } from "zod";
 
-
 class InventarioController {
 
     static importCSV = async (req, res) => {
         try{
             if (!req.file) {
-                return res.status(400).send('Nenhum arquivo enviado.');
+                return sendError(res, 400, ['Nenhum arquivo enviado.'])
             }
             const arquivo = req.file
             const parametros = {
@@ -32,8 +31,8 @@ class InventarioController {
             }else if(err.message === "O nome do inventário já está em uso.") {
                 return sendError(res, 403, ["O nome do inventário já está em uso."])
 
-            }else if(err.message === "arquivo do tipo errado.") {
-                return sendError(res, 400, ["arquivo do tipo errado."])
+            }else if(err.message === "Arquivo do tipo errado.") {
+                return sendError(res, 400, ["Arquivo do tipo errado."])
 
             }else if(err.message === "Estrutura do CSV está incorreta.") {
                 return sendError(res, 400, "Estrutura do CSV está incorreta.")

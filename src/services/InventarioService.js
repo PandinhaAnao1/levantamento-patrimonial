@@ -2,11 +2,10 @@ import InvRepository from "../repositories/InventarioRepository.js";
 import IvSchema from "../shemas/InventarioSchema.js";
 import {z, ZodIssueCode}  from "zod";
 import Stream from "stream";
-import fastcsv from 'fast-csv';
 import InventarioRepository from "../repositories/InventarioRepository.js";
+import csvParser from "csv-parser";
 
 import CSVFileValidator from 'csv-file-validator'
-
 
 class InventarioService{
     
@@ -25,7 +24,7 @@ class InventarioService{
             throw new Error("O nome do inventário já está em uso.");
         }
     
-        if (arquivo.mimetype !== 'text/csv') {
+        if (arquivo.mimetype != 'text/csv') {
             throw new Error("Arquivo do tipo errado.");
         }
     
@@ -65,17 +64,20 @@ class InventarioService{
         const nomeSalasCSV = new Set();
         const csvStreamSalas = new Stream.PassThrough();
         csvStreamSalas.end(arquivo.buffer);
-    
+
+        const header = ['bem_nome', 'bem_tombo', 'bem_descricao', 'bem_responsavel', 'bem_valor', 'sala_nome'];
+
+
         await new Promise((resolve, reject) => {
-            fastcsv.parseStream(csvStreamSalas, { headers: true, delimiter: ';', columns: true })
+            csvStreamSalas
+                .pipe(csvParser({ headers: header, separator: ';' ,skipLines: 1}))  // Configura o parser CSV
                 .on('data', (row) => {
-                    nomeSalasCSV.add(row['sala_nome']);
+                    if (row['sala_nome']) {  // Verifica se a coluna 'sala_nome' existe
+                        nomeSalasCSV.add(row['sala_nome']);
+                    }
                 })
                 .on('end', () => {
                     resolve();
-                })
-                .on('error', (err) => {
-                    reject(err);
                 });
         });
     
@@ -104,16 +106,17 @@ class InventarioService{
 
         const csvStreamBens = new Stream.PassThrough();
         csvStreamBens.end(arquivo.buffer);
-    
+
         await new Promise((resolve, reject) => {
-            fastcsv.parseStream(csvStreamBens, { headers: true, delimiter: ';', columns: true })
+            csvStreamBens
+                .pipe(csvParser({ headers: header, separator: ';',skipLines: 1}))  // Configura o parser CSV
                 .on('data', (row) => {
                     const tupula = {
                         nome: row['bem_nome'],
                         tombo: row['bem_tombo'],
                         descricao: row['bem_descricao'],
                         responsavel: row['bem_responsavel'],
-                        valor: row['bem_valor'],
+                        valor: parseFloat(row['bem_valor']),
                         inventario_id: parseInt(inventarioCriado.id),
                         sala_id: parseInt(idSalas[row['sala_nome']]),
                         auditado: false
@@ -123,9 +126,6 @@ class InventarioService{
                 .on('end', async () => {
                     await InventarioRepository.insertBens({ data: insertBens });
                     resolve();
-                })
-                .on('error', (err) => {
-                    reject(err);
                 });
         });
     
@@ -196,6 +196,7 @@ class InventarioService{
         return iventario;
         
     }
+
 
     static async listarInventarioPorId(parametros){
         //Futuramente vou trocar essa logica vou colocar o esquema de validação e transformação 
