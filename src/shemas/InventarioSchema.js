@@ -5,7 +5,7 @@ class InventarioSchema{
     static listarSchema = z.object({
         nome: z.string().min(1).optional(), 
         data: z.date().optional(),
-        concluido: z.literal(true).optional(),
+        concluido: z.literal(false).optional(),
         campus: z.number().int().min(1).positive().optional(),
         pagina: z.number().int().min(1).positive().optional()
     });
@@ -19,7 +19,7 @@ class InventarioSchema{
 
     static atualizarSchema = z.object({
         nome: z.string().min(1).max(80).optional(),
-        concluido: z.literal(false).optional()
+        concluido: z.literal(true).optional()
     });
 }
 

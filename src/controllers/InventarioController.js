@@ -86,6 +86,8 @@ class InventarioController {
       
    
         }catch(error){
+            //colocar os erro depois de mudar os erro para todos throw
+            // if(erro.code)
 
             if(error instanceof ZodError) {
                 const customError = error.issues[0].code = 'custom' ? true : false;

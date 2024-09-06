@@ -2,13 +2,21 @@ import InvRepository from "../repositories/InventarioRepository.js";
 import IvSchema from "../shemas/InventarioSchema.js";
 import {z, ZodIssueCode}  from "zod";
 import Stream from "stream";
-import fastcsv from 'fast-csv';
+// import fastcsv from 'fast-csv';
 import InventarioRepository from "../repositories/InventarioRepository.js";
 
 import CSVFileValidator from 'csv-file-validator'
 
 
 class InventarioService{
+    //Criar paginator padrão
+    //O retorno vai ser um objeto que possui:
+
+    //Total de itens: SERIA OS RESULTADOS 
+    //Total de paginas:
+    //Pagina atual:
+    //limite
+    //Usar o count ao inves do _count
     
     static async importCSV(arquivo, parametros) {
         const { nome, campus_id } = IvSchema.criar.parse(parametros);
@@ -155,7 +163,7 @@ class InventarioService{
                 message:"Não foi contar inventários com esse parâmetros!",
                 code: z.ZodIssueCode.custom,
                 params: {
-                    status: 404, // Adicionando um detalhe personalizado
+                    status: 404, 
                   },
             }]);
         }
@@ -204,6 +212,10 @@ class InventarioService{
         let regex = /^[0-9]+$/;
         
         let idString = parametros.id;
+        // Colocar apenas throw { erro: true, code:200}
+        //  
+
+        // //}
         if(!regex.test(idString)){
             throw new z.ZodError([{
                 path: ["inventario"],
@@ -254,7 +266,7 @@ class InventarioService{
             }
         };
 
-
+        //Colocar um if para veirifcar se o inventario foi criado mesmo
         const novoInventario = InvRepository.criar(body);
 
 
@@ -272,7 +284,9 @@ class InventarioService{
         
         const  { id,  ... resto} = atualizacoes;
         //Corrigir o .id usar algma forma melhor
-        if(!regex.test(id.id)){
+        console.log(id);
+        
+        if(!regex.test(id)){
             throw new z.ZodError([{
                 path: ["inventario"],
                 message:"O id do inventario deve ser um numero!",
