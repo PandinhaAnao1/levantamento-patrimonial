@@ -10,12 +10,19 @@ class CampusRepository{
     }
 
     static async criar(filtros){
-      return await prisma.campus.create(criarConta);
+      return await prisma.campus.create(filtros);
     }
 
-    static async atualizar(filtros){
-      return await prisma.campus.update(atualizarcampus);
-    }
+     
+      static async buscarPorId(id) {
+          return await prisma.campus.findUnique({
+              where: { id: id }
+          });
+      }
+  
+      static async atualizar(atualizacao) {
+          return await prisma.campus.update(atualizacao);
+      }
 
     static createFilterCampus(parametros){
       let filtro = {

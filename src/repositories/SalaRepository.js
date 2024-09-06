@@ -19,12 +19,13 @@ class SalaRepository{
         let filtro = {
             where: {
                 ...(parametros.id && { id: parametros.id }),
-                ...(parametros.inventario_id && { bem: {some:{ inventario_id: parametros.inventario_id }}}),
+                ...(parametros.campus_id && { campus_id: parametros.campus_id }),
                 ...(parametros.nome && { nome: {contains: parametros.nome }}),
 
             },select:{
               id:true,
               nome:true,
+              campus_id:true
             }
         }
         return filtro;
