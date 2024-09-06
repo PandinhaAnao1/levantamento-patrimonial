@@ -71,6 +71,25 @@ describe('Teste dos services listar e contar!', () => {
         expect(InventarioRepository.contar).toHaveBeenCalled();
         expect(data).toEqual(1);
         expect(data).toBeDefined();
+    });
+    test('Deve testar o filtros de listar itens services!', async () => {
+        const mockDeInventarios = [
+            { nome: "Inventario de teste", data: new Date(), concluido: false, campus: 1 },
+        ];
+
+        InventarioRepository.listar.mockResolvedValue(mockDeInventarios);
+
+        const data = await InventarioService.listarInventarios({
+            nome:'Inventario',
+            data:new Date(),
+            concluido:false,
+            campus:1,
+            pagina:1,
+        });
+
+        expect(InventarioRepository.listar).toHaveBeenCalled();
+        expect(data).toEqual(mockDeInventarios);
+        expect(data).toBeDefined();
 
     });
     test('Deve testar se vai dar erro ao listar inventarios vazios', async () => {
