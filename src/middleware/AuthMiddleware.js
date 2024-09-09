@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
-import messages from "./../utils/mensages.js"
-export const PRIVATE_KEY = '1010FFF'
+import {sendError} from "../utils/mensages.js"
 
 
 const AuthMiddleware = (req,res,next) => {
